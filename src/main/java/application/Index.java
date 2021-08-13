@@ -1,4 +1,4 @@
-package jp.example;
+package application;
 
 import java.io.Serializable;
 

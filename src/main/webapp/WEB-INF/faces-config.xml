@@ -4,4 +4,9 @@
     xmlns:xml="http://www.w3.org/XML/1998/namespace"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd ">
+
+    <lifecycle>
+        <phase-listener>event.SecurityHttpResponseHeaderListener</phase-listener>
+    </lifecycle>
+
 </faces-config>
