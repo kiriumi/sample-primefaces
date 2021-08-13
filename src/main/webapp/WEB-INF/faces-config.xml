@@ -9,6 +9,9 @@
         <default-locale>ja</default-locale>
     </locale-config>
 
+    <!-- JSFのデフォルトメッセージを上書き -->
+    <message-bundle>FacesMessages</message-bundle>
+
     <lifecycle>
         <phase-listener>security.LoginCheckLisener</phase-listener>
         <phase-listener>token.TokenCheckListener</phase-listener>

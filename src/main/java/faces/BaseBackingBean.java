@@ -1,4 +1,4 @@
-package application;
+package faces;
 
 import java.io.Serializable;
 
@@ -26,16 +26,6 @@ public class BaseBackingBean implements Serializable {
     @Getter
     private ExternalContext externalContext;
 
-    //    @Inject
-    //    private MessageService messageService;
-
-    @Inject
-    private LoginManager loginManager;
-
-    protected void logout() {
-        loginManager.logout();
-    }
-
     protected final HttpServletRequest request() {
         return (HttpServletRequest) externalContext.getRequest();
     }
@@ -55,9 +45,19 @@ public class BaseBackingBean implements Serializable {
         return logger;
     }
 
-    //    protected MessageService messageService() {
-    //        return messageService;
-    //    }
+    @Inject
+    private MessageService messageService;
+
+    protected MessageService messageService() {
+        return messageService;
+    }
+
+    @Inject
+    private LoginManager loginManager;
+
+    protected void logout() {
+        loginManager.logout();
+    }
 
     @Inject
     private Token token;
