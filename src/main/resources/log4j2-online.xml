@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration>
+
+<Configuration status="OFF">
+
+    <Properties>
+        <Property name="logPath">${bundle:ApplicationConfig:base.dir}/log</Property>
+
+        <Property name="sysPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %m%n%ex</Property>
+        <Property name="archiPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %C#%M %m%n%ex</Property>
+        <Property name="appPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %X{contextPath} %X{class}#%X{method} %m%n%ex</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${sysPattern}" />
+        </Console>
+
+        <RollingFile name="file-system" fileName="${logPath}/system.log" filePattern="${logPath}/%d{yyyyMM}/system_%d{yyyyMMdd}_%i.zip">
+
+            <PatternLayout pattern="${sysPattern}" />
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+
+            <DefaultRolloverStrategy min="1" max="10" />
+        </RollingFile>
+
+        <RollingFile name="file-faces" fileName="${logPath}/application.log"
+            filePattern="${logPath}/%d{yyyyMM}/application_%d{yyyyMMdd}_%i.zip">
+
+            <PatternLayout pattern="${sysPattern}" />
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+
+            <DefaultRolloverStrategy min="1" max="10" />
+        </RollingFile>
+
+        <RollingFile name="file-archi" fileName="${logPath}/application.log"
+            filePattern="${logPath}/%d{yyyyMM}/application_%d{yyyyMMdd}_%i.zip">
+
+            <PatternLayout pattern="${archiPattern}" />
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+
+            <DefaultRolloverStrategy min="1" max="10" />
+        </RollingFile>
+
+        <RollingFile name="file-app" fileName="${logPath}/application.log"
+            filePattern="${logPath}/%d{yyyyMM}/application_%d{yyyyMMdd}_%i.zip">
+
+            <PatternLayout pattern="${appPattern}" />
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+
+            <DefaultRolloverStrategy min="1" max="10" />
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+        <Logger name="javax.enterprise.resource.webcontainer.jsf" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file-system" />
+            <AppenderRef ref="file-faces" />
+        </Logger>
+
+        <Logger name="log.ActionLoggingInterceptor" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file-system" />
+            <AppenderRef ref="file-archi" />
+        </Logger>
+
+        <!-- MyBatis -->
+        <Logger name="mapper" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file-archi" />
+        </Logger>
+
+        <!-- Webアプリケーション -->
+        <Logger name="log.BaseLogger" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file-system" />
+            <AppenderRef ref="file-app" />
+        </Logger>
+    </Loggers>
+
+</Configuration>
+

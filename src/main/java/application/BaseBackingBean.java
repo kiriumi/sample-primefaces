@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import log.ApplicationLogger;
 import lombok.Getter;
 import security.LoginManager;
 import token.ChildToken;
@@ -26,9 +27,6 @@ public class BaseBackingBean implements Serializable {
     private ExternalContext externalContext;
 
     //    @Inject
-    //    private ApplicationLogger logger;
-
-    //    @Inject
     //    private MessageService messageService;
 
     @Inject
@@ -37,8 +35,6 @@ public class BaseBackingBean implements Serializable {
     protected void logout() {
         loginManager.logout();
     }
-
-    private static final String REDIRECT_PARAM = "?faces-redirect=true";
 
     protected final HttpServletRequest request() {
         return (HttpServletRequest) externalContext.getRequest();
@@ -52,9 +48,12 @@ public class BaseBackingBean implements Serializable {
         return externalContext.getFlash();
     }
 
-    //    protected ApplicationLogger logger() {
-    //        return logger;
-    //    }
+    @Inject
+    private ApplicationLogger logger;
+
+    protected ApplicationLogger logger() {
+        return logger;
+    }
 
     //    protected MessageService messageService() {
     //        return messageService;
@@ -65,6 +64,8 @@ public class BaseBackingBean implements Serializable {
 
     @Inject
     private ChildToken childToken;
+
+    private static final String REDIRECT_PARAM = "?faces-redirect=true";
 
     protected String redirect(final String pageName) {
 
