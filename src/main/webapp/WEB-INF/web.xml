@@ -23,7 +23,8 @@
     <context-param>
         <param-name>primefaces.CSP_POLICY</param-name>
         <param-value>
-            object-src 'none'; base-uri 'none'; script-src 'unsafe-inline' 'strict-dynamic' https: http:
+            object-src 'none'; base-uri 'none'; script-src 'unsafe-inline' 'strict-dynamic'
+            https: http:
         </param-value>
     </context-param>
 
@@ -40,8 +41,18 @@
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>nova-light</param-value>
-        <!-- <param-value>none</param-value> -->
     </context-param>
+
+    <filter>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <filter-class>
+            org.primefaces.webapp.filter.FileUploadFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
 
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
@@ -59,17 +70,6 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
-
-    <filter>
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-        <filter-class>
-            org.primefaces.webapp.filter.FileUploadFilter
-        </filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-        <servlet-name>Faces Servlet</servlet-name>
-    </filter-mapping>
 
     <session-config>
         <session-timeout>30</session-timeout>
