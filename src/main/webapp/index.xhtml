@@ -15,8 +15,13 @@
 <h:body>
     <h:form prependId="false">
         <h:inputText value="#{index.text}"></h:inputText>
-        <p:commandButton ajax="false" value="ボタン" action="#{index.action()}" />
+        <p:commandButton ajax="false" value="ボタン" action="#{index.action()}"
+            onclick="confirm('実行するよ？')" />
     </h:form>
+
+    <script>
+        alert('画面表示')
+    </script>
 </h:body>
 
 </html>
