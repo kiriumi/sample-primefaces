@@ -13,7 +13,7 @@ import javax.faces.event.PhaseListener;
 
 import org.apache.commons.lang3.StringUtils;
 
-import application.BaseBackingBean;
+import faces.BaseBackingBean;
 
 public class TokenCheckListener implements PhaseListener {
 

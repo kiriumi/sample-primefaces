@@ -15,6 +15,11 @@ public class LoginManager implements Serializable {
     private boolean logined;
 
     public void login() {
+
+        if (logined) {
+            return;
+        }
+
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         req.changeSessionId();
         this.logined = true;
