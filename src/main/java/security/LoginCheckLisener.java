@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
@@ -14,9 +15,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 public class LoginCheckLisener implements PhaseListener {
-
-    @Inject
-    ExternalContext externalContext;
 
     @Inject
     LoginManager loginManager;
@@ -36,6 +34,8 @@ public class LoginCheckLisener implements PhaseListener {
             return;
         }
 
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+
         if (externalContext.getSession(false) == null || !loginManager.logined()) {
             // 未認証の場合、ログイン画面にリダイレクト
             String loginPage = properties.getString("login.page");
@@ -51,6 +51,8 @@ public class LoginCheckLisener implements PhaseListener {
     }
 
     private boolean isSecuredPage(final List<String> urls) {
+
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
         for (String url : urls) {
 

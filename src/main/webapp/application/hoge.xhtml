@@ -6,23 +6,19 @@
     xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-    <title>インデックス</title>
+    <title>ほげ</title>
 </h:head>
 
 <f:metadata>
-    <f:viewAction action="#{index.action()}" />
+    <f:viewAction action="#{hoge.action()}" />
 </f:metadata>
 
 <h:body>
     <h:form prependId="false">
-        <h:inputText value="#{index.text}"></h:inputText>
-        <p:commandButton ajax="false" value="ボタン" action="#{index.action()}"
-            onclick="confirm('実行するよ？')" />
+        <h:inputText value="#{hoge.text}"></h:inputText>
+        <p:commandButton ajax="false" value="ボタン" action="#{hoge.action()}" />
     </h:form>
 
-    <script>
-        alert('画面表示')
-    </script>
 </h:body>
 
 </html>
