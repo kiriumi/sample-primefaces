@@ -58,8 +58,14 @@ public class Login extends BaseBackingBean {
             return null;
         }
 
+        if (user.isLocked() || user.isLockedByLimitOver()) {
+            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "アカウントがロックされてるよ");
+            return null;
+        }
+
         if (!passwordEncoder.matches(password, user.getPassword())) {
             messageService().addMessage(FacesMessage.SEVERITY_ERROR, "パスワードが間違ってるよ");
+            user.countupFail();
             return null;
         }
 
