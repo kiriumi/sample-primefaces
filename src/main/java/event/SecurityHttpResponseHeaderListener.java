@@ -18,15 +18,16 @@ public class SecurityHttpResponseHeaderListener implements PhaseListener {
                 final FacesContext facesContext = event.getFacesContext();
                 final HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
 
-                invalidateChache(response);
+                invalidateCache(response);
                 blockIframe(response);
                 forceContentType(response);
                 forceXssProtection(response);
     }
 
-    public HttpServletResponse invalidateChache(final HttpServletResponse response) {
+    public HttpServletResponse invalidateCache(final HttpServletResponse response) {
         response.addHeader("Pragma", "no-cache");
         response.addHeader("Cache-Control", "no-store");
+        response.addHeader("Expires", "Mon, 8 Aug 2006 10:00:00 GMT");
         return response;
     }
 
