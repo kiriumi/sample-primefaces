@@ -22,10 +22,7 @@
 
     <context-param>
         <param-name>primefaces.CSP_POLICY</param-name>
-        <param-value>
-            object-src 'none'; base-uri 'none'; script-src 'unsafe-inline' 'strict-dynamic'
-            https: http:
-        </param-value>
+        <param-value>object-src 'none'; base-uri 'none'; script-src 'unsafe-inline' 'strict-dynamic' https: http:</param-value>
     </context-param>
 
     <context-param>

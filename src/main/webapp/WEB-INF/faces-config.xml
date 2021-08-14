@@ -16,6 +16,7 @@
         <phase-listener>security.LoginCheckLisener</phase-listener>
        <!-- <phase-listener>token.TokenCheckListener</phase-listener> -->
        <!-- <phase-listener>token.TokenUpdateListener</phase-listener> -->
+       <phase-listener>event.SecurityHttpResponseHeaderListener</phase-listener>
     </lifecycle>
 
     <factory>
