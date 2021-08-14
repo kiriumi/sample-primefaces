@@ -15,8 +15,15 @@
 <h:body>
 
     <h:panelGroup id="panel" layout="block">
+
+        <p:messages globalOnly="true" />
+
         <h:form prependId="false">
-            <h:inputText value="#{login.id}" />
+            <p:inputText value="#{login.id}" />
+            <p:password value="#{login.password}" />
+
+            <p:commandButton class="" ajax="false" value="サインアップ"
+                action="#{login.signup()}" />
 
             <p:commandButton class="" ajax="false" value="ログイン"
                 action="#{login.login()}" />
