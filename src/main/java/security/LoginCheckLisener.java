@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
@@ -17,7 +16,10 @@ import org.apache.commons.lang3.StringUtils;
 public class LoginCheckLisener implements PhaseListener {
 
     @Inject
-    LoginManager loginManager;
+    private ExternalContext extCtx;
+
+    @Inject
+    private LoginManager loginManager;
 
     @Override
     public void afterPhase(final PhaseEvent event) {
@@ -34,16 +36,14 @@ public class LoginCheckLisener implements PhaseListener {
             return;
         }
 
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-
-        if (externalContext.getSession(false) == null || !loginManager.logined()) {
+        if (extCtx.getSession(false) == null || !loginManager.logined()) {
             // 未認証の場合、ログイン画面にリダイレクト
             String loginPage = properties.getString("login.page");
             loginPage = loginPage.startsWith("/") ? loginPage : StringUtils.join("/", loginPage);
-            String loginPagePath = String.join("", externalContext.getRequestContextPath(), loginPage);
+            String loginPagePath = String.join("", extCtx.getRequestContextPath(), loginPage);
 
             try {
-                externalContext.redirect(loginPagePath);
+                extCtx.redirect(loginPagePath);
             } catch (IOException e) {
             }
         }
@@ -52,14 +52,12 @@ public class LoginCheckLisener implements PhaseListener {
 
     private boolean isSecuredPage(final List<String> urls) {
 
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-
         for (String url : urls) {
 
             url = url.trim();
             url = url.startsWith("/") ? url : StringUtils.join("/", url);
 
-            if (externalContext.getRequestServletPath().startsWith(url)) {
+            if (extCtx.getRequestServletPath().startsWith(url)) {
                 return true;
             }
         }
