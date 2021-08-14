@@ -8,6 +8,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+
+import lombok.Getter;
+
 @Named
 @SessionScoped
 public class LoginManager implements Serializable {
@@ -15,13 +19,18 @@ public class LoginManager implements Serializable {
     @Inject
     private ExternalContext extCtx;
 
+    @Getter
+    private String userId;
+
     private boolean logined;
 
-    public void login() {
+    public void login(String userId) {
 
         if (logined) {
             return;
         }
+
+        this.userId = StringUtils.defaultString(userId, "");
 
         HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
         req.changeSessionId();
