@@ -18,9 +18,6 @@ public class WebAccessLoggingInterceptor implements Serializable {
     @Inject
    private FacesContext facesContext;
 
-    @Inject
-    private WebAccessLogger logger;
-
     @AroundInvoke
     public Object around(final InvocationContext context) throws Exception {
 
@@ -36,9 +33,9 @@ public class WebAccessLoggingInterceptor implements Serializable {
         String classNameWithoutProxy = context.getTarget().getClass().getName().replaceAll("\\$Proxy.*$", "");
         String methodName = context.getMethod().getName();
 
-        logger.info("access", classNameWithoutProxy, methodName, "開始");
+        WebAccessLogger.access("access", classNameWithoutProxy, methodName, "開始");
         Object result = context.proceed();
-        logger.info("access", classNameWithoutProxy, methodName, "終了");
+        WebAccessLogger.access("access", classNameWithoutProxy, methodName, "終了");
 
         return result;
     }

@@ -1,13 +1,47 @@
 package log;
 
-import javax.enterprise.context.Dependent;
+import org.apache.logging.log4j.ThreadContext;
 
-@Dependent
-public class WebApplicationLogger extends BaseWebLogger {
+import lombok.extern.log4j.Log4j2;
 
-    @Override
-    protected String getBundleName() {
-        return "LogMessagesApplication";
+@Log4j2
+public class WebApplicationLogger {
+
+    public static void debug(final String message) {
+        setLayout();
+        log.debug(message);
+        ThreadContext.clearAll();
     }
+
+    public static void debug(final String key, final Object... params) {
+        setLayout();
+        log.debug(LoggerUtils.getLogMessage(key), params);
+        ThreadContext.clearAll();
+    }
+
+    public static void info(final String key, final Object... params) {
+        setLayout();
+        log.info(LoggerUtils.getLogMessage(key), params);
+        ThreadContext.clearAll();
+    }
+
+    public static void warn(final String key, final Object... params) {
+        setLayout();
+        log.warn(LoggerUtils.getLogMessage(key), params);
+        ThreadContext.clearAll();
+    }
+
+    public static void error(final String key, final Object... params) {
+        setLayout();
+        log.error(LoggerUtils.getLogMessage(key), params);
+        ThreadContext.clearAll();
+    }
+
+    private static void setLayout() {
+        LoggerUtils.putCalledClassAndMethod(WebApplicationLogger.class);
+        LoggerUtils.putWebInfo();
+    }
+
+
 
 }

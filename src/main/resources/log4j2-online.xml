@@ -83,8 +83,15 @@
             <AppenderRef ref="file-archi" />
         </Logger>
 
+        <!-- アクセスログ -->
+        <Logger name="log.WebAccessLogger" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file-system" />
+            <AppenderRef ref="file-app" />
+        </Logger>
+
         <!-- Webアプリケーション -->
-        <Logger name="log.BaseLogger" level="DEBUG" additivity="false">
+        <Logger name="log.WebApplicationLogger" level="DEBUG" additivity="false">
             <AppenderRef ref="console" />
             <AppenderRef ref="file-system" />
             <AppenderRef ref="file-app" />
