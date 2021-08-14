@@ -1,6 +1,7 @@
 package faces;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -36,16 +37,15 @@ public class BaseBackingBean implements Serializable {
         return (HttpServletResponse) externalContext.getResponse();
     }
 
+    protected Map<String, Object> session() {
+        return externalContext.getSessionMap();
+    }
+
     protected Flash flash() {
         return externalContext.getFlash();
     }
 
-    @Inject
-    private WebApplicationLogger logger;
-
-    protected WebApplicationLogger logger() {
-        return logger;
-    }
+    protected WebApplicationLogger log;
 
     @Inject
     private MessageService messageService;
@@ -58,7 +58,7 @@ public class BaseBackingBean implements Serializable {
     private LoginManager loginManager;
 
     protected String getUserId() {
-        return loginManager.getUserId();
+        return LoginManager.getUserId();
     }
 
     protected void logout() {

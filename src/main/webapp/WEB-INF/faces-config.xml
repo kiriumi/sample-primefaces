@@ -18,4 +18,8 @@
        <!-- <phase-listener>token.TokenUpdateListener</phase-listener> -->
     </lifecycle>
 
+    <factory>
+        <exception-handler-factory>exception.WebExceptionHandlerFactory</exception-handler-factory>
+    </factory>
+
 </faces-config>

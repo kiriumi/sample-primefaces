@@ -23,6 +23,9 @@ public class Index implements Serializable {
     }
 
     public String action() {
+        if (true) {
+            throw new NullPointerException("例外が発生したよ");
+        }
         return null;
     }
 }
