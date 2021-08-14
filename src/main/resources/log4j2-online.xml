@@ -8,6 +8,7 @@
 
         <Property name="sysPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %m%n%ex</Property>
         <Property name="archiPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %C %M %m%n%ex</Property>
+        <Property name="accessPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %X{host} %X{url} %X{clientIp} %X{userId} %X{class} %X{method} %X{invokedClass} %X{invokedMethod} %m%n%ex</Property>
         <Property name="appPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %X{host} %X{url} %X{clientIp} %X{userId} %X{class} %X{method} %m%n%ex</Property>
     </Properties>
 
@@ -74,12 +75,6 @@
             <AppenderRef ref="console" />
             <AppenderRef ref="file-system" />
             <AppenderRef ref="file-faces" />
-        </Logger>
-
-        <Logger name="log.ActionLoggingInterceptor" level="INFO" additivity="false">
-            <AppenderRef ref="console" />
-            <AppenderRef ref="file-system" />
-            <AppenderRef ref="file-archi" />
         </Logger>
 
         <!-- MyBatis -->

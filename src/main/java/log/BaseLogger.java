@@ -46,11 +46,11 @@ public abstract class BaseLogger {
         putCalledClassAndMethod();
         putCustomItems();
 
-        ResourceBundle logMessageProp = ResourceBundle.getBundle("LogMessages");
+        ResourceBundle bundle = ResourceBundle.getBundle(getBundleName());
         String logMessage = null;
 
         try {
-            logMessage = logMessageProp.getString(key);
+            logMessage = bundle.getString(key);
         } catch (Exception e) {
             // 該当のキーが見つからない場合
             log.warn("該当のキーがないよ：{}", key);
@@ -81,4 +81,6 @@ public abstract class BaseLogger {
 
     protected void putCustomItems() {
     };
+
+    protected abstract String getBundleName() ;
 }

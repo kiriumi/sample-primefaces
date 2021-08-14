@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import log.WebAccessLogging;
 import log.WebApplicationLogger;
 import lombok.Getter;
 import security.LoginManager;
@@ -16,6 +17,7 @@ import token.ChildToken;
 import token.Token;
 import token.TokenUtils;
 
+@WebAccessLogging
 public class BaseBackingBean implements Serializable {
 
     @Inject
@@ -26,15 +28,15 @@ public class BaseBackingBean implements Serializable {
     @Getter
     private ExternalContext externalContext;
 
-    protected final HttpServletRequest request() {
+    protected HttpServletRequest request() {
         return (HttpServletRequest) externalContext.getRequest();
     }
 
-    protected final HttpServletResponse response() {
+    protected HttpServletResponse response() {
         return (HttpServletResponse) externalContext.getResponse();
     }
 
-    protected final Flash flash() {
+    protected Flash flash() {
         return externalContext.getFlash();
     }
 
