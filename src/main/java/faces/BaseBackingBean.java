@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import log.ApplicationLogger;
+import log.WebApplicationLogger;
 import lombok.Getter;
 import security.LoginManager;
 import token.ChildToken;
@@ -39,9 +39,9 @@ public class BaseBackingBean implements Serializable {
     }
 
     @Inject
-    private ApplicationLogger logger;
+    private WebApplicationLogger logger;
 
-    protected ApplicationLogger logger() {
+    protected WebApplicationLogger logger() {
         return logger;
     }
 
@@ -54,6 +54,10 @@ public class BaseBackingBean implements Serializable {
 
     @Inject
     private LoginManager loginManager;
+
+    protected String getUserId() {
+        return loginManager.getUserId();
+    }
 
     protected void logout() {
         loginManager.logout();

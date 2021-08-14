@@ -54,6 +54,11 @@
         <servlet-name>Faces Servlet</servlet-name>
     </filter-mapping>
 
+    <context-param>
+        <param-name>log4jConfiguration</param-name>
+        <param-value>classpath:/log4j2-online.xml</param-value>
+    </context-param>
+
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>

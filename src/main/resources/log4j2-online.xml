@@ -4,16 +4,16 @@
 <Configuration status="OFF">
 
     <Properties>
-        <Property name="logPath">${bundle:ApplicationConfig:base.dir}/log</Property>
+        <Property name="logPath">${bundle:ApplicationConfig:log.root.dir}/log</Property>
 
         <Property name="sysPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %m%n%ex</Property>
-        <Property name="archiPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %C#%M %m%n%ex</Property>
-        <Property name="appPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %X{contextPath} %X{class}#%X{method} %m%n%ex</Property>
+        <Property name="archiPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %C %M %m%n%ex</Property>
+        <Property name="appPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %X{host} %X{url} %X{clientIp} %X{userId} %X{class} %X{method} %m%n%ex</Property>
     </Properties>
 
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="${sysPattern}" />
+            <PatternLayout pattern="${appPattern}" />
         </Console>
 
         <RollingFile name="file-system" fileName="${logPath}/system.log" filePattern="${logPath}/%d{yyyyMM}/system_%d{yyyyMMdd}_%i.zip">
