@@ -6,14 +6,25 @@
     xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-    <title>ログイン</title>
+    <title>aaaaログイン</title>
+    <h:outputScript library="primefaces" name="jquery/jquery.js" />
+    <h:outputScript library="js" name="block-ui.js" />
+    <h:outputScript library="js" name="confirm-beforeunload.js" />
 </h:head>
 
 <h:body>
-    <h:form prependId="false">
-        <h:inputText value="#{login.id}"></h:inputText>
-        <p:commandButton ajax="false" value="ボタン" action="#{login.login()}" />
-    </h:form>
+
+    <h:panelGroup id="panel" layout="block">
+        <h:form class="confirm-beforeunload" prependId="false">
+            <h:inputText value="#{login.id}" />
+            <p:commandButton class="" id="hoge" ajax="false" value="ボタン"
+                action="#{login.login()}" />
+        </h:form>
+
+    </h:panelGroup>
+
+    <p:blockUI block="panel" widgetVar="bui" />
+
 
 </h:body>
 
