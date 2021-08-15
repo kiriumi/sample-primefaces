@@ -61,7 +61,7 @@ public class Login extends BaseBackingBean {
 
         boolean twoFactorAuthed = (boolean) flash().getOrDefault(TwoFactor.FLASH_TWO_FACTOR_AUTHED_KEY, false);
         if (twoFactorAuthed) {
-            loginManager.setTwoFactorAuthed(true);
+            loginManager.authedTwoFactorAuthed();
             return redirect("/application/top");
         }
 

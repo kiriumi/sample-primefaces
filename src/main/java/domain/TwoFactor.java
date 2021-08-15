@@ -21,6 +21,8 @@ public class TwoFactor implements Serializable {
 
     private String token;
 
+    private String email;
+
     public String getRedirectPage() {
 
         String tmpRedirectPage = redirectPage;
@@ -29,8 +31,13 @@ public class TwoFactor implements Serializable {
         return tmpRedirectPage;
     }
 
-    public void sendTokenByMail(String emal) {
-        this.token = "123456";
+    public void sendTokenByMail(String email) {
+        this.email = email;
+        generateToken();
+    }
+
+    public void resendTokenByMail() {
+        generateToken();
     }
 
     public boolean valid(String inputedToken) {
@@ -44,5 +51,11 @@ public class TwoFactor implements Serializable {
     public void clear() {
         this.redirectPage = null;
         this.token = null;
+        this.email = null;
     }
+
+    private void generateToken() {
+        this.token = "123456";
+    }
+
 }

@@ -16,10 +16,23 @@
     <ui:define name="content">
         <h:form prependId="false">
 
-            <p:inputText value="#{twoFactorAuth.token}" />
+            <div class="p-formgroup-inline">
 
-            <p:commandButton class="" ajax="false" value="確認"
-                action="#{twoFactorAuth.verify()}" />
+                <div class="p-field ui-fluid">
+                    <p:outputLabel for="token-sended" styleClass="p-sr-only">トークン</p:outputLabel>
+                    <p:inputText id="token-sended" value="#{twoFactorAuth.token}"
+                        aria-describedby="token-help" placeholder="123456" />
+                    <small id="token-help">送付されたメールに記載のトークンを入力してください</small>
+                </div>
+
+                <p:commandButton class="" ajax="false" value="確認"
+                    action="#{twoFactorAuth.verify()}" />
+
+                <p:commandButton class="" ajax="false" value="再送"
+                    styleClass="ui-button-outlined" immediate="true"
+                    action="#{twoFactorAuth.resendToken()}" />
+
+            </div>
 
         </h:form>
     </ui:define>

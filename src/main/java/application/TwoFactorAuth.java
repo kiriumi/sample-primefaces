@@ -58,8 +58,8 @@ public class TwoFactorAuth extends BaseBackingBean {
         return redirect(twoFactor.getRedirectPage());
     }
 
-    public String reSendToken() {
-        twoFactor.sendTokenByMail(user.getEmail());
+    public String resendToken() {
+        twoFactor.resendTokenByMail();
         return null;
     }
 }
