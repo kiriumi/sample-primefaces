@@ -21,6 +21,10 @@ public class UserInfo {
     private String password;
 
     @Getter
+    @Setter
+    private String email;
+
+    @Getter
     private int failCount = 0;
 
     private int failCountLimit;
@@ -29,7 +33,6 @@ public class UserInfo {
 
     private long lockedMinuteByLimitOver;
 
-    @Getter
     private boolean locked;
 
     @PostConstruct
@@ -50,7 +53,11 @@ public class UserInfo {
         }
     }
 
-    public boolean isLockedByLimitOver() {
+    public boolean isLocked() {
+        return locked || isLockedByLimitOver();
+    }
+
+    private boolean isLockedByLimitOver() {
         return LocalDateTime.now().compareTo(lockedDatetimeByLimitOver) < 0;
     }
 

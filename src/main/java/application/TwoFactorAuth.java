@@ -1,8 +1,12 @@
 package application;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import domain.TwoFactor;
+import domain.UserInfo;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +21,39 @@ public class TwoFactorAuth extends BaseBackingBean {
     @Setter
     private String token;
 
-    public String check() {
-        return redirect("/application/top.xhtml");
+    @Inject
+    private TwoFactor twoFactor;
+
+    @Inject
+    private UserInfo user;
+
+    public String init() {
+
+        if(!twoFactor.hasToken()) {
+            return redirect("login");
+        }
+
+        if (user.isLocked()) {
+            return redirect("accountLocked");
+        }
+
+        return null;
+    }
+
+    public String verify() {
+
+        if (user.isLocked()) {
+            return redirect("accountLocked");
+        }
+
+        if (!twoFactor.valid(token)) {
+            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "IDかパスワードが間違ってるよ");
+            user.countupFail();
+            return null;
+        }
+
+        flash().put(TwoFactor.FLASH_TWO_FACTOR_AUTHED_KEY, true);
+
+        return redirect(twoFactor.getRedirectPage());
     }
 }

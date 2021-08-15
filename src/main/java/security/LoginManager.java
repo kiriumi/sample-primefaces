@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Named
 @SessionScoped
 public class LoginManager implements Serializable {
@@ -31,7 +34,12 @@ public class LoginManager implements Serializable {
     }
 
     private boolean logined;
+
     private boolean autoLogin;
+
+    @Getter
+    @Setter
+    private boolean twoFactorAuthed;
 
     public void login(String userId, boolean autoLogin) {
 

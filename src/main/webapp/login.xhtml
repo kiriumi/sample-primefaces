@@ -24,6 +24,9 @@
             <p:selectBooleanCheckbox value="#{login.autoLogin}"
                 itemLabel="自動ログイン" />
 
+            <p:commandButton class="" ajax="false" value="サインアップ"
+                action="#{login.goPreSignup()}" />
+
         </h:form>
     </ui:define>
 </ui:composition>

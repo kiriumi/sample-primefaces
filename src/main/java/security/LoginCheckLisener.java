@@ -36,7 +36,7 @@ public class LoginCheckLisener implements PhaseListener {
             return;
         }
 
-        if (extCtx.getSession(false) == null || !loginManager.logined()) {
+        if (extCtx.getSession(false) == null || !loginManager.logined() || !loginManager.isTwoFactorAuthed()) {
             // 未認証の場合、ログイン画面にリダイレクト
             String loginPage = properties.getString("login.page");
             loginPage = loginPage.startsWith("/") ? loginPage : StringUtils.join("/", loginPage);

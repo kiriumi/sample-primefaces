@@ -7,15 +7,14 @@
 
 <ui:composition template="/templates/base.xhtml">
 
-    <ui:define name="title">二段階認証</ui:define>
+    <ui:define name="title">ユーザ登録</ui:define>
 
     <ui:define name="content">
+
         <h:form prependId="false">
 
-            <p:inputText value="#{twoFactorAuth.token}" />
-
-            <p:commandButton class="" ajax="false" value="確認"
-                action="#{twoFactorAuth.check()}" />
+            <p:inputText value="#{preSignup.email}" />
+            <p:commandButton ajax="false" value="送信" action="#{preSignup.sendMail()}" />
 
         </h:form>
     </ui:define>

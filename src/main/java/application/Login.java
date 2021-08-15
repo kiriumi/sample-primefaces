@@ -7,9 +7,9 @@ import javax.inject.Named;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import domain.TwoFactor;
 import domain.UserInfo;
 import faces.BaseBackingBean;
-import log.WebApplicationLogger;
 import lombok.Getter;
 import lombok.Setter;
 import security.LoginManager;
@@ -42,16 +42,24 @@ public class Login extends BaseBackingBean {
     @Inject
     private UserInfo user;
 
-    public String signup() {
+    @Inject
+    private TwoFactor twoFactor;
 
-        if (passwordEncoder == null) {
-            this.passwordEncoder = new BCryptPasswordEncoder();
+    public String init() {
+
+        if (user.isLocked()) {
+            return redirect("accountLocked");
         }
 
-        user.setId(id);
+        if (loginManager.isTwoFactorAuthed()) {
+            return "top";
+        }
 
-        String hashedPassword = passwordEncoder.encode(password);
-        user.setPassword(hashedPassword);
+        boolean twoFactorAuthed = (boolean) flash().getOrDefault(TwoFactor.FLASH_TWO_FACTOR_AUTHED_KEY, false);
+        if (twoFactorAuthed) {
+            loginManager.setTwoFactorAuthed(true);
+            return "top";
+        }
 
         return null;
     }
@@ -62,9 +70,8 @@ public class Login extends BaseBackingBean {
             return null;
         }
 
-        if (user.isLocked() || user.isLockedByLimitOver()) {
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "アカウントがロックされてるよ");
-            return null;
+        if (user.isLocked()) {
+            return redirect("accountLocked");
         }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -74,8 +81,14 @@ public class Login extends BaseBackingBean {
         }
 
         loginManager.login(id, autoLogin);
-        WebApplicationLogger.debug("ログインしたよ");
 
-        return redirect("/application/twoFactorAuth.xhtml");
+        twoFactor.sendTokenByMail(user.getEmail());
+        twoFactor.setRedirectPage("login");
+
+        return redirect("twoFactorAuth");
+    }
+
+    public String goPreSignup() {
+        return redirect("preSignup");
     }
 }
