@@ -58,7 +58,7 @@ public class UserInfo {
     }
 
     private boolean isLockedByLimitOver() {
-        return LocalDateTime.now().compareTo(lockedDatetimeByLimitOver) < 0;
+        return LocalDateTime.now().isBefore(lockedDatetimeByLimitOver);
     }
 
 }

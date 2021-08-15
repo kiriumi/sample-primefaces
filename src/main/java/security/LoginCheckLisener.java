@@ -10,6 +10,7 @@ import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,11 +33,17 @@ public class LoginCheckLisener implements PhaseListener {
         List<String> securityConstraintUrls = Arrays.asList(properties.getString("security.constraint.url").split(","));
 
         if (!isSecuredPage(securityConstraintUrls)) {
+
             // 非認証画面の場合
+             if(StringUtils.isNotBlank(extCtx.getSessionId(false))) {
+                 // セッションハイジャック防止のため毎回セッションIDを変更
+                 HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
+                 req.changeSessionId();
+             }
             return;
         }
 
-        if (extCtx.getSession(false) == null || !loginManager.logined() || !loginManager.isTwoFactorAuthed()) {
+        if (extCtx.getSession(false) == null || !loginManager.isTwoFactorAuthed()) {
             // 未認証の場合、ログイン画面にリダイレクト
             String loginPage = properties.getString("login.page");
             loginPage = loginPage.startsWith("/") ? loginPage : StringUtils.join("/", loginPage);

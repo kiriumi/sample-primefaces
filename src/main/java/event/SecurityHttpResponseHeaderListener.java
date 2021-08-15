@@ -4,9 +4,15 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
+import security.LoginManager;
+
 public class SecurityHttpResponseHeaderListener implements PhaseListener {
+
+    @Inject
+    private LoginManager loginManager;
 
     @Override
     public void afterPhase(PhaseEvent event) {
@@ -22,6 +28,7 @@ public class SecurityHttpResponseHeaderListener implements PhaseListener {
                 blockIframe(response);
                 forceContentType(response);
                 forceXssProtection(response);
+                loginManager.activateAutoLogin();
     }
 
     public HttpServletResponse invalidateCache(final HttpServletResponse response) {
