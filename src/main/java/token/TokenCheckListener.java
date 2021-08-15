@@ -1,7 +1,11 @@
 package token;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.ResourceBundle;
 
 import javax.el.ELContext;
 import javax.el.ELResolver;
@@ -11,6 +15,7 @@ import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import faces.BaseBackingBean;
@@ -39,11 +44,13 @@ public class TokenCheckListener implements PhaseListener {
         TokenCheck tokenCheck = bean.getClass().getAnnotation(TokenCheck.class);
         if (tokenCheck == null) {
             //トークンチェック対象の画面ではない場合、何もしない
+            updateToken();
             return;
         }
 
         if (facesCtx.isPostback() || TokenUtils.isSamePage()) {
             // 初期表示処理以外の場合、何もしない
+            updateToken();
             return;
         }
 
@@ -70,6 +77,7 @@ public class TokenCheckListener implements PhaseListener {
                 session.remove(TokenUtils.KEY_TOKEN);
                 throw new InvalidTokenException();
             }
+            updateToken();
 
         } else {
 
@@ -82,9 +90,10 @@ public class TokenCheckListener implements PhaseListener {
                 String parentTokenInSession = (String) session.get(TokenUtils.KEY_TOKEN);
                 String parentTokenInRequest = extCtx.getRequestParameterMap().get(TokenUtils.KEY_TOKEN);
 
-                if (!parentTokenInSession.equals(parentTokenInRequest)) {
+                if (!Objects.equals(parentTokenInSession, parentTokenInRequest)) {
                     throw new InvalidTokenException("トークンチェック不正");
                 }
+                updateToken();
                 return;
             }
 
@@ -94,13 +103,84 @@ public class TokenCheckListener implements PhaseListener {
                 childTokenMap.remove(namespace);
                 throw new InvalidTokenException("トークンチェック不正");
             }
+            updateToken();
+        }
+    }
+
+    private void updateToken() {
+
+        FacesContext facesCtx = FacesContext.getCurrentInstance();
+        ExternalContext extCtx = facesCtx.getExternalContext();
+
+        ELContext elContext = facesCtx.getELContext();
+        ELResolver elResolver = elContext.getELResolver();
+
+        Token token = (Token) elResolver.getValue(elContext, null, "token");
+        ChildToken childToken = (ChildToken) elResolver.getValue(elContext, null, "childToken");
+
+        ResourceBundle bundle = ResourceBundle.getBundle("ApplicationConfig");
+
+        Map<String, Object> session = extCtx.getSessionMap();
+
+        // 初期表示処理以外またはエラー画面の場合、トークンを画面に再設定
+        if (facesCtx.isPostback() || TokenUtils.isSamePage()
+                || extCtx.getRequestServletPath().endsWith(bundle.getString("error.page"))) {
+
+            if (TokenUtils.isParent()) {
+                // 親画面の場合
+                String tokenInSession = (String) session.get(TokenUtils.KEY_TOKEN);
+                if (StringUtils.isBlank(tokenInSession)) {
+                    // 初回アクセスの場合
+                    tokenInSession = generateToken();
+                    session.put(TokenUtils.KEY_TOKEN, tokenInSession);
+                }
+                token.setToken(tokenInSession); // 画面にトークンを設定
+
+            } else {
+                // 子画面の場合
+                String namespace = extCtx.getRequestParameterMap().get(TokenUtils.KEY_CHILD_TOKEN_NAMESPACE);
+
+                @SuppressWarnings("unchecked")
+                Map<String, String> childTokenMap = (Map<String, String>) session.get(TokenUtils.KEY_CHILD_TOKEN_MAP);
+                String tokenInSession = childTokenMap.get(namespace); // セッションにトークンを設定
+
+                // 画面にトークンを設定
+                childToken.setNamespace(namespace);
+                childToken.setToken(tokenInSession);
+            }
+            return;
+        }
+
+        // トークンを更新
+        if (TokenUtils.isParent()) {
+            // 親画面の場合
+            String updatedToken = generateToken();
+            session.put(TokenUtils.KEY_TOKEN, updatedToken); // セッションにトークンを設定
+            token.setToken(updatedToken); // 画面にトークンを設定
+
+        } else {
+            // 子画面の場合
+            String updatedToken = generateToken();
+            String namespace = extCtx.getRequestParameterMap().get(TokenUtils.KEY_CHILD_TOKEN_NAMESPACE);
+
+            @SuppressWarnings("unchecked")
+            Map<String, String> childTokenMap = (Map<String, String>) session.get(TokenUtils.KEY_CHILD_TOKEN_MAP);
+            childTokenMap.put(namespace, updatedToken); // セッションにトークンを設定
+
+            // 画面にトークンを設定
+            childToken.setNamespace(namespace);
+            childToken.setToken(updatedToken);
         }
     }
 
     @Override
     public PhaseId getPhaseId() {
         return PhaseId.RESTORE_VIEW;
-        //        return PhaseId.
+    }
+
+    private String generateToken() {
+        long seed = new Random().nextLong() + new Date().getTime();
+        return DigestUtils.sha256Hex(Long.toString(seed)).substring(0, 32);
     }
 
 }

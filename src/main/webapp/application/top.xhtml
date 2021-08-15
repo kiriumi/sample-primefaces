@@ -13,7 +13,11 @@
 
         <h:form prependId="false">
             ようこそ
-            <p:commandButton value="ログアウト" action="#{logout.logout()}" />
+            <p:commandButton value="ユーザ情報の照会"
+                action="#{top.showUserInfo()}"
+                onsuccess="openChildWindow('#{request.contextPath}/application/userInfoReferrer.xhtml', '_blank', 'noopener')" />
+
+            <p:commandButton ajax="false" value="ログアウト" action="#{top.logout()}" />
         </h:form>
 
     </ui:define>
