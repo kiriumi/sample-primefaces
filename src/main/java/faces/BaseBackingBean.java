@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 import log.WebAccessLogging;
 import log.WebApplicationLogger;
 import lombok.Getter;
@@ -71,7 +73,9 @@ public class BaseBackingBean implements Serializable {
     @Inject
     private ChildToken childToken;
 
-    private static final String REDIRECT_PARAM = "?faces-redirect=true";
+    private static final String PARAM_REDIRECT = "?faces-redirect=true";
+
+    private static final String PARAM_KEY_VALUE_FORMAT = "&%s=%s";
 
     protected String redirect(final String pageName) {
 
@@ -80,13 +84,15 @@ public class BaseBackingBean implements Serializable {
 
         if (childToken.getNamespace() == null) {
             // 親画面での画面遷移の場合
-            return String.join("", pageName, REDIRECT_PARAM, "&", TokenUtils.KEY_TOKEN, "=", token.getToken());
+
+            return StringUtils.isBlank(token.getToken()) ? StringUtils.join(pageName, PARAM_REDIRECT) :
+                StringUtils.join(pageName, PARAM_REDIRECT, String.format(PARAM_KEY_VALUE_FORMAT, TokenUtils.KEY_TOKEN, token.getToken()));
         }
 
         // 子画面での画面遷移の場合
-        return String.join("", pageName, REDIRECT_PARAM,
-                "&", TokenUtils.KEY_CHILD_TOKEN_NAMESPACE, "=", childToken.getNamespace(),
-                "&", TokenUtils.KEY_CHILD_TOKEN, "=", childToken.getToken());
+        return StringUtils.join(pageName, PARAM_REDIRECT,
+                String.format(PARAM_KEY_VALUE_FORMAT, TokenUtils.KEY_CHILD_TOKEN_NAMESPACE, childToken.getNamespace()),
+                String.format(PARAM_KEY_VALUE_FORMAT, TokenUtils.KEY_CHILD_TOKEN, childToken.getToken()));
     }
 
 }

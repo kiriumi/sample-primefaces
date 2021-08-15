@@ -6,7 +6,7 @@
     xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-    <title>ログイン</title>
+    <title>２段階認証</title>
     <h:outputScript library="primefaces" name="jquery/jquery.js" />
     <h:outputScript library="js" name="block-ui.js" />
     <h:outputScript library="js" name="confirm-beforeunload.js" />
@@ -19,17 +19,11 @@
         <p:messages globalOnly="true" />
 
         <h:form prependId="false">
-            <p:inputText value="#{login.id}" />
-            <p:password value="#{login.password}" />
+            <p:inputText value="#{twoFactorAuth.token}" />
 
-            <p:commandButton class="" ajax="false" value="サインアップ"
-                action="#{login.signup()}" />
+            <p:commandButton class="" ajax="false" value="確認"
+                action="#{twoFactorAuth.check()}" />
 
-            <p:commandButton class="" ajax="false" value="ログイン"
-                action="#{login.login()}" />
-
-            <p:selectBooleanCheckbox value="#{login.autoLogin}"
-                itemLabel="自動ログイン" />
         </h:form>
 
     </h:panelGroup>

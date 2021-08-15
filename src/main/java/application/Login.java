@@ -76,6 +76,6 @@ public class Login extends BaseBackingBean {
         loginManager.login(id, autoLogin);
         WebApplicationLogger.debug("ログインしたよ");
 
-        return null;
+        return redirect("/application/twoFactorAuth.xhtml");
     }
 }

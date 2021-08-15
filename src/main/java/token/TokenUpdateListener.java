@@ -13,6 +13,7 @@ import javax.faces.event.PhaseListener;
 import javax.inject.Inject;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class TokenUpdateListener implements PhaseListener {
 
@@ -38,6 +39,11 @@ public class TokenUpdateListener implements PhaseListener {
             if (TokenUtils.isParent()) {
                 // 親画面の場合
                 String tokenInSession = (String) session.get(TokenUtils.KEY_TOKEN);
+                if (StringUtils.isBlank(tokenInSession)) {
+                    // 初回アクセスの場合
+                    tokenInSession = generateToken();
+                    session.put(TokenUtils.KEY_TOKEN, tokenInSession);
+                }
                 token.setToken(tokenInSession); // 画面にトークンを設定
 
             } else {

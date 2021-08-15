@@ -34,8 +34,8 @@ public class TokenCheckListener implements PhaseListener {
         String path = extCtx.getRequestServletPath();
         String viewId = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
         String beanName = StringUtils.join(viewId.substring(0, 1).toLowerCase(), viewId.substring(1));
-
         BaseBackingBean bean = (BaseBackingBean) elResolver.getValue(elContext, null, beanName);
+
         TokenCheck tokenCheck = bean.getClass().getAnnotation(TokenCheck.class);
         if (tokenCheck == null) {
             //トークンチェック対象の画面ではない場合、何もしない
