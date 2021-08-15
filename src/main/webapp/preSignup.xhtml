@@ -19,10 +19,11 @@
 
             <div class="p-formgroup-inline">
 
-                <div class="p-field">
-                    <label for="email" class="p-sr-only">メールアドレス</label>
-                    <p:inputText id="email" value="#{preSignup.email}"
+                <div class="p-field ui-fluid">
+                    <p:outputLabel for="email" styleClass="p-sr-only">メールアドレス</p:outputLabel>
+                    <p:inputText id="email" value="#{preSignup.email}" aria-describedby="email-help"
                         placeholder="mail@example.com" />
+                        <small id="email-help">使用するメールアドレスを入力してください</small>
                 </div>
 
                 <p:commandButton ajax="false" value="送信"

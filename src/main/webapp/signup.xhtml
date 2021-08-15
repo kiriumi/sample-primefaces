@@ -17,22 +17,29 @@
 
         <h:form class="confirm-beforeunload" prependId="false">
 
-            <div class="p-field p-grid">
-                <label for="id" class="p-col-fixed" style="width: 100px">ID</label>
-                <div class="p-col">
-                    <p:inputText id="id" value="#{signup.id}" />
-                </div>
-            </div>
+            <div class="ui-fluid">
 
-            <div class="p-field p-grid">
-                <label for="password" class="p-col-fixed" style="width: 100px">パスワード</label>
-                <div class="p-col">
-                    <p:password id="password" value="#{signup.password}" />
+                <div class="p-field p-grid">
+                    <p:outputLabel for="id" styleClass="p-col-fixed"
+                        style="width: 100px">ID</p:outputLabel>
+                    <div class="p-col">
+                        <p:inputText id="id" value="#{signup.id}" />
+                    </div>
                 </div>
+
+                <div class="p-field p-grid">
+                    <p:outputLabel for="password" styleClass="p-col-fixed"
+                        style="width: 100px">パスワード</p:outputLabel>
+                    <div class="p-col">
+                        <p:password id="password" value="#{signup.password}" />
+                    </div>
+                </div>
+
             </div>
 
             <p:commandButton class="not-confirm" ajax="false" value="ユーザ登録"
-                action="#{signup.signup()}" onclick="return confirm('登録します、よろしいですか？')" />
+                action="#{signup.signup()}"
+                onclick="return confirm('登録します、よろしいですか？')" />
 
         </h:form>
     </ui:define>
