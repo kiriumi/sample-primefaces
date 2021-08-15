@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
@@ -15,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 
 public class LoginCheckLisener implements PhaseListener {
+
+    @Inject
+    private FacesContext facesCtx;
 
     @Inject
     private ExternalContext extCtx;
@@ -35,11 +39,11 @@ public class LoginCheckLisener implements PhaseListener {
         if (!isSecuredPage(securityConstraintUrls)) {
 
             // 非認証画面の場合
-             if(StringUtils.isNotBlank(extCtx.getSessionId(false))) {
-                 // セッションハイジャック防止のため毎回セッションIDを変更
-                 HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
-                 req.changeSessionId();
-             }
+            if (StringUtils.isNotBlank(extCtx.getSessionId(false)) && !facesCtx.isPostback()) {
+                // セッションハイジャック防止のため毎回セッションIDを変更
+                HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
+                req.changeSessionId();
+            }
             return;
         }
 
