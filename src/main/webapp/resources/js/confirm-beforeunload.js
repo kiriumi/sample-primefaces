@@ -2,7 +2,7 @@
  * ページを離れる際に、入力項目に変更があったら確認する
  * 使用方法
  * ・form要素のclass属性に「confirm-onunload」を指定する
- * ・確認が不要な処理を行う要素のclass属性に「not-confitm」を指定する
+ * ・確認が不要な処理を行う要素のclass属性に「not-confirm」を指定する
  */
 $(function() {
 

@@ -40,12 +40,12 @@ public class Signup extends BaseBackingBean {
     public String init() {
 
         if (loginManager.isTwoFactorAuthed()) {
-            return "top";
+            return  redirect("/application/top");
         }
 
         boolean twoFactorAuthed = (boolean) flash().getOrDefault(TwoFactor.FLASH_TWO_FACTOR_AUTHED_KEY, false);
         if (!twoFactorAuthed) {
-            return "login";
+            return  redirect("login");
         }
         return null;
     }
@@ -59,7 +59,9 @@ public class Signup extends BaseBackingBean {
         user.setId(id);
         user.setPassword(passwordEncoder.encode(password));
 
-        return "login";
+        flash().put(Login.FLUSH_KEY_MESSAGE, "ユーザ登録が完了したよ");
+
+        return  redirect("login");
     }
 
 }

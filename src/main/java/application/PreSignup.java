@@ -35,7 +35,7 @@ public class PreSignup extends BaseBackingBean {
     public String init() {
 
         if (loginManager.isTwoFactorAuthed()) {
-            return "top";
+            return  redirect("/application/top");
         }
         return null;
     }
@@ -45,7 +45,7 @@ public class PreSignup extends BaseBackingBean {
         user.setEmail(email); // ユーザの仮登録
 
         twoFactor.sendTokenByMail(email);
-        twoFactor.setRedirectPage("preSignup");
+        twoFactor.setRedirectPage("signup");
 
         return redirect("twoFactorAuth");
     }

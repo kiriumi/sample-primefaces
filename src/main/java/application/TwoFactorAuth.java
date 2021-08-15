@@ -48,7 +48,7 @@ public class TwoFactorAuth extends BaseBackingBean {
         }
 
         if (!twoFactor.valid(token)) {
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "IDかパスワードが間違ってるよ");
+            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "トークンが違うよ");
             user.countupFail();
             return null;
         }
@@ -56,5 +56,10 @@ public class TwoFactorAuth extends BaseBackingBean {
         flash().put(TwoFactor.FLASH_TWO_FACTOR_AUTHED_KEY, true);
 
         return redirect(twoFactor.getRedirectPage());
+    }
+
+    public String reSendToken() {
+        twoFactor.sendTokenByMail(user.getEmail());
+        return null;
     }
 }

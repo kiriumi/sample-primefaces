@@ -5,6 +5,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import domain.TwoFactor;
@@ -20,6 +21,8 @@ import validation.constraints.Password;
 @Named
 @ViewScoped
 public class Login extends BaseBackingBean {
+
+    public static final String FLUSH_KEY_MESSAGE = "application.Login.flush.message";
 
     @Inject
     private LoginManager loginManager;
@@ -53,13 +56,18 @@ public class Login extends BaseBackingBean {
         }
 
         if (loginManager.isTwoFactorAuthed()) {
-            return "top";
+            return redirect("/application/top");
         }
 
         boolean twoFactorAuthed = (boolean) flash().getOrDefault(TwoFactor.FLASH_TWO_FACTOR_AUTHED_KEY, false);
         if (twoFactorAuthed) {
             loginManager.setTwoFactorAuthed(true);
-            return "top";
+            return redirect("/application/top");
+        }
+
+        String message = (String) flash().get(FLUSH_KEY_MESSAGE);
+        if (StringUtils.isNotBlank(message)) {
+            messageService().addMessage(FacesMessage.SEVERITY_INFO, message);
         }
 
         return null;
@@ -67,12 +75,12 @@ public class Login extends BaseBackingBean {
 
     public String login() {
 
-        if (loginManager.logined()) {
-            return null;
-        }
-
         if (user.isLocked()) {
             throw new AccountLokedException();
+        }
+
+        if (passwordEncoder == null) {
+            this.passwordEncoder = new BCryptPasswordEncoder();
         }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {

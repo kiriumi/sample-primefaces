@@ -9,23 +9,39 @@
 
     <ui:define name="title">ログイン</ui:define>
 
+    <f:metadata>
+        <f:viewAction action="#{login.init()}" />
+    </f:metadata>
+
     <ui:define name="content">
         <h:form prependId="false">
 
-            <p:inputText value="#{login.id}" />
-            <p:password value="#{login.password}" />
+            <div class="p-field p-grid">
+                <label for="id" class="p-col-fixed" style="width: 100px">ID</label>
+                <div class="p-col">
+                    <p:inputText id="id" value="#{login.id}" />
+                </div>
+            </div>
 
-            <p:commandButton class="" ajax="false" value="サインアップ"
-                action="#{login.signup()}" />
+            <div class="p-field p-grid">
+                <label for="password" class="p-col-fixed" style="width: 100px">パスワード</label>
+                <div class="p-col">
+                    <p:password id="password" value="#{login.password}" />
+                </div>
+            </div>
 
-            <p:commandButton class="" ajax="false" value="ログイン"
-                action="#{login.login()}" />
+            <div class="p-field-checkbox">
+                <p:selectBooleanCheckbox value="#{login.autoLogin}"
+                    itemLabel="自動ログイン" />
+            </div>
 
-            <p:selectBooleanCheckbox value="#{login.autoLogin}"
-                itemLabel="自動ログイン" />
+            <div class="p-formgroup-inline">
+                <p:commandButton class="" ajax="false" value="ログイン"
+                    action="#{login.login()}" />
 
-            <p:commandButton class="" ajax="false" value="サインアップ"
-                action="#{login.goPreSignup()}" />
+                <p:commandButton class="" ajax="false" value="サインアップ"
+                    immediate="true" action="#{login.goPreSignup()}" />
+            </div>
 
         </h:form>
     </ui:define>
