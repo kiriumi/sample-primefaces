@@ -1,12 +1,12 @@
 function showBlockUi() {
-    PF('bui').show();
+    PrimeFaces.widgets['bui'].show();
 }
 
 function hideBlockUi() {
-    PF('bui').hide();
+    PrimeFaces.widgets['bui'].hide();
 }
 
 document.addEventListener("submit", function() {
     $('form').css('pointer-events', 'none');
-    PF('bui').show();
+    PrimeFaces.widgets['bui'].show();
 });
