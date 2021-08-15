@@ -7,6 +7,7 @@ import javax.inject.Named;
 
 import domain.TwoFactor;
 import domain.UserInfo;
+import exception.AccountLokedException;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,23 +28,23 @@ public class TwoFactorAuth extends BaseBackingBean {
     @Inject
     private UserInfo user;
 
-    public String init() {
+    public String init() throws Exception {
 
-        if(!twoFactor.hasToken()) {
+        if (!twoFactor.hasToken()) {
             return redirect("login");
         }
 
         if (user.isLocked()) {
-            return redirect("accountLocked");
+            throw new AccountLokedException();
         }
 
         return null;
     }
 
-    public String verify() {
+    public String verify() throws Exception {
 
         if (user.isLocked()) {
-            return redirect("accountLocked");
+            throw new AccountLokedException();
         }
 
         if (!twoFactor.valid(token)) {

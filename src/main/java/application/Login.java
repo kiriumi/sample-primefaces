@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import domain.TwoFactor;
 import domain.UserInfo;
+import exception.AccountLokedException;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,10 +46,10 @@ public class Login extends BaseBackingBean {
     @Inject
     private TwoFactor twoFactor;
 
-    public String init() {
+    public String init() throws Exception {
 
         if (user.isLocked()) {
-            return redirect("accountLocked");
+            throw new AccountLokedException();
         }
 
         if (loginManager.isTwoFactorAuthed()) {
@@ -64,14 +65,14 @@ public class Login extends BaseBackingBean {
         return null;
     }
 
-    public String login() {
+    public String login() throws Exception {
 
         if (loginManager.logined()) {
             return null;
         }
 
         if (user.isLocked()) {
-            return redirect("accountLocked");
+            throw new AccountLokedException();
         }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
