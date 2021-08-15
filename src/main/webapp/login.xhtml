@@ -5,20 +5,13 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
 
-<h:head>
-    <title>ログイン</title>
-    <h:outputScript library="primefaces" name="jquery/jquery.js" />
-    <h:outputScript library="js" name="block-ui.js" />
-    <h:outputScript library="js" name="confirm-beforeunload.js" />
-</h:head>
+<ui:composition template="/templates/base.xhtml">
 
-<h:body>
+    <ui:define name="title">ログイン</ui:define>
 
-    <h:panelGroup id="panel" layout="block">
-
-        <p:messages globalOnly="true" />
-
+    <ui:define name="content">
         <h:form prependId="false">
+
             <p:inputText value="#{login.id}" />
             <p:password value="#{login.password}" />
 
@@ -30,12 +23,8 @@
 
             <p:selectBooleanCheckbox value="#{login.autoLogin}"
                 itemLabel="自動ログイン" />
+
         </h:form>
-
-    </h:panelGroup>
-    <p:blockUI block="panel" widgetVar="bui" />
-    <ui:include src="/template/token.xhtml" />
-
-</h:body>
-
+    </ui:define>
+</ui:composition>
 </html>
