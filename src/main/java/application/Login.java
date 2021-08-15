@@ -46,7 +46,7 @@ public class Login extends BaseBackingBean {
     @Inject
     private TwoFactor twoFactor;
 
-    public String init() throws Exception {
+    public String init() {
 
         if (user.isLocked()) {
             throw new AccountLokedException();
@@ -65,7 +65,7 @@ public class Login extends BaseBackingBean {
         return null;
     }
 
-    public String login() throws Exception {
+    public String login() {
 
         if (loginManager.logined()) {
             return null;

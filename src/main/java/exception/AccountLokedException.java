@@ -1,6 +1,6 @@
 package exception;
 
-public class AccountLokedException extends Exception {
+public class AccountLokedException extends WebApplicationException {
 
     private static final String MESSAGE = "アカウントロック中です";
 

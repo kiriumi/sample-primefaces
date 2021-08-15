@@ -1,6 +1,8 @@
 package token;
 
-public class InvalidTokenException extends RuntimeException {
+import exception.WebApplicationException;
+
+public class InvalidTokenException extends WebApplicationException {
 
     public InvalidTokenException() {
         super();

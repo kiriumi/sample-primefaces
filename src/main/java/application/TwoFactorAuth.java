@@ -28,7 +28,7 @@ public class TwoFactorAuth extends BaseBackingBean {
     @Inject
     private UserInfo user;
 
-    public String init() throws Exception {
+    public String init() {
 
         if (!twoFactor.hasToken()) {
             return redirect("login");
