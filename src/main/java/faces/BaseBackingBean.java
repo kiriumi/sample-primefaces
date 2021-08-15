@@ -56,15 +56,12 @@ public class BaseBackingBean implements Serializable {
         return messageService;
     }
 
-    @Inject
-    private LoginManager loginManager;
-
     protected String getUserId() {
         return LoginManager.getUserId();
     }
 
-    protected void logout() {
-        loginManager.logout();
+    public String logout() {
+        return redirect("/logout");
     }
 
     @Inject
