@@ -21,14 +21,14 @@ public class SecurityHttpResponseHeaderListener implements PhaseListener {
     @Override
     public void beforePhase(final PhaseEvent event) {
 
-                final FacesContext facesContext = event.getFacesContext();
-                final HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
+        final FacesContext facesContext = event.getFacesContext();
+        final HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
 
-                invalidateCache(response);
-                blockIframe(response);
-                forceContentType(response);
-                forceXssProtection(response);
-                loginManager.activateAutoLogin();
+        invalidateCache(response);
+        blockIframe(response);
+        forceContentType(response);
+        forceXssProtection(response);
+        loginManager.activateAutoLogin();
     }
 
     public HttpServletResponse invalidateCache(final HttpServletResponse response) {
