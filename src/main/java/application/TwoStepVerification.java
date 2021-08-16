@@ -5,7 +5,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import domain.TwoFactorAuther;
+import domain.TwoStepVerificatior;
 import domain.UserInfo;
 import exception.WebApplicationException;
 import faces.BaseBackingBean;
@@ -16,21 +16,21 @@ import token.TokenCheck;
 @Named
 @ViewScoped
 @TokenCheck
-public class TwoFactorAuth extends BaseBackingBean {
+public class TwoStepVerification extends BaseBackingBean {
 
     @Getter
     @Setter
     private String token;
 
     @Inject
-    private TwoFactorAuther twoFactor;
+    private TwoStepVerificatior twoStep;
 
     @Inject
     private UserInfo user;
 
     public String init() {
 
-        if (!twoFactor.isSetuped()) {
+        if (!twoStep.isSetuped()) {
             throw new WebApplicationException();
         }
         return null;
@@ -38,23 +38,23 @@ public class TwoFactorAuth extends BaseBackingBean {
 
     public String verify() throws Exception {
 
-        if (!twoFactor.verify(token)) {
+        if (!twoStep.verify(token)) {
             messageService().addMessage(FacesMessage.SEVERITY_ERROR, "トークンが違うよ");
             user.countupFail();
             return null;
         }
 
-        flash().put(TwoFactorAuther.FLASH_TWO_FACTOR_AUTHED_KEY, true);
+        flash().put(TwoStepVerificatior.FLASH_TWO_FACTOR_AUTHED_KEY, true);
 
-        return redirect(twoFactor.getRedirectPage());
+        return redirect(twoStep.getRedirectPage());
     }
 
     public String resendToken() {
-        twoFactor.sendTokenByMail();
+        twoStep.sendTokenByMail();
         return null;
     }
 
     public String backPage() {
-        return redirect(twoFactor.getBackPage());
+        return redirect(twoStep.getBackPage());
     }
 }

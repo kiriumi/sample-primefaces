@@ -10,7 +10,7 @@
     <ui:define name="title">二段階認証</ui:define>
 
     <f:metadata>
-        <f:viewAction action="#{twoFactorAuth.init()}" />
+        <f:viewAction action="#{twoStepVerification.init()}" />
     </f:metadata>
 
     <ui:define name="content">
@@ -20,21 +20,21 @@
 
                 <div class="p-field ui-fluid">
                     <p:outputLabel for="input-token" styleClass="p-sr-only">トークン</p:outputLabel>
-                    <p:inputText id="input-token" value="#{twoFactorAuth.token}"
+                    <p:inputText id="input-token" value="#{twoStepVerification.token}"
                         aria-describedby="input-token-help" placeholder="123456" />
                     <small id="input-token-help">送付されたメールに記載のトークンを入力してください</small>
                 </div>
 
                 <p:commandButton class="" ajax="false" value="確認"
-                    action="#{twoFactorAuth.verify()}" />
+                    action="#{twoStepVerification.verify()}" />
 
                 <p:commandButton class="" ajax="false" value="再送"
                     styleClass="ui-button-outlined" immediate="true"
-                    action="#{twoFactorAuth.resendToken()}" />
+                    action="#{twoStepVerification.resendToken()}" />
 
                 <p:commandButton class="" ajax="false" value="戻る"
                     styleClass="ui-button-outlined" immediate="true"
-                    action="#{twoFactorAuth.backPage()}" />
+                    action="#{twoStepVerification.backPage()}" />
 
             </div>
 

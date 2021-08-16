@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Named
 @SessionScoped
-public class TwoFactorAuther implements Serializable {
+public class TwoStepVerificatior implements Serializable {
 
     public static final String FLASH_TWO_FACTOR_AUTHED_KEY = "domain.TwoFactor.authed";
 
