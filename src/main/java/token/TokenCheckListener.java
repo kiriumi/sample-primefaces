@@ -14,6 +14,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,11 @@ public class TokenCheckListener implements PhaseListener {
 
     @Override
     public void afterPhase(final PhaseEvent event) {
+        verifyToken();
+        updateToken();
+    }
+
+    private void verifyToken() {
 
         FacesContext facesCtx = FacesContext.getCurrentInstance();
         ExternalContext extCtx = facesCtx.getExternalContext();
@@ -36,7 +42,9 @@ public class TokenCheckListener implements PhaseListener {
         ELContext elContext = facesCtx.getELContext();
         ELResolver elResolver = elContext.getELResolver();
 
-        String path = extCtx.getRequestServletPath();
+        //        String path = extCtx.getRequestServletPath();
+        HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
+        String path = req.getRequestURL().toString();
         String viewId = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
         String beanName = StringUtils.join(viewId.substring(0, 1).toLowerCase(), viewId.substring(1));
         BaseBackingBean bean = (BaseBackingBean) elResolver.getValue(elContext, null, beanName);
@@ -44,13 +52,11 @@ public class TokenCheckListener implements PhaseListener {
         TokenCheck tokenCheck = bean.getClass().getAnnotation(TokenCheck.class);
         if (tokenCheck == null) {
             //トークンチェック対象の画面ではない場合、何もしない
-            updateToken();
             return;
         }
 
         if (facesCtx.isPostback() || TokenUtils.isSamePage()) {
             // 初期表示処理以外の場合、何もしない
-            updateToken();
             return;
         }
 
@@ -77,7 +83,6 @@ public class TokenCheckListener implements PhaseListener {
                 session.remove(TokenUtils.KEY_TOKEN);
                 throw new InvalidTokenException();
             }
-            updateToken();
 
         } else {
 
@@ -93,7 +98,6 @@ public class TokenCheckListener implements PhaseListener {
                 if (!Objects.equals(parentTokenInSession, parentTokenInRequest)) {
                     throw new InvalidTokenException("トークンチェック不正");
                 }
-                updateToken();
                 return;
             }
 
@@ -103,7 +107,6 @@ public class TokenCheckListener implements PhaseListener {
                 childTokenMap.remove(namespace);
                 throw new InvalidTokenException("トークンチェック不正");
             }
-            updateToken();
         }
     }
 
