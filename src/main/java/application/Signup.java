@@ -4,6 +4,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -23,11 +24,13 @@ public class Signup extends BaseBackingBean {
     private BCryptPasswordEncoder passwordEncoder;
 
     @AvirableChar
+    @NotBlank
     @Getter
     @Setter
     private String id;
 
     @Password
+    @NotBlank
     @Getter
     @Setter
     private String password;
@@ -44,13 +47,17 @@ public class Signup extends BaseBackingBean {
     public String init() {
 
         if (loginManager.isLogined()) {
-            return  redirect("/application/top");
+            return redirect("/application/top");
         }
 
         if (!twoStep.isSuccessed()) {
-            return  redirect("login");
+            return redirect("login");
         }
         return null;
+    }
+
+    public void validate() {
+        return;
     }
 
     public String signup() {
@@ -65,7 +72,7 @@ public class Signup extends BaseBackingBean {
         messageService().addMessage(FacesMessage.SEVERITY_INFO, "ユーザ登録が完了したよ");
         flash().setKeepMessages(true);
 
-        return  redirect("login");
+        return redirect("login");
     }
 
 }
