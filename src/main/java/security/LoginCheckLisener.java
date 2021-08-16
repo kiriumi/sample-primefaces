@@ -36,7 +36,7 @@ public class LoginCheckLisener implements PhaseListener {
         ResourceBundle properties = ResourceBundle.getBundle("ApplicationConfig");
         List<String> securityConstraintUrls = Arrays.asList(properties.getString("security.constraint.url").split(","));
 
-        if (!isSecuredPage(securityConstraintUrls)) {
+        if (!isSecuredPage(securityConstraintUrls) && !loginManager.isLogined()) {
 
             // 非認証画面の場合
             if (StringUtils.isNotBlank(extCtx.getSessionId(false)) && !facesCtx.isPostback()) {
