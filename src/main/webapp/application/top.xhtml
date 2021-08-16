@@ -15,7 +15,9 @@
             ようこそ
             <p:commandButton value="ユーザ情報の照会"
                 action="#{top.showUserInfo()}"
-                onsuccess="openChildWindow('#{request.contextPath}/application/userInfoReferrer.xhtml', '_blank', 'noopener')" />
+                onsuccess="openChildWindow('#{request.contextPath}/application/userInfoReferrer.xhtml', '_child', 'resizable')" />
+
+            <p:commandButton id="refresh" ajax="false" style="visibility: hidden" action="#{top.refresh()}" />
 
             <p:commandButton ajax="false" value="ログアウト" action="#{top.logout()}" />
         </h:form>

@@ -17,12 +17,13 @@
     <ui:define name="content">
 
         <p:panelGrid columns="2">
-            ユーザID<h:outputText value="#{userReferrer.user.id}"/>
-            メールアドレス<h:outputText value="#{userInfoReferrer.user.email}"/>
+            ユーザID<h:outputText value="#{userReferrer.user.id}" />
+            メールアドレス<h:outputText value="#{userInfoReferrer.user.email}" />
         </p:panelGrid>
 
         <h:form prependId="false">
-            <p:commandButton value="閉じる" action="#{userInfoReferrer.close()}" onsuccess="window.close()" />
+            <p:commandButton value="閉じる" action="#{userInfoReferrer.close()}"
+                onsuccess="window.opener.document.getElementById('refresh').click(); window.close()" />
         </h:form>
 
     </ui:define>

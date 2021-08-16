@@ -16,8 +16,12 @@ public class Top extends BaseBackingBean {
     @Inject
     private UserInfo user;
 
+    public String refresh() {
+        return null;
+    }
+
     public String showUserInfo() {
-        session().put("application.Top.flush.user" , user);
+        session().put("application.Top.flush.user", user);
         return null;
     }
 }
