@@ -41,7 +41,7 @@ public class LoginManager implements Serializable {
 
     public void setup(String userId, boolean autoLogin) {
         extCtx.getSessionMap().put(SESSION_KEY_USERID, userId); // ログ出力のstaticメソッドからユーザIDを取得できるようにするため
-        this.autoLogin = true;
+        this.autoLogin = autoLogin;
     }
 
     public void  changeUserId(String userId) {
