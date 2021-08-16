@@ -16,7 +16,7 @@ public class Logout extends BaseBackingBean {
 
     public String init() {
 
-        if (!loginManager.logined()) {
+        if (!loginManager.isLogined()) {
             return redirect("login");
         }
 

@@ -1,5 +1,6 @@
 package application;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -37,14 +38,16 @@ public class Signup extends BaseBackingBean {
     @Inject
     private LoginManager loginManager;
 
+    @Inject
+    private TwoStepVerificatior twoStep;
+
     public String init() {
 
-        if (loginManager.isTwoFactorAuthed()) {
+        if (loginManager.isLogined()) {
             return  redirect("/application/top");
         }
 
-        boolean twoFactorAuthed = (boolean) flash().getOrDefault(TwoStepVerificatior.FLASH_TWO_FACTOR_AUTHED_KEY, false);
-        if (!twoFactorAuthed) {
+        if (!twoStep.isSuccessed()) {
             return  redirect("login");
         }
         return null;
@@ -59,7 +62,8 @@ public class Signup extends BaseBackingBean {
         user.setId(id);
         user.setPassword(passwordEncoder.encode(password));
 
-        flash().put(Login.FLUSH_KEY_MESSAGE, "ユーザ登録が完了したよ");
+        messageService().addMessage(FacesMessage.SEVERITY_INFO, "ユーザ登録が完了したよ");
+        flash().setKeepMessages(true);
 
         return  redirect("login");
     }

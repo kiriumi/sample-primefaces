@@ -5,12 +5,10 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import domain.TwoStepVerificatior;
 import domain.UserInfo;
-import exception.AccountLokedException;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,33 +49,13 @@ public class Login extends BaseBackingBean {
 
     public String init() {
 
-        if (user.isLocked()) {
-            throw new AccountLokedException();
-        }
-
-        if (loginManager.isTwoFactorAuthed()) {
+        if (loginManager.isLogined()) {
             return redirect("/application/top");
         }
-
-        boolean twoFactorAuthed = (boolean) flash().getOrDefault(TwoStepVerificatior.FLASH_TWO_FACTOR_AUTHED_KEY, false);
-        if (twoFactorAuthed) {
-            loginManager.authedTwoFactorAuthed();
-            return redirect("/application/top");
-        }
-
-        String message = (String) flash().get(FLUSH_KEY_MESSAGE);
-        if (StringUtils.isNotBlank(message)) {
-            messageService().addMessage(FacesMessage.SEVERITY_INFO, message);
-        }
-
         return null;
     }
 
     public String login() {
-
-        if (user.isLocked()) {
-            throw new AccountLokedException();
-        }
 
         if (passwordEncoder == null) {
             this.passwordEncoder = new BCryptPasswordEncoder();
@@ -89,8 +67,8 @@ public class Login extends BaseBackingBean {
             return null;
         }
 
-        loginManager.login(id, autoLogin);
-        twoStep.setup(user.getEmail(), "login", "login");
+        loginManager.setup(id, autoLogin);
+        twoStep.setup(user.getEmail(), "/application/top", "login", () -> loginManager.login());
 
         return redirect("twoStepVerification");
     }

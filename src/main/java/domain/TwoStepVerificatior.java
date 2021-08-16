@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import lombok.Getter;
@@ -13,7 +15,10 @@ import lombok.Setter;
 @SessionScoped
 public class TwoStepVerificatior implements Serializable {
 
-    public static final String FLASH_TWO_FACTOR_AUTHED_KEY = "domain.TwoFactor.authed";
+    public static final String FLASH_KEY_TWO_STEP_VERIFICATR_SUCCESS = "domain.TwoStepVerificatior.success";
+
+    @Inject
+    private ExternalContext extCtx;
 
     private String email;
 
@@ -30,6 +35,8 @@ public class TwoStepVerificatior implements Serializable {
     @Getter
     private boolean setuped;
 
+    private Runnable callback;
+
     public void setup(String email, String redirectPage, String backPage) {
         clear();
         this.email = email;
@@ -39,13 +46,31 @@ public class TwoStepVerificatior implements Serializable {
         sendTokenByMail();
     }
 
+    public void setup(String email, String redirectPage, String backPage, Runnable callback) {
+        setup(email, redirectPage, backPage);
+        this.callback = callback;
+    }
+
     public void sendTokenByMail() {
         generateToken();
         sendMail();
     }
 
     public boolean verify(String inputedToken) {
-        return Objects.equals(token, inputedToken);
+
+        boolean result = Objects.equals(token, inputedToken);
+
+        if (result) {
+            extCtx.getFlash().put(TwoStepVerificatior.FLASH_KEY_TWO_STEP_VERIFICATR_SUCCESS, true);
+            if (callback != null) {
+                callback.run();
+            }
+        }
+        return result;
+    }
+
+    public boolean isSuccessed() {
+        return (boolean) extCtx.getFlash().getOrDefault(TwoStepVerificatior.FLASH_KEY_TWO_STEP_VERIFICATR_SUCCESS, false);
     }
 
     public String getRedirectPage() {

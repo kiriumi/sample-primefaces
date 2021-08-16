@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.ThreadContext;
 
 import lombok.extern.log4j.Log4j2;
-import security.LoginManager;
 
 @Log4j2
 public abstract class LoggerUtils {
@@ -72,7 +71,7 @@ public abstract class LoggerUtils {
         ThreadContext.put("host", req.getLocalName());
         ThreadContext.put("url", req.getRequestURL().toString());
         ThreadContext.put("clientIp", getClientIp(req));
-        ThreadContext.put("userId", LoginManager.getUserId());
+//        ThreadContext.put("userId", LoginManager.getUserId());
     }
 
     private static String getClientIp(HttpServletRequest req) {

@@ -44,8 +44,6 @@ public class TwoStepVerification extends BaseBackingBean {
             return null;
         }
 
-        flash().put(TwoStepVerificatior.FLASH_TWO_FACTOR_AUTHED_KEY, true);
-
         return redirect(twoStep.getRedirectPage());
     }
 
@@ -57,4 +55,5 @@ public class TwoStepVerification extends BaseBackingBean {
     public String backPage() {
         return redirect(twoStep.getBackPage());
     }
+
 }

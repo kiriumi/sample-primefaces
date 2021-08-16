@@ -34,7 +34,7 @@ public class PreSignup extends BaseBackingBean {
 
     public String init() {
 
-        if (loginManager.isTwoFactorAuthed()) {
+        if (loginManager.isLogined()) {
             return  redirect("/application/top");
         }
         return null;
