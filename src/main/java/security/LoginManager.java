@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Cookie;
@@ -20,15 +21,14 @@ import lombok.Getter;
 @SessionScoped
 public class LoginManager implements Serializable {
 
+    private static final String SESSION_KEY_USERID = "security.LoginManager.userId";
+
     private static final String COOKIE_KEY_SESSION = "JSESSIONID";
 
     private static final int UNIT_DAY = 60 * 60 * 24;
 
     @Inject
     private ExternalContext extCtx;
-
-    @Getter
-    private String userId;
 
     private boolean autoLogin;
 
@@ -40,13 +40,22 @@ public class LoginManager implements Serializable {
     private LocalDateTime autoLoginExpiresDateTime;
 
     public void setup(String userId, boolean autoLogin) {
-        this.userId = userId;
+        extCtx.getSessionMap().put(SESSION_KEY_USERID, userId); // ログ出力のstaticメソッドからユーザIDを取得できるようにするため
         this.autoLogin = true;
+    }
+
+    public void  changeUserId(String userId) {
+         extCtx.getSessionMap().put(SESSION_KEY_USERID, userId);
+    }
+
+    public static String getUserId() {
+        return (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().getOrDefault(SESSION_KEY_USERID, "");
     }
 
     public void login() {
         HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
         req.changeSessionId();
+
         this.logined = true;
     }
 
@@ -58,8 +67,6 @@ public class LoginManager implements Serializable {
             extCtx.addResponseCookie(COOKIE_KEY_SESSION, extCtx.getSessionId(false), cookieAttr);
             this.autoLogin = false;
         }
-
-        extCtx.getSessionMap().remove(COOKIE_KEY_SESSION);
         extCtx.invalidateSession();
 
         this.logined = false;
