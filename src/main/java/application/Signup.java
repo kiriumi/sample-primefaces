@@ -6,7 +6,7 @@ import javax.inject.Named;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import domain.TwoFactor;
+import domain.TwoFactorAuther;
 import domain.UserInfo;
 import faces.BaseBackingBean;
 import lombok.Getter;
@@ -43,7 +43,7 @@ public class Signup extends BaseBackingBean {
             return  redirect("/application/top");
         }
 
-        boolean twoFactorAuthed = (boolean) flash().getOrDefault(TwoFactor.FLASH_TWO_FACTOR_AUTHED_KEY, false);
+        boolean twoFactorAuthed = (boolean) flash().getOrDefault(TwoFactorAuther.FLASH_TWO_FACTOR_AUTHED_KEY, false);
         if (!twoFactorAuthed) {
             return  redirect("login");
         }

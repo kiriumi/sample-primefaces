@@ -8,7 +8,7 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import domain.TwoFactor;
+import domain.TwoFactorAuther;
 import domain.UserInfo;
 import exception.AccountLokedException;
 import faces.BaseBackingBean;
@@ -47,7 +47,7 @@ public class Login extends BaseBackingBean {
     private UserInfo user;
 
     @Inject
-    private TwoFactor twoFactor;
+    private TwoFactorAuther twoFactor;
 
     public String init() {
 
@@ -59,7 +59,7 @@ public class Login extends BaseBackingBean {
             return redirect("/application/top");
         }
 
-        boolean twoFactorAuthed = (boolean) flash().getOrDefault(TwoFactor.FLASH_TWO_FACTOR_AUTHED_KEY, false);
+        boolean twoFactorAuthed = (boolean) flash().getOrDefault(TwoFactorAuther.FLASH_TWO_FACTOR_AUTHED_KEY, false);
         if (twoFactorAuthed) {
             loginManager.authedTwoFactorAuthed();
             return redirect("/application/top");
@@ -90,9 +90,7 @@ public class Login extends BaseBackingBean {
         }
 
         loginManager.login(id, autoLogin);
-
-        twoFactor.sendTokenByMail(user.getEmail());
-        twoFactor.setRedirectPage("login");
+        twoFactor.setup(user.getEmail(), "login", "login");
 
         return redirect("twoFactorAuth");
     }

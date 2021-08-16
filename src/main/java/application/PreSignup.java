@@ -6,7 +6,7 @@ import javax.inject.Named;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import domain.TwoFactor;
+import domain.TwoFactorAuther;
 import domain.UserInfo;
 import faces.BaseBackingBean;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class PreSignup extends BaseBackingBean {
     private LoginManager loginManager;
 
     @Inject
-    private TwoFactor twoFactor;
+    private TwoFactorAuther twoFactor;
 
     public String init() {
 
@@ -43,9 +43,7 @@ public class PreSignup extends BaseBackingBean {
     public String sendMail() {
 
         user.setEmail(email); // ユーザの仮登録
-
-        twoFactor.sendTokenByMail(email);
-        twoFactor.setRedirectPage("signup");
+        twoFactor.setup(email, "signup", "preSignup");
 
         return redirect("twoFactorAuth");
     }
