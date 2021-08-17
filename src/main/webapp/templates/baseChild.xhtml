@@ -11,10 +11,8 @@
 </h:head>
 <h:body>
 
-    <h:panelGroup id="body" layout="block">
-        <p:messages id="messages" showDetail="false" globalOnly="false" />
-        <ui:insert name="content" />
-    </h:panelGroup>
+    <p:growl id="growl" globalOnly="true" />
+    <ui:insert name="content" />
 
     <p:blockUI block="body" widgetVar="bui" />
     <ui:include src="/templates/tokenChild.xhtml" />

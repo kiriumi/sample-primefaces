@@ -38,7 +38,7 @@
             </div>
 
             <p:commandButton class="not-confirm" ajax="true" value="ユーザ登録"
-                action="#{signup.validate()}" update="messages"
+                action="#{signup.validate()}" update="growl"
                 oncomplete="if (!args.validationFailed) $('#signup').click()" />
 
             <p:commandButton id="signup" ajax="false" style="visibility: hidden"
