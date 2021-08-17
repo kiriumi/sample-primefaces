@@ -46,9 +46,9 @@ public class TwoStepVerificatior implements Serializable {
         sendTokenByMail();
     }
 
-    public void setup(String email, String redirectPage, String backPage, Runnable callback) {
+    public void setup(String email, String redirectPage, String backPage, Runnable callbackIfSuccessed) {
         setup(email, redirectPage, backPage);
-        this.callback = callback;
+        this.callback = callbackIfSuccessed;
     }
 
     public void sendTokenByMail() {
