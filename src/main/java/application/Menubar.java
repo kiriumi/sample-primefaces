@@ -17,4 +17,8 @@ public class Menubar extends BaseBackingBean{
         return redirect("/application/userInfoReference");
     }
 
+    public String goFileload() {
+        return redirect("/application/fileload");
+    }
+
 }

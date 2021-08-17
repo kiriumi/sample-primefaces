@@ -44,7 +44,10 @@ public class TokenCheckListener implements PhaseListener {
 
         HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
         String path = req.getRequestURL().toString();
-        if (path.endsWith(req.getRequestURI())) {
+
+        // ページ指定なしの場合、ウェルカムページのURLに変換
+        String uri = req.getRequestURI();
+        if (req.getContextPath().endsWith(uri.substring(0, uri.length() - 1) )) {
             path = StringUtils.join(path, extCtx.getRequestServletPath().substring(1));
         }
 

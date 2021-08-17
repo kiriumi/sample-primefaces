@@ -23,13 +23,13 @@ import org.primefaces.model.file.UploadedFile;
 
 import exception.WebApplicationException;
 import faces.BaseBackingBean;
-import log.WebAccessLogging;
 import lombok.Getter;
+import token.TokenCheck;
 
 @Named
 @ViewScoped
-@WebAccessLogging
-public class Index extends BaseBackingBean {
+@TokenCheck
+public class Fileload extends BaseBackingBean {
 
     public void handleFileUpload(FileUploadEvent event) {
 

@@ -28,12 +28,8 @@
                 <p:outputLabel for="password">パスワード</p:outputLabel>
                 <p:password id="password" value="#{signup.password}" feedback="true"
                     weakLabel="弱" goodLabel="中" strongLabel="強" toggleMask="true"
-                    redisplay="true" match=" password-match" />
+                    redisplay="true" />
                 <p:message id="password-message" for="password" />
-
-                <p:outputLabel for="password-match">パスワード（確認）</p:outputLabel>
-                <p:password id="password-match" value="#{signup.password}" />
-                <p:message id="password-match-message" for="password-match" />
 
                 <p:outputLabel for="postal-code" value="郵便番号" />
                 <p:inputText id="postal-code" styleClass="p-postal-code"

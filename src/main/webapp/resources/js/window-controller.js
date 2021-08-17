@@ -95,10 +95,32 @@ function hideBlockUi(widgetVar) {
     PrimeFaces.widgets[widgetVar].hide();
 }
 
+/**
+ * ダブルクリック抑止
+ */
 document.addEventListener("submit", function() {
+
     $('form').css('pointer-events', 'none');
-    //showBlockUi(bui);
+
+    var url = location.pathname;
+    var suffix = url.substring(url.indexOf("/", 1)).replaceAll("/", "_");
+    var downloadCookieName = "primefaces.download" + suffix;
+
+    const downloadTimer = window.setInterval(function () {
+        const downloading = getCookie(downloadCookieName);
+        if (downloading === "null") {
+            $('form').css('pointer-events', '');
+            clearInterval(downloadTimer);
+        }
+    }, 1000 );
 });
+
+/**
+ * Cookie取得
+ */
+function getCookie(name) {
+    return document.cookie.split('; ').find(row => row.startsWith(name)).split('=')[1];
+}
 
 /**
  * PrimeFacesの日本語カレンダー

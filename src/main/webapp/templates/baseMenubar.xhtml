@@ -13,8 +13,9 @@
 
     <h:form>
         <p:menubar>
-            <p:menuitem label="トップ" icon="pi pi-fw pi-home"
+            <p:menuitem value="トップ" icon="pi pi-fw pi-home"
                 action="#{menubar.goTop()}" />
+
             <p:submenu label="アカウント" icon="pi pi-fw pi-user">
                 <p:menuitem value="ユーザ情報" icon="pi pi-fw pi-user"
                     action="#{menubar.goUserInfoReference()}" />
@@ -22,7 +23,11 @@
                 <p:menuitem value="パスワード変更" icon="pi pi-fw pi-key" />
                 <p:menuitem value="アカウント削除" icon="pi pi-fw pi-user-minus" />
             </p:submenu>
-            <p:menuitem label="ログアウト" icon="pi pi-fw pi-sign-out"
+
+            <p:menuitem value="ファイル" icon="pi pi-fw pi-file"
+                action="#{menubar.goFileload()}" />
+
+            <p:menuitem value="ログアウト" icon="pi pi-fw pi-sign-out"
                 action="#{menubar.logout()}" />
         </p:menubar>
     </h:form>
