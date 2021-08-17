@@ -42,9 +42,12 @@ public class TokenCheckListener implements PhaseListener {
         ELContext elContext = facesCtx.getELContext();
         ELResolver elResolver = elContext.getELResolver();
 
-        //        String path = extCtx.getRequestServletPath();
         HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
         String path = req.getRequestURL().toString();
+        if (path.endsWith(req.getRequestURI())) {
+            path = StringUtils.join(path, extCtx.getRequestServletPath().substring(1));
+        }
+
         String viewId = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
         String beanName = StringUtils.join(viewId.substring(0, 1).toLowerCase(), viewId.substring(1));
         BaseBackingBean bean = (BaseBackingBean) elResolver.getValue(elContext, null, beanName);
