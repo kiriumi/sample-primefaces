@@ -87,17 +87,17 @@ $(function() {
 
 });
 
-function showBlockUi() {
-    PrimeFaces.widgets['bui'].show();
+function showBlockUi(widgetVar) {
+    PrimeFaces.widgets[widgetVar].show();
 }
 
-function hideBlockUi() {
-    PrimeFaces.widgets['bui'].hide();
+function hideBlockUi(widgetVar) {
+    PrimeFaces.widgets[widgetVar].hide();
 }
 
 document.addEventListener("submit", function() {
     $('form').css('pointer-events', 'none');
-    //PrimeFaces.widgets['bui'].show();
+    //showBlockUi(bui);
 });
 
 /**
