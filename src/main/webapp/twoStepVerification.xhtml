@@ -16,27 +16,36 @@
     <ui:define name="content">
         <h:form prependId="false">
 
-            <div class="p-formgroup-inline">
+            <p:panelGrid columns="3" layout="grid"
+                columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-9"
+                styleClass="ui-panelgrid-blank ui-fluid">
 
-                <div class="p-field ui-fluid">
-                    <p:outputLabel for="input-token" styleClass="p-sr-only">トークン</p:outputLabel>
-                    <p:inputText id="input-token" value="#{twoStepVerification.token}"
-                        aria-describedby="input-token-help" placeholder="123456" />
-                    <small id="input-token-help">送付されたメールに記載のトークンを入力してください</small>
-                </div>
+                <p:outputLabel for="input-token" styleClass="p-sr-only">トークン</p:outputLabel>
+                <p:inputText id="input-token" value="#{twoStepVerification.token}"
+                    aria-describedby="input-token-help" placeholder="123456" />
+                <p:message for="input-token" />
+                <p:row>
+                    <p:column styleClass="ui-grid-col-12">
+                        <small id="input-token-help">送付されたメールに記載のトークンを入力してください</small>
+                    </p:column>
+                </p:row>
 
-                <p:commandButton class="" ajax="false" value="確認"
-                    action="#{twoStepVerification.verify()}" />
+                <p:row>
+                    <p:column styleClass="ui-grid-col-12">
+                        <p:commandButton ajax="false" value="確認" styleClass="p-mr-2"
+                            style="width: auto" action="#{twoStepVerification.verify()}" />
 
-                <p:commandButton class="" ajax="false" value="再送"
-                    styleClass="ui-button-outlined" immediate="true"
-                    action="#{twoStepVerification.resendToken()}" />
+                        <p:commandButton ajax="false" value="再送"
+                            styleClass="ui-button-outlined p-mr-2" immediate="true"
+                            style="width: auto" action="#{twoStepVerification.resendToken()}" />
 
-                <p:commandButton class="" ajax="false" value="戻る"
-                    styleClass="ui-button-outlined" immediate="true"
-                    action="#{twoStepVerification.backPage()}" />
+                        <p:commandButton ajax="false" value="戻る"
+                            styleClass="ui-button-outlined" immediate="true"
+                            style="width: auto" action="#{twoStepVerification.backPage()}" />
+                    </p:column>
+                </p:row>
 
-            </div>
+            </p:panelGrid>
 
         </h:form>
     </ui:define>

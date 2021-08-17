@@ -1,11 +1,11 @@
 package application;
 
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
-import domain.UserInfo;
 import faces.BaseBackingBean;
+import lombok.Getter;
+import lombok.Setter;
 import token.TokenCheck;
 
 @Named
@@ -13,15 +13,18 @@ import token.TokenCheck;
 @TokenCheck
 public class Top extends BaseBackingBean {
 
-    @Inject
-    private UserInfo user;
+    @Getter
+    @Setter
+    private String passInfo;
 
-    public String refresh() {
+    public String showChildWindow() {
+        session().put("application.Top.passInfo", "子画面に渡した情報");
         return null;
     }
 
-    public String showUserInfo() {
-        session().put("application.Top.flush.user", user);
+    public String closedChildWindow() {
+        this.passInfo = (String) session().get("application.Top.passInfo");
         return null;
     }
+
 }

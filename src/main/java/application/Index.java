@@ -1,10 +1,11 @@
 package application;
 
-import java.io.Serializable;
-
+import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 
+import faces.BaseBackingBean;
 import log.WebAccessLogging;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,20 +13,31 @@ import lombok.Setter;
 @Named
 @ViewScoped
 @WebAccessLogging
-public class Index implements Serializable {
+public class Index extends BaseBackingBean {
 
     @Getter
     @Setter
-    private String text;
+    private int output;
+
+    @NotNull
+    @Getter
+    @Setter
+    private int input;
 
     public String init() {
         return null;
     }
 
+    public void actionListener(ActionEvent event) {
+        return;
+    }
+
     public String action() {
-        if (true) {
-            throw new NullPointerException("例外が発生したよ");
-        }
+        this.output += input;
+        return null;
+    }
+
+    public String action2() {
         return null;
     }
 }

@@ -59,6 +59,7 @@ public class Login extends BaseBackingBean {
     public String login() {
 
         // 本来、ここでDBからユーザ情報を取得
+        user.setId(id);
         if (user.isLocked()) {
             messageService().addMessage(FacesMessage.SEVERITY_ERROR, "IDかパスワードが間違ってるよ");
             return null;
@@ -81,7 +82,7 @@ public class Login extends BaseBackingBean {
         }
 
         user.resetFailCount();
-        loginManager.setup(id, autoLogin);
+        loginManager.setup(user.getId(), autoLogin);
 
         twoStep.setup(user.getEmail(), "/application/top", "login", () -> loginManager.login());
 

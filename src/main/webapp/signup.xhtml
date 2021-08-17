@@ -14,35 +14,41 @@
     </f:metadata>
 
     <ui:define name="content">
-
         <h:form class="confirm-beforeunload" prependId="false">
 
-            <div class="ui-fluid">
+            <p:panelGrid columns="3" layout="grid"
+                columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-8"
+                styleClass="ui-panelgrid-blank ui-fluid">
 
-                <div class="p-field p-grid">
-                    <p:outputLabel for="id" styleClass="p-col-fixed"
-                        style="width: 100px">ID</p:outputLabel>
-                    <div class="p-col">
-                        <p:inputText id="id" value="#{signup.id}" />
-                    </div>
-                </div>
+                <p:outputLabel for="id">ID</p:outputLabel>
+                <p:inputText id="id" value="#{signup.id}" />
+                <p:message id="id-message" for="id" />
 
-                <div class="p-field p-grid">
-                    <p:outputLabel for="password" styleClass="p-col-fixed"
-                        style="width: 100px">パスワード</p:outputLabel>
-                    <div class="p-col">
-                        <p:password id="password" value="#{signup.password}" />
-                    </div>
-                </div>
+                <p:outputLabel for="password">パスワード</p:outputLabel>
+                <p:password id="password" value="#{signup.password}" feedback="true"
+                    weakLabel="弱" goodLabel="中" strongLabel="強" toggleMask="true"
+                    redisplay="true" match=" password-match" />
+                <p:message id="password-message" for="password" />
 
-            </div>
+                <p:outputLabel for="password-match">パスワード（確認）</p:outputLabel>
+                <p:password id="password-match" value="#{signup.password}" />
+                <p:message id="password-match-message" for="password-match" />
 
-            <p:commandButton class="not-confirm" ajax="true" value="ユーザ登録"
-                action="#{signup.validate()}" update="growl"
-                oncomplete="if (!args.validationFailed) $('#signup').click()" />
+                <p:row>
+                    <p:column styleClass="ui-grid-col-12">
+                        <p:commandButton styleClass="not-confirm p-mr-2"
+                            style="width: auto" ajax="true" value="ユーザ登録"
+                            action="#{signup.validate()}"
+                            update="id-message, password-message, password-match-message"
+                            oncomplete="if (!args.validationFailed) $('#signup').click()" />
 
-            <p:commandButton id="signup" ajax="false" style="visibility: hidden"
-                action="#{signup.signup()}" onclick="return confirm('ユーザを登録しますか？')" />
+                        <p:commandButton id="signup" ajax="false"
+                            style="visibility: hidden" action="#{signup.signup()}"
+                            onclick="return confirm('ユーザを登録しますか？')" />
+                    </p:column>
+                </p:row>
+
+            </p:panelGrid>
 
         </h:form>
     </ui:define>

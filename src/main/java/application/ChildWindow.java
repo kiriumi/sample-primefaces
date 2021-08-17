@@ -3,7 +3,6 @@ package application;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import domain.UserInfo;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,19 +11,23 @@ import token.TokenCheck;
 @Named
 @ViewScoped
 @TokenCheck
-public class UserInfoReferrer extends BaseBackingBean {
+public class ChildWindow extends BaseBackingBean {
 
     @Getter
     @Setter
-    private UserInfo user;
+    private String passInfo;
 
     public String init() {
-        this.user = (UserInfo) session().get("application.Top.flush.user");
+        this.passInfo = (String) session().get("application.Top.passInfo");
         return null;
     }
 
     public String close() {
-        session().remove("application.Top.flush.user");
+        session().put("application.Top.passInfo", "親画面に渡した情報");
         return null;
+    }
+
+    public String goChildWindow2() {
+        return redirect("/application/childWindow2.xhtml");
     }
 }

@@ -16,35 +16,36 @@
     <ui:define name="content">
         <h:form prependId="false">
 
-            <div class="ui-fluid">
-                <div class="p-field p-grid">
-                    <p:outputLabel for="id" styleClass="p-col-fixed">ID</p:outputLabel>
-                    <div class="p-col">
-                        <p:inputText id="id" value="#{login.id}" />
-                    </div>
-                    <p:message for="id" />
-                </div>
+            <p:panelGrid columns="3" layout="grid"
+                columnClasses="ui-grid-col-1,ui-grid-col-2,ui-grid-col-9"
+                styleClass="ui-panelgrid-blank ui-fluid">
 
-                <div class="p-field p-grid">
-                    <p:outputLabel for="password" styleClass="p-col-fixed">パスワード</p:outputLabel>
-                    <div class="p-col">
-                        <p:password id="password" value="#{login.password}" />
-                    </div>
-                </div>
-            </div>
+                <p:outputLabel for="id" styleClass="p-col-fixed">ID</p:outputLabel>
+                <p:inputText id="id" value="#{login.id}" />
+                <p:message for="id" />
 
-            <div class="p-field-checkbox">
-                <p:selectBooleanCheckbox value="#{login.autoLogin}"
-                    itemLabel="自動ログイン" />
-            </div>
+                <p:outputLabel for="password" styleClass="p-col-fixed">パスワード</p:outputLabel>
+                <p:password id="password" value="#{login.password}"
+                    toggleMask="true" redisplay="true" />
 
-            <div class="p-formgroup-inline">
-                <p:commandButton ajax="false" value="ログイン" action="#{login.login()}" />
+                <p:row>
+                    <p:column styleClass="ui-grid-col-12">
+                        <p:selectBooleanCheckbox value="#{login.autoLogin}"
+                            itemLabel="自動ログイン" />
+                    </p:column>
+                </p:row>
 
-                <p:commandButton ajax="false" value="サインアップ"
-                    styleClass="ui-button-outlined" immediate="true"
-                    action="#{login.goPreSignup()}" />
-            </div>
+                <p:row>
+                    <p:column styleClass="ui-grid-col-12">
+                        <p:commandButton styleClass="p-mr-2" style="width: auto"
+                            ajax="false" value="ログイン" action="#{login.login()}" />
+
+                        <p:commandButton styleClass="ui-button-outlined"
+                            style="width: auto" ajax="false" value="サインアップ" immediate="true"
+                            action="#{login.goPreSignup()}" />
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
 
         </h:form>
     </ui:define>

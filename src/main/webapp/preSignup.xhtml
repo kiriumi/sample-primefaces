@@ -17,19 +17,28 @@
 
         <h:form prependId="false">
 
-            <div class="p-formgroup-inline">
+            <p:panelGrid columns="3" layout="grid"
+                columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-8"
+                styleClass="ui-panelgrid-blank ui-fluid">
 
-                <div class="p-field ui-fluid">
-                    <p:outputLabel for="email" styleClass="p-sr-only">メールアドレス</p:outputLabel>
-                    <p:inputText id="email" value="#{preSignup.email}" aria-describedby="email-help"
-                        placeholder="mail@example.com" />
+                <p:outputLabel for="email" styleClass="p-sr-only">メールアドレス</p:outputLabel>
+                <p:inputText id="email" value="#{preSignup.email}"
+                    aria-describedby="email-help" placeholder="mail@example.com" />
+                <p:message for="email" />
+                <p:row>
+                    <p:column styleClass="ui-grid-col-12">
                         <small id="email-help">使用するメールアドレスを入力してください</small>
-                </div>
+                    </p:column>
+                </p:row>
 
-                <p:commandButton ajax="false" value="送信"
-                    action="#{preSignup.sendMail()}" />
+                <p:row>
+                    <p:column styleClass="ui-grid-col-12">
+                        <p:commandButton ajax="false" value="送信" style="width: auto"
+                            action="#{preSignup.sendMail()}" />
+                    </p:column>
+                </p:row>
 
-            </div>
+            </p:panelGrid>
 
         </h:form>
     </ui:define>

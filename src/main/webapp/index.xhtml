@@ -14,15 +14,19 @@
 </f:metadata>
 
 <h:body>
+    <p:messages id="messages" />
     <h:form prependId="false">
-        <h:inputText value="#{index.text}"></h:inputText>
-        <p:commandButton ajax="false" value="ボタン" action="#{index.action()}"
-            onclick="confirm('実行するよ？')" />
-    </h:form>
+        <h:outputText id="output" value="#{index.output}" />
+        <p:inputText id="input" value="#{index.input}" />
 
-    <script>
-        alert('画面表示')
-    </script>
+        <p:commandButton ajax="true" update="output, growl"
+            actionListener="#{index.actionListener}" action="#{index.action()}" oncomplete="if (!args.validationFailed) $('#action2').click()"/>
+
+        <p:commandButton id="action2" ajax="false" action="#{index.action2()}" onclick="confirm('ほげ')" />
+
+    </h:form>
+if (!args.validationFailed)
+
 </h:body>
 
 </html>

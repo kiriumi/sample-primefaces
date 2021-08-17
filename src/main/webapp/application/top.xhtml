@@ -5,23 +5,24 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/templates/base.xhtml">
+<ui:composition template="/templates/baseMenubar.xhtml">
 
     <ui:define name="title">トップ</ui:define>
 
     <ui:define name="content">
-
         <h:form prependId="false">
+
             ようこそ
-            <p:commandButton value="ユーザ情報の照会"
-                action="#{top.showUserInfo()}"
-                onsuccess="openChildWindow('#{request.contextPath}/application/userInfoReferrer.xhtml', '_child', 'resizable')" />
 
-            <p:commandButton id="refresh" ajax="false" style="visibility: hidden" action="#{top.refresh()}" />
+            <p:commandButton value="子画面を開く"
+                action="#{top.showChildWindow()}"
+                onsuccess="openChildWindow('#{request.contextPath}/application/childWindow.xhtml', '_child', 'resizable')" />
+            <h:outputText value="#{top.passInfo}" />
 
-            <p:commandButton ajax="false" value="ログアウト" action="#{top.logout()}" />
+            <p:commandButton style="visibility: hidden" id="closed-child-window"
+                ajax="false" action="#{top.closedChildWindow()}" />
+
         </h:form>
-
     </ui:define>
 </ui:composition>
 
