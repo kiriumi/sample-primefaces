@@ -23,7 +23,7 @@
 
         <h:form prependId="false">
             <p:commandButton value="閉じる" action="#{userInfoReferrer.close()}"
-                onsuccess="window.opener.document.getElementById('refresh').click(); window.close()" />
+                onsuccess="closeChildWindow('refresh')" />
         </h:form>
 
     </ui:define>
