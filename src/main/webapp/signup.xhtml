@@ -14,7 +14,8 @@
     </f:metadata>
 
     <ui:define name="content">
-        <h:form class="confirm-beforeunload" prependId="false">
+        <h:form class="confirm-beforeunload h-adr" prependId="false">
+            <span class="p-country-name" style="display: none;">Japan</span>
 
             <p:panelGrid columns="3" layout="grid"
                 columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-8"
@@ -34,12 +35,36 @@
                 <p:password id="password-match" value="#{signup.password}" />
                 <p:message id="password-match-message" for="password-match" />
 
+                <p:outputLabel for="postal-code" value="郵便番号" />
+                <p:inputText id="postal-code" styleClass="p-postal-code"
+                    maxlength="7" />
+                <p:message id="id-postal-code" for="postal-code" />
+
+                <p:outputLabel for="region" value="都道府県" />
+                <p:inputText id="region" styleClass="p-region" readonly="true" />
+                <p:message id="id-region" for="region" />
+
+                <p:outputLabel for="locality" value="市区町村" />
+                <p:inputText id="locality" styleClass="p-locality" readonly="true" />
+                <p:message id="id-locality" for="locality" />
+
+                <p:outputLabel for="street-address" value="町域" />
+                <p:inputText id="street-address" styleClass="p-street-address" />
+                <p:message id="id-street-address" for="street-address" />
+
+                <p:outputLabel for="extended-address" value="その他住所" />
+                <p:inputText id="extended-address" styleClass="p-extended-address" />
+                <p:message id="id-extended-address" for="extended-address" />
+
+                <p:outputLabel for="birthday" value="誕生日" />
+                <p:calendar id="birthday" showOn="button" />
+                <p:message id="id-birthday" for="birthday" />
+
                 <p:row>
                     <p:column styleClass="ui-grid-col-12">
                         <p:commandButton styleClass="not-confirm p-mr-2"
                             style="width: auto" ajax="true" value="ユーザ登録"
-                            action="#{signup.validate()}"
-                            update="id-message, password-message, password-match-message"
+                            action="#{signup.validate()}" update="@all"
                             oncomplete="if (!args.validationFailed) $('#signup').click()" />
 
                         <p:commandButton id="signup" ajax="false"
@@ -47,7 +72,6 @@
                             onclick="return confirm('ユーザを登録しますか？')" />
                     </p:column>
                 </p:row>
-
             </p:panelGrid>
 
         </h:form>
