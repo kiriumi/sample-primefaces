@@ -15,7 +15,7 @@
 
 <h:body>
     <h:form prependId="false">
-        <p:messages showDetail="false" globalOnly="true" />
+        <h:outputText value="#{error.errorMessage}" />
     </h:form>
     <ui:include src="/templates/token.xhtml" />
 </h:body>
