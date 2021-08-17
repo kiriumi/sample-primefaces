@@ -97,7 +97,7 @@ function hideBlockUi() {
 
 document.addEventListener("submit", function() {
     $('form').css('pointer-events', 'none');
-    PrimeFaces.widgets['bui'].show();
+    //PrimeFaces.widgets['bui'].show();
 });
 
 /**
