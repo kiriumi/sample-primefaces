@@ -9,23 +9,18 @@
     <title>インデックス</title>
 </h:head>
 
-<f:metadata>
-    <f:viewAction action="#{index.init()}" />
-</f:metadata>
-
 <h:body>
     <p:messages id="messages" />
     <h:form prependId="false">
-        <h:outputText id="output" value="#{index.output}" />
-        <p:inputText id="input" value="#{index.input}" />
 
-        <p:commandButton ajax="true" update="output, growl"
-            actionListener="#{index.actionListener}" action="#{index.action()}" oncomplete="if (!args.validationFailed) $('#action2').click()"/>
-
-        <p:commandButton id="action2" ajax="false" action="#{index.action2()}" onclick="confirm('ほげ')" />
+        <p:fileUpload mode="advanced" multiple="true" sizeLimit="102400"
+            allowTypes="/(\.|\/)(gif|jpe?g|png|txt)$/" label="ファイルを選択"
+            uploadLabel="アップロード" cancelLabel="キャンセル"
+            invalidSizeMessage="上限は100 KBです"
+            invalidFileMessage="gif | jpg | jpeg | png | txt のみです"
+            virusScan="true" listener="#{index.handleFileUpload}" />
 
     </h:form>
-if (!args.validationFailed)
 
 </h:body>
 

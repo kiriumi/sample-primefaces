@@ -85,4 +85,8 @@
         <welcome-file>login.xhtml</welcome-file>
     </welcome-file-list>
 
+    <listener>
+        <listener-class>org.primefaces.webapp.UploadedFileCleanerListener</listener-class>
+    </listener>
+
 </web-app>
