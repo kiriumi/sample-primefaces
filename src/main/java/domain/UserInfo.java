@@ -29,11 +29,13 @@ public class UserInfo {
 
     private int failCountLimit;
 
-    private LocalDateTime lockedDatetimeByLimitOver = LocalDateTime.MIN;
+    private LocalDateTime unlockedDatetime = LocalDateTime.MIN;
 
     private long lockedMinuteByLimitOver;
 
     private boolean locked;
+
+    private boolean lockedByLimitOver;
 
     @PostConstruct
     public void init() {
@@ -49,7 +51,8 @@ public class UserInfo {
     public void countupFail() {
 
         if (++failCount > failCountLimit) {
-            this.lockedDatetimeByLimitOver = LocalDateTime.now().plusMinutes(lockedMinuteByLimitOver);
+            this.unlockedDatetime = LocalDateTime.now().plusMinutes(lockedMinuteByLimitOver);
+            this.lockedByLimitOver = true;
         }
     }
 
@@ -58,7 +61,17 @@ public class UserInfo {
     }
 
     private boolean isLockedByLimitOver() {
-        return LocalDateTime.now().isBefore(lockedDatetimeByLimitOver);
+
+        boolean locked = LocalDateTime.now().isBefore(unlockedDatetime);
+        if (lockedByLimitOver == true && locked == false) {
+            this.failCount = 0;
+            this.lockedByLimitOver = false;
+        }
+        return locked;
+    }
+
+    public void resetFailCount() {
+        this.failCount = 0;
     }
 
 }

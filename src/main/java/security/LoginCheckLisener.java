@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
+import exception.AccountLokedException;
+
 public class LoginCheckLisener implements PhaseListener {
 
     @Inject
@@ -33,8 +35,8 @@ public class LoginCheckLisener implements PhaseListener {
     @Override
     public void beforePhase(final PhaseEvent event) {
 
-        ResourceBundle properties = ResourceBundle.getBundle("ApplicationConfig");
-        List<String> securityConstraintUrls = Arrays.asList(properties.getString("security.constraint.url").split(","));
+        ResourceBundle bundle = ResourceBundle.getBundle("ApplicationConfig");
+        List<String> securityConstraintUrls = Arrays.asList(bundle.getString("security.constraint.url").split(","));
 
         if (!isSecuredPage(securityConstraintUrls) && !loginManager.isLogined()) {
 
@@ -47,9 +49,13 @@ public class LoginCheckLisener implements PhaseListener {
             return;
         }
 
+        if (loginManager.isLocked()) {
+            throw new AccountLokedException();
+        }
+
         if (extCtx.getSession(false) == null || !loginManager.isLogined()) {
             // 未認証の場合、ログイン画面にリダイレクト
-            String loginPage = properties.getString("login.page");
+            String loginPage = bundle.getString("login.page");
             loginPage = loginPage.startsWith("/") ? loginPage : StringUtils.join("/", loginPage);
             String loginPagePath = String.join("", extCtx.getRequestContextPath(), loginPage);
 

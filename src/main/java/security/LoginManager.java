@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Named
 @SessionScoped
@@ -35,6 +36,10 @@ public class LoginManager implements Serializable {
     @Getter
     private boolean logined;
 
+    @Getter
+    @Setter
+    private boolean locked;
+
     private Cookie sessionCookie;
 
     private LocalDateTime autoLoginExpiresDateTime;
@@ -42,10 +47,11 @@ public class LoginManager implements Serializable {
     public void setup(String userId, boolean autoLogin) {
         extCtx.getSessionMap().put(SESSION_KEY_USERID, userId); // ログ出力のstaticメソッドからユーザIDを取得できるようにするため
         this.autoLogin = autoLogin;
+        this.locked = false;
     }
 
-    public void  changeUserId(String userId) {
-         extCtx.getSessionMap().put(SESSION_KEY_USERID, userId);
+    public void changeUserId(String userId) {
+        extCtx.getSessionMap().put(SESSION_KEY_USERID, userId);
     }
 
     public static String getUserId() {
