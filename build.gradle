@@ -19,13 +19,6 @@ dependencies {
     //implementation group: 'net.sf.barcode4j', name: 'barcode4j', version: '2.1'
     //implementation group: 'net.glxn', name: 'qrgen', version: '1.4'
     implementation group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20200713.1'
-    //implementation group: 'org.apache.tika', name: 'tika-java7', version: '1.27'
-
-    //implementation('org.apache.tika:tika-java7:1.27') {
-        //exclude group: 'apache.tika', module: 'tika-parsers'
-        //exclude group: 'cxf-rt-rs-client', module: 'org.apache.cxf'
-        //exclude group: 'asm', module: 'org.ow2.asm'
-    //}
 
     // DBアクセス
     compileOnly group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
@@ -44,10 +37,9 @@ dependencies {
     // ユーティリティ
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.14'
+    implementation group: 'org.apache.tika', name: 'tika-core', version: '1.27'
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
-
-
 }
 
 eclipse.wtp.facet.file.withXml { xml ->

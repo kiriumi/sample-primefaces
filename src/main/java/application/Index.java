@@ -16,10 +16,14 @@ import javax.inject.Named;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tika.Tika;
+import org.apache.tika.io.TikaInputStream;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.file.UploadedFile;
+
+import com.google.common.base.Objects;
 
 import exception.WebApplicationException;
 import faces.BaseBackingBean;
@@ -31,7 +35,7 @@ import lombok.Getter;
 @WebAccessLogging
 public class Index extends BaseBackingBean {
 
-    public void handleFileUpload(FileUploadEvent event) {
+    public void handleFileUpload(FileUploadEvent event) throws IOException {
 
         UploadedFile uploadedFile = event.getFile();
         String extention = FilenameUtils.getExtension(uploadedFile.getFileName());
@@ -47,11 +51,9 @@ public class Index extends BaseBackingBean {
         }
 
         // ContentTypeのチェック
-        if (extention.matches("^(gif|jpe?g|png)$") && !uploadedFile.getContentType().matches("^image/.*$")) {
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "不正なファイルがアップロードされました");
-            return;
-        }
-        if (extention.matches("^txt$") && !uploadedFile.getContentType().matches("^text/plain$")) {
+        TikaInputStream stream = TikaInputStream.get(uploadedFile.getInputStream());
+        String detectedContentType = new Tika().detect(stream);
+        if (!Objects.equal(uploadedFile.getContentType(), detectedContentType)) {
             messageService().addMessage(FacesMessage.SEVERITY_ERROR, "不正なファイルがアップロードされました");
             return;
         }
