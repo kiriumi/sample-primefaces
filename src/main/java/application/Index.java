@@ -12,12 +12,14 @@ import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.io.TikaInputStream;
+import org.mybatis.cdi.Transactional;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -25,71 +27,79 @@ import org.primefaces.model.file.UploadedFile;
 
 import com.google.common.base.Objects;
 
+import dto.Role;
 import exception.WebApplicationException;
 import faces.BaseBackingBean;
 import log.WebAccessLogging;
 import lombok.Getter;
+import repository.RoleMapper;
 
 @Named
 @ViewScoped
 @WebAccessLogging
 public class Index extends BaseBackingBean {
 
-    public void handleFileUpload(FileUploadEvent event) throws IOException {
+	@Inject
+	private RoleMapper mapper;
 
-        UploadedFile uploadedFile = event.getFile();
-        String extention = FilenameUtils.getExtension(uploadedFile.getFileName());
+	@Transactional
+	public void accessDbTable(ActionEvent event) {
 
-        if (uploadedFile == null
-                || uploadedFile.getContent() == null
-                || uploadedFile.getContent().length <= 0
-                || StringUtils.isBlank(uploadedFile.getFileName())
-                || uploadedFile.getFileName().length() >= 256) {
+		final Role role = new Role();
+		role.setEmailaddress("hoge@com");
+		role.setRole("role");
+		mapper.insert(role);
+	}
 
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "不正なファイルがアップロードされました");
-            return;
-        }
+	public void handleFileUpload(FileUploadEvent event) throws IOException {
 
-        // ContentTypeのチェック
-        TikaInputStream stream = TikaInputStream.get(uploadedFile.getInputStream());
-        String detectedContentType = new Tika().detect(stream);
-        if (!Objects.equal(uploadedFile.getContentType(), detectedContentType)) {
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "不正なファイルがアップロードされました");
-            return;
-        }
+		final UploadedFile uploadedFile = event.getFile();
+		final String extention = FilenameUtils.getExtension(uploadedFile.getFileName());
 
-        try {
-            ResourceBundle bundle = ResourceBundle.getBundle("ApplicationConfig");
+		if (uploadedFile == null || uploadedFile.getContent() == null || uploadedFile.getContent().length <= 0
+				|| StringUtils.isBlank(uploadedFile.getFileName()) || uploadedFile.getFileName().length() >= 256) {
 
-            String strDir = bundle.getString("uploadfile.root.dir");
-            File dir = new File(strDir);
-            dir.mkdirs();
+			messageService().addMessage(FacesMessage.SEVERITY_ERROR, "不正なファイルがアップロードされました");
+			return;
+		}
 
-            File saveFile = File.createTempFile("tmp_", ".".concat(extention), dir);
-            Files.copy(uploadedFile.getInputStream(), saveFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		// ContentTypeのチェック
+		final TikaInputStream stream = TikaInputStream.get(uploadedFile.getInputStream());
+		final String detectedContentType = new Tika().detect(stream);
+		if (!Objects.equal(uploadedFile.getContentType(), detectedContentType)) {
+			messageService().addMessage(FacesMessage.SEVERITY_ERROR, "不正なファイルがアップロードされました");
+			return;
+		}
 
-        } catch (IOException e) {
-            throw new WebApplicationException(e);
-        }
-    }
+		try {
+			final ResourceBundle bundle = ResourceBundle.getBundle("ApplicationConfig");
 
-    @Getter
-    private StreamedContent downloadedFile;
+			final String strDir = bundle.getString("uploadfile.root.dir");
+			final File dir = new File(strDir);
+			dir.mkdirs();
 
-    public void downloadFile(ActionEvent actionEvent) throws UnsupportedEncodingException, IOException {
+			final File saveFile = File.createTempFile("tmp_", ".".concat(extention), dir);
+			Files.copy(uploadedFile.getInputStream(), saveFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-        response().addHeader("Content-Disposition", "attachement");
+		} catch (final IOException e) {
+			throw new WebApplicationException(e);
+		}
+	}
 
-        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+	@Getter
+	private StreamedContent downloadedFile;
 
-            output.write("ダウンロードファイルデータ".getBytes("MS932"));
+	public void downloadFile(ActionEvent actionEvent) throws UnsupportedEncodingException, IOException {
 
-            this.downloadedFile = DefaultStreamedContent.builder()
-                    .name("download.txt")
-                    .contentType("text/plain")
-                    .stream(() -> new ByteArrayInputStream(output.toByteArray()))
-                    .build();
-        }
-    }
+		response().addHeader("Content-Disposition", "attachement");
+
+		try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+
+			output.write("ダウンロードファイルデータ".getBytes("MS932"));
+
+			this.downloadedFile = DefaultStreamedContent.builder().name("download.txt").contentType("text/plain")
+					.stream(() -> new ByteArrayInputStream(output.toByteArray())).build();
+		}
+	}
 
 }
