@@ -22,13 +22,13 @@
                 styleClass="ui-panelgrid-blank ui-fluid">
 
                 <p:outputLabel for="id">ID</p:outputLabel>
-                <p:inputText id="id" value="#{signup.id}" />
+                <p:inputText id="id" value="#{signup.id}" label="ID"/>
                 <p:message id="id-message" for="id" />
 
                 <p:outputLabel for="password">パスワード</p:outputLabel>
                 <p:password id="password" value="#{signup.password}" feedback="true"
                     weakLabel="弱" goodLabel="中" strongLabel="強" toggleMask="true"
-                    redisplay="true" />
+                    redisplay="true"label="パスワード"/>
                 <p:message id="password-message" for="password" />
 
                 <p:outputLabel for="postal-code" value="郵便番号" />
