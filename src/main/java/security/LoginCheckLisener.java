@@ -19,71 +19,71 @@ import exception.AccountLokedException;
 
 public class LoginCheckLisener implements PhaseListener {
 
-    @Inject
-    private FacesContext facesCtx;
+	@Inject
+	private FacesContext facesCtx;
 
-    @Inject
-    private ExternalContext extCtx;
+	@Inject
+	private ExternalContext extCtx;
 
-    @Inject
-    private LoginManager loginManager;
+	@Inject
+	private LoginManager loginManager;
 
-    @Override
-    public void afterPhase(final PhaseEvent event) {
-    }
+	@Override
+	public void afterPhase(final PhaseEvent event) {
+	}
 
-    @Override
-    public void beforePhase(final PhaseEvent event) {
+	@Override
+	public void beforePhase(final PhaseEvent event) {
 
-        ResourceBundle bundle = ResourceBundle.getBundle("ApplicationConfig");
-        List<String> securityConstraintUrls = Arrays.asList(bundle.getString("security.constraint.url").split(","));
+		ResourceBundle bundle = ResourceBundle.getBundle("ApplicationConfig");
+		List<String> securityConstraintUrls = Arrays.asList(bundle.getString("security.constraint.url").split(","));
 
-        if (!isSecuredPage(securityConstraintUrls) && !loginManager.isLogined()) {
+		if (!isSecuredPage(securityConstraintUrls) && !loginManager.isLogined()) {
 
-            // 非認証画面の場合
-            if (StringUtils.isNotBlank(extCtx.getSessionId(false)) && !facesCtx.isPostback()) {
-                // セッションハイジャック防止のため毎回セッションIDを変更
-                HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
-                req.changeSessionId();
-            }
-            return;
-        }
+			// 非認証画面の場合
+			if (StringUtils.isNotBlank(extCtx.getSessionId(false)) && !facesCtx.isPostback()) {
+				// セッションハイジャック防止のため毎回セッションIDを変更
+				HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
+				req.changeSessionId();
+			}
+			return;
+		}
 
-        if (loginManager.isLocked()) {
-            throw new AccountLokedException();
-        }
+		if (loginManager.isLocked()) {
+			throw new AccountLokedException();
+		}
 
-        if (extCtx.getSession(false) == null || !loginManager.isLogined()) {
-            // 未認証の場合、ログイン画面にリダイレクト
-            String loginPage = bundle.getString("login.page");
-            loginPage = loginPage.startsWith("/") ? loginPage : StringUtils.join("/", loginPage);
-            String loginPagePath = String.join("", extCtx.getRequestContextPath(), loginPage);
+		if (extCtx.getSession(false) == null || !loginManager.isLogined()) {
+			// 未認証の場合、ログイン画面にリダイレクト
+			String loginPage = bundle.getString("login.page");
+			loginPage = loginPage.startsWith("/") ? loginPage : StringUtils.join("/", loginPage);
+			String loginPagePath = String.join("", extCtx.getRequestContextPath(), loginPage);
 
-            try {
-                extCtx.redirect(loginPagePath);
-            } catch (IOException e) {
-            }
-        }
+			try {
+				extCtx.redirect(loginPagePath);
+			} catch (IOException e) {
+			}
+		}
 
-    }
+	}
 
-    private boolean isSecuredPage(final List<String> urls) {
+	private boolean isSecuredPage(List<String> urls) {
 
-        for (String url : urls) {
+		for (String url : urls) {
 
-            url = url.trim();
-            url = url.startsWith("/") ? url : StringUtils.join("/", url);
+			url = url.trim();
+			url = url.startsWith("/") ? url : StringUtils.join("/", url);
 
-            if (extCtx.getRequestServletPath().startsWith(url)) {
-                return true;
-            }
-        }
-        return false;
-    }
+			if (extCtx.getRequestServletPath().startsWith(url)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public PhaseId getPhaseId() {
-        return PhaseId.RESTORE_VIEW;
-    }
+	@Override
+	public PhaseId getPhaseId() {
+		return PhaseId.RESTORE_VIEW;
+	}
 
 }

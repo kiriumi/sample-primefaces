@@ -15,9 +15,9 @@ import token.TokenCheck;
 @TokenCheck
 public class UserInfoReference extends BaseBackingBean {
 
-    @Inject
-    @Getter
-    @Setter
-    private UserInfo user;
+	@Inject
+	@Getter
+	@Setter
+	private UserInfo user;
 
 }
