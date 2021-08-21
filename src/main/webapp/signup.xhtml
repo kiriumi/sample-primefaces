@@ -22,13 +22,13 @@
                 styleClass="ui-panelgrid-blank ui-fluid">
 
                 <p:outputLabel for="id">ID</p:outputLabel>
-                <p:inputText id="id" value="#{signup.id}" label="ID"/>
+                <p:inputText id="id" value="#{signup.id}" label="ID" />
                 <p:message id="id-message" for="id" />
 
                 <p:outputLabel for="password">パスワード</p:outputLabel>
                 <p:password id="password" value="#{signup.password}" feedback="true"
                     weakLabel="弱" goodLabel="中" strongLabel="強" toggleMask="true"
-                    redisplay="true"label="パスワード"/>
+                    redisplay="true" label="パスワード" style="width: auto" />
                 <p:message id="password-message" for="password" />
 
                 <p:outputLabel for="postal-code" value="郵便番号" />
@@ -60,7 +60,7 @@
                     <p:column styleClass="ui-grid-col-12">
                         <p:commandButton styleClass="not-confirm p-mr-2"
                             style="width: auto" ajax="true" value="ユーザ登録"
-                            action="#{signup.validate()}" update="@all"
+                            actionListener="#{signup.validate}" update="@all"
                             oncomplete="if (!args.validationFailed) $('#signup').click()" />
 
                         <p:commandButton id="signup" ajax="false"
@@ -70,7 +70,24 @@
                 </p:row>
             </p:panelGrid>
 
+            <h:inputHidden id="recaptcha-token"
+                value="#{signup.reCatpchaToken}" />
+
         </h:form>
+
+        <script
+            src="https://www.google.com/recaptcha/api.js?render=6Ldy9w8cAAAAAD03pJAZEGwY-rYZVwPUcsei7Tr6"></script>
+        <script>
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6Ldy9w8cAAAAAD03pJAZEGwY-rYZVwPUcsei7Tr6',
+                        {
+                            action : 'reCatpcha' // JSFでは使用しないので、何でも良い
+                        }).then(function(token) {
+                    $('#recaptcha-token').val(token);
+                });
+            });
+        </script>
+
     </ui:define>
 </ui:composition>
 </html>

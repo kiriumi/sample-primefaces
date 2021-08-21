@@ -22,7 +22,7 @@
 
     <context-param>
         <param-name>primefaces.CSP_POLICY</param-name>
-        <param-value>object-src 'none'; base-uri 'none'; script-src 'unsafe-inline' 'strict-dynamic' https: http:</param-value>
+        <param-value>object-src 'none'; base-uri 'none'; script-src 'unsafe-inline' 'strict-dynamic' https: http: *.googleapis.com</param-value>
     </context-param>
 
     <context-param>
@@ -38,6 +38,15 @@
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>nova-light</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+        <param-value>何のキーか不明（サイトキー、シークレットキーでもなかった）</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+        <param-value>何のキーか不明（サイトキー、シークレットキーでもなかった）</param-value>
     </context-param>
 
     <filter>
