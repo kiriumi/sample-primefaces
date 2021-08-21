@@ -28,7 +28,7 @@
                 <p:outputLabel for="password">パスワード</p:outputLabel>
                 <p:password id="password" value="#{signup.password}" feedback="true"
                     weakLabel="弱" goodLabel="中" strongLabel="強" toggleMask="true"
-                    redisplay="true" label="パスワード" style="width: auto" />
+                    redisplay="true" label="パスワード" />
                 <p:message id="password-message" for="password" />
 
                 <p:outputLabel for="postal-code" value="郵便番号" />
@@ -70,8 +70,7 @@
                 </p:row>
             </p:panelGrid>
 
-            <h:inputHidden id="recaptcha-token"
-                value="#{signup.reCatpchaToken}" />
+            <h:inputHidden id="recaptcha-token" value="#{signup.reCatpchaToken}" />
 
         </h:form>
 
