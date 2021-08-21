@@ -1,12 +1,14 @@
 package application;
 
+import java.util.ResourceBundle;
+
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import domain.TwoStepVerificatior;
-import domain.UserInfo;
 import exception.WebApplicationException;
 import faces.BaseBackingBean;
 import lombok.Getter;
@@ -25,8 +27,17 @@ public class TwoStepVerification extends BaseBackingBean {
     @Inject
     private TwoStepVerificatior twoStep;
 
-    @Inject
-    private UserInfo user;
+    private int failCount;
+
+    private int failCountLimit;
+
+    @PostConstruct
+    public void onConstruct() {
+        ResourceBundle bundle = ResourceBundle.getBundle("ApplicationConfig");
+
+        String strFailCountLimit = bundle.getString("login.fail.count.limit");
+        this.failCountLimit = Integer.parseInt(strFailCountLimit);
+    }
 
     public String init() {
 
@@ -40,7 +51,11 @@ public class TwoStepVerification extends BaseBackingBean {
 
         if (!twoStep.verify(token)) {
             messageService().addMessage(FacesMessage.SEVERITY_ERROR, "トークンが違うよ");
-            user.countupFail();
+
+            if (++failCount > failCountLimit) {
+                throw new WebApplicationException("最初からやり直してください");
+            }
+
             return null;
         }
 

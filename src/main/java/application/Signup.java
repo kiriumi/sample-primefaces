@@ -8,6 +8,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.bind.JsonbBuilder;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -21,11 +22,12 @@ import com.google.common.base.Objects;
 
 import domain.ReCatpchaResponse;
 import domain.TwoStepVerificatior;
-import domain.UserInfo;
+import dto.UserInfo;
 import exception.WebApplicationException;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
+import repository.UserInfoMapper;
 import security.LoginManager;
 import validation.constraints.AvirableChar;
 import validation.constraints.Password;
@@ -49,7 +51,7 @@ public class Signup extends BaseBackingBean {
     private String password;
 
     @Inject
-    private UserInfo user;
+    private UserInfoMapper mapper;
 
     @Inject
     private LoginManager loginManager;
@@ -57,15 +59,19 @@ public class Signup extends BaseBackingBean {
     @Inject
     private TwoStepVerificatior twoStep;
 
+    private UserInfo user;
+
     public String init() {
 
         if (loginManager.isLogined()) {
             return redirect("/application/top");
         }
 
-        if (!twoStep.isSuccessed()) {
+        this.user = getUser();
+        if (user == null || !twoStep.isSuccessed()) {
             return redirect("login");
         }
+
         return null;
     }
 
@@ -74,9 +80,15 @@ public class Signup extends BaseBackingBean {
         if (isBot()) {
             throw new WebApplicationException("BOTです");
         }
+
+        if (Objects.equal(id, password)) {
+            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "IDとパスワードは同じにできません");
+        }
+
         return;
     }
 
+    @Transactional
     public String signup() {
 
         if (passwordEncoder == null) {
@@ -85,6 +97,7 @@ public class Signup extends BaseBackingBean {
 
         user.setId(id);
         user.setPassword(passwordEncoder.encode(password));
+        mapper.insertSelective(user);
 
         messageService().addMessage(FacesMessage.SEVERITY_INFO, "ユーザ登録が完了したよ");
         flash().setKeepMessages(true);

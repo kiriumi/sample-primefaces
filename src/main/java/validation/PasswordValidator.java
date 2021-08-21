@@ -21,7 +21,9 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return value.matches(regexp) && StringJisUtils.isJisX0201_0208(value) && min <= value.length() && value.length() <= max;
+        return value.matches(regexp)
+                && StringJisUtils.isJisX0201_0208(value)
+                && min <= value.length() && value.length() <= max;
     }
 
 }

@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import log.WebAccessLogging;
 import log.WebApplicationLogger;
 import lombok.Getter;
-import security.LoginManager;
 import token.ChildToken;
 import token.Token;
 import token.TokenUtils;
@@ -56,8 +55,13 @@ public class BaseBackingBean implements Serializable {
         return messageService;
     }
 
-    protected String getUserId() {
-        return LoginManager.getUserId();
+    @SuppressWarnings("unchecked")
+    protected <T> T getUser() {
+        return (T) session().get("faces.BaseBackingBean.User");
+    }
+
+    protected <T> void setUser(T user) {
+        session().put("faces.BaseBackingBean.User", user);
     }
 
     public String logout() {
@@ -76,14 +80,16 @@ public class BaseBackingBean implements Serializable {
 
     protected String redirect(final String pageName) {
 
-        if (pageName == null)
+        if (pageName == null) {
             return null;
+        }
 
         if (childToken.getNamespace() == null) {
             // 親画面での画面遷移の場合
 
-            return StringUtils.isBlank(token.getToken()) ? StringUtils.join(pageName, PARAM_REDIRECT) :
-                StringUtils.join(pageName, PARAM_REDIRECT, String.format(PARAM_KEY_VALUE_FORMAT, TokenUtils.KEY_TOKEN, token.getToken()));
+            return StringUtils.isBlank(token.getToken()) ? StringUtils.join(pageName, PARAM_REDIRECT)
+                    : StringUtils.join(pageName, PARAM_REDIRECT,
+                            String.format(PARAM_KEY_VALUE_FORMAT, TokenUtils.KEY_TOKEN, token.getToken()));
         }
 
         // 子画面での画面遷移の場合

@@ -7,7 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import domain.TwoStepVerificatior;
-import domain.UserInfo;
+import dto.UserInfo;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,9 +22,6 @@ public class PreSignup extends BaseBackingBean {
     @Getter
     @Setter
     private String email;
-
-    @Inject
-    private UserInfo user;
 
     @Inject
     private LoginManager loginManager;
@@ -42,7 +39,10 @@ public class PreSignup extends BaseBackingBean {
 
     public String sendMail() {
 
-        user.setEmail(email); // ユーザの仮登録
+        UserInfo user = new UserInfo();
+        user.setEmail(email);
+        setUser(user);
+
         towStep.setup(email, "signup", "preSignup");
 
         return redirect("twoStepVerification");

@@ -1,13 +1,11 @@
 package application;
 
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
-import domain.UserInfo;
+import dto.UserInfo;
 import faces.BaseBackingBean;
 import lombok.Getter;
-import lombok.Setter;
 import token.TokenCheck;
 
 @Named
@@ -15,9 +13,12 @@ import token.TokenCheck;
 @TokenCheck
 public class UserInfoReference extends BaseBackingBean {
 
-	@Inject
-	@Getter
-	@Setter
-	private UserInfo user;
+    @Getter
+    private UserInfo userInfo;
+
+    public String init() {
+        this.userInfo = getUser();
+        return null;
+    }
 
 }

@@ -2,39 +2,38 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
 
-	<context id="postgres" targetRuntime="MyBatis3"> <!-- targetRuntimeをMyBatis3にしないと、Exampleができない -->
+    <context id="postgres" targetRuntime="MyBatis3"> <!-- targetRuntimeをMyBatis3にしないと、Exampleができない -->
 
-		<property name="javaFileEncoding" value="UTF-8" />
+        <property name="javaFileEncoding" value="UTF-8" />
 
-		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" /> <!-- limitとoffsetを使用できるようにするプラグイン -->
-		<plugin type="plugin.mybatis.CdiMapperAnnotationPlugin" /> <!-- CDIの@Mapperを付けるためのカスタムプラグイン -->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" /> <!-- limitとoffsetを使用できるようにするプラグイン -->
+        <plugin type="plugin.mybatis.CdiMapperAnnotationPlugin" /> <!-- CDIの@Mapperを付けるためのカスタムプラグイン -->
 
-		<commentGenerator>
-			<property name="addRemarkComments" value="true" />
-			<property name="suppressDate" value="true" />
-		</commentGenerator>
+        <commentGenerator>
+            <property name="addRemarkComments" value="true" />
+            <property name="suppressDate" value="true" />
+        </commentGenerator>
 
-		<jdbcConnection driverClass="org.postgresql.Driver" connectionURL="jdbc:postgresql://localhost:5432/postgres" userId="postgres"
-			password="postgres" />
+        <jdbcConnection driverClass="org.postgresql.Driver" connectionURL="jdbc:postgresql://localhost:5432/postgres" userId="postgres"
+            password="postgres" />
 
-		<javaTypeResolver>
-			<property name="forceBigDecimals" value="false" /> <!-- テーブル、列のコメントがJavadocコメントに付与される -->
-			<property name="useJSR310Types" value="true" /> <!-- 日付の型をDataではなく、LocalDateTimeにする -->
-		</javaTypeResolver>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" /> <!-- テーブル、列のコメントがJavadocコメントに付与される -->
+            <property name="useJSR310Types" value="true" /> <!-- 日付の型をDataではなく、LocalDateTimeにする -->
+        </javaTypeResolver>
 
-		<javaModelGenerator targetPackage="dto" targetProject="sample-primefaces/src/main/java">
-			<property name="trimStrings" value="true" />
-		</javaModelGenerator>
+        <javaModelGenerator targetPackage="dto" targetProject="sample-primefaces/src/main/java">
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
 
-		<sqlMapGenerator targetPackage="repository" targetProject="sample-primefaces/src/main/resources" />
+        <sqlMapGenerator targetPackage="repository" targetProject="sample-primefaces/src/main/resources" />
 
-		<javaClientGenerator targetPackage="repository" targetProject="sample-primefaces/src/main/java" type="XMLMAPPER" />
+        <javaClientGenerator targetPackage="repository" targetProject="sample-primefaces/src/main/java" type="XMLMAPPER" />
 
-		<!-- Keyクラスを作成しないよう、modeType=falseにする -->
-		<table schema="public" tableName="user" modelType="flat" />
-		<table schema="public" tableName="role" modelType="flat" />
-		<table schema="public" tableName="code" modelType="flat" />
+        <!-- Keyクラスを作成しないよう、modeType=falseにする -->
+        <table schema="public" tableName="user_info" modelType="flat" />
+        <table schema="public" tableName="code" modelType="flat" />
 
-	</context>
+    </context>
 
 </generatorConfiguration>

@@ -16,6 +16,8 @@
             <p:menuitem value="トップ" icon="pi pi-fw pi-home"
                 action="#{menubar.goTop()}" />
 
+            <p:divider layout="vertical" />
+
             <p:submenu label="アカウント" icon="pi pi-fw pi-user">
                 <p:menuitem value="ユーザ情報" icon="pi pi-fw pi-user"
                     action="#{menubar.goUserInfoReference()}" />
@@ -27,8 +29,14 @@
             <p:menuitem value="ファイル" icon="pi pi-fw pi-file"
                 action="#{menubar.goFileload()}" />
 
-            <p:menuitem value="ログアウト" icon="pi pi-fw pi-sign-out"
-                action="#{menubar.logout()}" />
+
+            <f:facet name="options">
+                <h:outputText value="#{menubar.userId}" />
+
+                <p:commandButton value="ログアウト" icon="pi pi-fw pi-sign-out"
+                    action="#{menubar.logout()}" />
+            </f:facet>
+
         </p:menubar>
     </h:form>
 
