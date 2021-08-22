@@ -24,7 +24,7 @@ public class MessageUtils {
             bundle = ResourceBundle.getBundle(String.join("_", subsystemId.toUpperCase(), bundleName));
             format = bundle.getString(id);
 
-        } catch (MissingResourceException e) {
+        } catch (MissingResourceException | StringIndexOutOfBoundsException e) {
 
             // 共通のメッセージフォーマットを取得
             bundle = ResourceBundle.getBundle(bundleName);

@@ -27,6 +27,7 @@ import com.google.common.base.Objects;
 import exception.WebApplicationException;
 import faces.BaseBackingBean;
 import log.WebAccessLogging;
+import log.WebApplicationLogger;
 import lombok.Getter;
 
 @Named
@@ -37,6 +38,9 @@ public class Index extends BaseBackingBean {
     public String init() {
 
         System.out.println(ResourceBundle.getBundle("Environment").getString("sample.env"));
+
+        WebApplicationLogger.info("XXX.id1");
+        WebApplicationLogger.info("sample.id1");
 
         return null;
     }
