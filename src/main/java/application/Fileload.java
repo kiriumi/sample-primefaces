@@ -60,7 +60,7 @@ public class Fileload extends BaseBackingBean {
             }
 
             // アップロードファイルの保存
-            ResourceBundle bundle = ResourceBundle.getBundle("ApplicationConfig");
+            ResourceBundle bundle = ResourceBundle.getBundle("Environment");
 
             String strDir = bundle.getString("uploadfile.root.dir");
             File dir = new File(strDir);

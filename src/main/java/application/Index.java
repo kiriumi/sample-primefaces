@@ -37,7 +37,7 @@ public class Index extends BaseBackingBean {
 
     public String init() {
 
-        System.out.println(ResourceBundle.getBundle("Environment").getString("sample.env"));
+        //        System.out.println(ResourceBundle.getBundle("Environment").getString("sample.env"));
 
         WebApplicationLogger.info("XXX.id1");
         WebApplicationLogger.info("sample.id1");
@@ -66,7 +66,7 @@ public class Index extends BaseBackingBean {
         }
 
         try {
-            final ResourceBundle bundle = ResourceBundle.getBundle("ApplicationConfig");
+            final ResourceBundle bundle = ResourceBundle.getBundle("Environment");
 
             final String strDir = bundle.getString("uploadfile.root.dir");
             final File dir = new File(strDir);
