@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
+import exception.WebApplicationException;
+
 public class LoginCheckLisener implements PhaseListener {
 
     @Inject
@@ -57,6 +59,11 @@ public class LoginCheckLisener implements PhaseListener {
                 extCtx.redirect(loginPagePath);
             } catch (IOException e) {
             }
+        }
+
+        if (loginManager.isLogined() && !loginManager.hasUser()) {
+            loginManager.logout();
+            throw new WebApplicationException("新たにユーザがログインしたため、ログアウトしました");
         }
 
     }

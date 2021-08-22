@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
+import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -57,6 +58,10 @@ public class Login extends BaseBackingBean {
 
     private long lockedMinuteByLimitOver;
 
+    @Getter
+    @Setter
+    private boolean overLoginLimit;
+
     @PostConstruct
     public void onConstruct() {
         ResourceBundle bundle = ResourceBundle.getBundle("ApplicationConfig");
@@ -73,17 +78,29 @@ public class Login extends BaseBackingBean {
         if (loginManager.isLogined()) {
             return redirect("/application/top");
         }
+
+        this.succcess = false;
+        this.user = null;
+
         return null;
     }
 
-    @Transactional
-    public String login() {
+    private UserInfo user;
+    private boolean succcess;
 
-        UserInfo user = mapper.selectByPrimaryKey(id);
-        if (user == null) {
+    @Transactional
+    public void validate(ActionEvent event) {
+
+        this.succcess = false;
+        this.user = null;
+
+        UserInfo selectedUser = mapper.selectByPrimaryKey(id);
+        if (selectedUser == null) {
             messageService().addMessageError(List.of("id", "password"), "IDかパスワードが間違ってるよ");
-            return null;
+            return;
         }
+
+        this.user = selectedUser;
 
         boolean tempLocked = LocalDateTime.now().isBefore(user.getUnlockedDateTime());
         if (user.getLocked() || tempLocked) {
@@ -107,7 +124,7 @@ public class Login extends BaseBackingBean {
                 // 本来はここで、アカウントロックが掛かったことを、メールでユーザに通知する
 
                 messageService().addMessageError(List.of("id", "password"), "IDかパスワードが間違ってるよ");
-                return null;
+                return;
             }
 
             user.setFailCount(failCount);
@@ -115,7 +132,23 @@ public class Login extends BaseBackingBean {
 
             messageService().addMessageError(List.of("id", "password"), "IDかパスワードが間違ってるよ");
 
+            return;
+        }
+
+        this.overLoginLimit = loginManager.overLoginLimit(id);
+
+        this.succcess = true;
+    }
+
+    @Transactional
+    public String login() {
+
+        if (!succcess) {
             return null;
+        }
+
+        if (overLoginLimit) {
+            loginManager.deleteOldestLoginUser(id);
         }
 
         user.setFailCount(0);

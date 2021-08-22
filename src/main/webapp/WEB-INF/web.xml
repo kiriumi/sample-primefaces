@@ -96,6 +96,7 @@
 
     <listener>
         <listener-class>org.primefaces.webapp.UploadedFileCleanerListener</listener-class>
+        <listener-class>event.WebSessionListener</listener-class>
     </listener>
 
 </web-app>

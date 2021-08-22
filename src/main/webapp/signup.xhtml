@@ -61,7 +61,7 @@
                         <p:commandButton styleClass="not-confirm p-mr-2"
                             style="width: auto" ajax="true" value="ユーザ登録"
                             actionListener="#{signup.validate}" update="@all"
-                            oncomplete="if (!args.validationFailed &amp;&amp; !signup.hasError) $('#signup').click()" />
+                            oncomplete="if (!args.validationFailed) $('#signup').click()" />
 
                         <p:commandButton id="signup" ajax="false"
                             style="visibility: hidden" action="#{signup.signup()}"

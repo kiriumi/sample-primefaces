@@ -27,7 +27,7 @@
                 <p:outputLabel for="password" styleClass="p-col-fixed">パスワード</p:outputLabel>
                 <p:password id="password" value="#{login.password}"
                     toggleMask="true" redisplay="true" />
-                    <p:message for="password" />
+                <p:message for="password" />
 
                 <p:row>
                     <p:column styleClass="ui-grid-col-12">
@@ -39,7 +39,9 @@
                 <p:row>
                     <p:column styleClass="ui-grid-col-12">
                         <p:commandButton styleClass="p-mr-2" style="width: auto"
-                            ajax="false" value="ログイン" action="#{login.login()}" />
+                            value="ログイン" actionListener="#{login.validate}"
+                            update="over-limit"
+                            oncomplete="if (!args.validationFailed) $('#login').click()" />
 
                         <p:commandButton styleClass="ui-button-outlined"
                             style="width: auto" ajax="false" value="サインアップ" immediate="true"
@@ -48,7 +50,26 @@
                 </p:row>
             </p:panelGrid>
 
+            <p:commandButton id="login" styleClass="visibility: hidden"
+                style="width: auto" ajax="false" action="#{login.login()}"
+                onclick="return confirmForceLigin()" />
+
+            <h:inputHidden id="over-limit" value="#{login.overLoginLimit}" />
+
         </h:form>
+
+        <script>
+            function confirmForceLigin() {
+
+                var overLoginLimit = $('#over-limit').val();
+                if (overLoginLimit === 'true') {
+                    return confirm('同一IDの最大ログイン数を超過しています。強制的にログインしますか？\n※最も使用していないユーザがログアウトされます。');
+                }
+                return true;
+            }
+        </script>
+
+
     </ui:define>
 </ui:composition>
 </html>

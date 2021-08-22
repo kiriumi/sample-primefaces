@@ -33,6 +33,7 @@
         <!-- Keyクラスを作成しないよう、modeType=falseにする -->
         <table schema="public" tableName="user_info" modelType="flat" />
         <table schema="public" tableName="code" modelType="flat" />
+        <table schema="public" tableName="logined_user" modelType="flat" />
 
     </context>
 

@@ -3,6 +3,7 @@ package security;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -15,7 +16,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dto.LoginedUser;
+import dto.LoginedUserExample;
+import dto.LoginedUserExample.Criteria;
 import lombok.Getter;
+import repository.LoginedUserCustomMapper;
+import repository.LoginedUserMapper;
 
 @Named
 @SessionScoped
@@ -39,6 +45,12 @@ public class LoginManager implements Serializable {
 
     private LocalDateTime autoLoginExpiresDateTime;
 
+    @Inject
+    private LoginedUserMapper mapper;
+
+    @Inject
+    private LoginedUserCustomMapper customMapper;
+
     public void setup(String userId, boolean autoLogin) {
         extCtx.getSessionMap().put(SESSION_KEY_USERID, userId); // ログ出力のstaticメソッドからユーザIDを取得できるようにするため
         this.autoLogin = autoLogin;
@@ -54,8 +66,15 @@ public class LoginManager implements Serializable {
     }
 
     public void login() {
+
         HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
+
         req.changeSessionId();
+
+        LoginedUser loginedUser = new LoginedUser();
+        loginedUser.setSessionId(extCtx.getSessionId(false));
+        loginedUser.setId(getUserId());
+        mapper.insertSelective(loginedUser);
 
         this.logined = true;
     }
@@ -69,9 +88,15 @@ public class LoginManager implements Serializable {
             extCtx.addResponseCookie(COOKIE_KEY_SESSION, extCtx.getSessionId(false), cookieAttr);
             this.autoLogin = false;
         }
+
+        mapper.deleteByPrimaryKey(extCtx.getSessionId(false));
         extCtx.invalidateSession();
 
         this.logined = false;
+    }
+
+    public void deleteSessionId(String sessionId) {
+        mapper.deleteByPrimaryKey(sessionId);
     }
 
     public void activateAutoLogin() {
@@ -106,6 +131,55 @@ public class LoginManager implements Serializable {
         sessionCookie.setMaxAge(newAutoLoginInterval);
         sessionCookie.setHttpOnly(true);
         res.addCookie(sessionCookie);
+    }
+
+    public boolean hasUser() {
+
+        LoginedUser loginedUser = new LoginedUser();
+        loginedUser.setSessionId(extCtx.getSessionId(false));
+        loginedUser.setUpdatedtime(LocalDateTime.now());
+        long updateCount = mapper.updateByPrimaryKeySelective(loginedUser);
+
+        if (updateCount != 1) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean overLoginLimit(String id) {
+
+        // 最大ログイン数を取得
+        ResourceBundle bundle = ResourceBundle.getBundle("ApplicationConfig");
+        String strLimit = bundle.getString("login.user.same.id.limit");
+        int limit = Integer.parseInt(strLimit);
+
+        // 現在のログイン数数を取得
+        LoginedUserExample example = new LoginedUserExample();
+        Criteria criteria = example.createCriteria();
+        criteria.andIdEqualTo(id);
+        long count = mapper.countByExample(example);
+
+        return limit <= count;
+    }
+
+    public void deleteOldestLoginUser(String id) {
+
+        LoginedUserExample exampleFind = new LoginedUserExample();
+        Criteria criteriaFind = exampleFind.createCriteria();
+        criteriaFind.andIdEqualTo(id);
+        exampleFind.setOrderByClause("updatedtime asc limit 1");
+        List<LoginedUser> oldestUsers = mapper.selectByExample(exampleFind);
+
+        if (oldestUsers.isEmpty()) {
+            return;
+        }
+
+        LoginedUser oldestUser = oldestUsers.get(0);
+
+        LoginedUserExample exampleDelete = new LoginedUserExample();
+        Criteria criteriaDelete = exampleDelete.createCriteria();
+        criteriaDelete.andIdEqualTo(id).andUpdatedtimeEqualTo(oldestUser.getUpdatedtime());
+        mapper.deleteByExample(exampleDelete);
     }
 
 }
