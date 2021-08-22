@@ -4,7 +4,7 @@
 <Configuration status="OFF">
 
     <Properties>
-        <Property name="logPath">${bundle:ApplicationConfig:log.root.dir}/log</Property>
+        <Property name="logPath">${bundle:Environment:log.root.dir}/log</Property>
 
         <Property name="sysPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %m%n%ex</Property>
         <Property name="archiPattern">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5p %C %M %m%n%ex</Property>
@@ -96,6 +96,14 @@
             <AppenderRef ref="file-system" />
             <AppenderRef ref="file-app" />
         </Logger>
+
+        <!-- MyBatis -->
+        <Logger name="repository" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file-system" />
+            <AppenderRef ref="file-app" />
+        </Logger>
+
     </Loggers>
 
 </Configuration>
