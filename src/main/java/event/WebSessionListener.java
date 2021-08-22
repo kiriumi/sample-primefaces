@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+import log.WebApplicationLogger;
 import security.LoginManager;
 
 public class WebSessionListener implements HttpSessionListener {
@@ -13,7 +14,14 @@ public class WebSessionListener implements HttpSessionListener {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent event) {
-        loginManager.deleteSessionId(event.getSession().getId());
+
+        try {
+            loginManager.deleteSessionId(event.getSession().getId());
+
+        } catch (Exception e) {
+            WebApplicationLogger.error(e, "error", e.getMessage());
+        }
+
     }
 
 }

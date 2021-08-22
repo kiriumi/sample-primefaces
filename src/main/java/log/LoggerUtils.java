@@ -45,6 +45,10 @@ public abstract class LoggerUtils {
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
                 .getRequest();
 
+        if (req == null) {
+            return;
+        }
+
         ThreadContext.put("host", req.getLocalName());
         ThreadContext.put("url", req.getRequestURL().toString());
         ThreadContext.put("clientIp", getClientIp(req));

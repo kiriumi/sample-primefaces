@@ -3,7 +3,6 @@ package security;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -163,23 +162,7 @@ public class LoginManager implements Serializable {
     }
 
     public void deleteOldestLoginUser(String id) {
-
-        LoginedUserExample exampleFind = new LoginedUserExample();
-        Criteria criteriaFind = exampleFind.createCriteria();
-        criteriaFind.andIdEqualTo(id);
-        exampleFind.setOrderByClause("updatedtime asc limit 1");
-        List<LoginedUser> oldestUsers = mapper.selectByExample(exampleFind);
-
-        if (oldestUsers.isEmpty()) {
-            return;
-        }
-
-        LoginedUser oldestUser = oldestUsers.get(0);
-
-        LoginedUserExample exampleDelete = new LoginedUserExample();
-        Criteria criteriaDelete = exampleDelete.createCriteria();
-        criteriaDelete.andIdEqualTo(id).andUpdatedtimeEqualTo(oldestUser.getUpdatedtime());
-        mapper.deleteByExample(exampleDelete);
+        customMapper.deleteOldestUser(id);
     }
 
 }
