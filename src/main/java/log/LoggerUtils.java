@@ -42,8 +42,14 @@ public abstract class LoggerUtils {
 
     static void putWebInfo() {
 
-        HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-                .getRequest();
+        FacesContext facesCtx = FacesContext.getCurrentInstance();
+
+        if (facesCtx == null) {
+            // APサーバ停止後のセッション破棄時のログ出力で、facesCtxがnullになるため
+            return;
+        }
+
+        HttpServletRequest req = (HttpServletRequest) facesCtx.getExternalContext().getRequest();
 
         if (req == null) {
             return;

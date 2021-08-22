@@ -39,8 +39,7 @@
                 <p:row>
                     <p:column styleClass="ui-grid-col-12">
                         <p:commandButton styleClass="p-mr-2" style="width: auto"
-                            value="ログイン" actionListener="#{login.validate}"
-                            update="over-limit"
+                            value="ログイン" actionListener="#{login.validate}" update="@form"
                             oncomplete="if (!args.validationFailed) $('#login').click()" />
 
                         <p:commandButton styleClass="ui-button-outlined"
@@ -50,8 +49,8 @@
                 </p:row>
             </p:panelGrid>
 
-            <p:commandButton id="login" styleClass="visibility: hidden"
-                style="width: auto" ajax="false" action="#{login.login()}"
+            <p:commandButton id="login" style="visibility: hidden"
+                ajax="false" action="#{login.login()}"
                 onclick="return confirmForceLigin()" />
 
             <h:inputHidden id="over-limit" value="#{login.overLoginLimit}" />

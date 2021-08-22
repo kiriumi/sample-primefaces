@@ -60,7 +60,7 @@
                     <p:column styleClass="ui-grid-col-12">
                         <p:commandButton styleClass="not-confirm p-mr-2"
                             style="width: auto" ajax="true" value="ユーザ登録"
-                            actionListener="#{signup.validate}" update="@all"
+                            actionListener="#{signup.validate}" update="@form"
                             oncomplete="if (!args.validationFailed) $('#signup').click()" />
 
                         <p:commandButton id="signup" ajax="false"
