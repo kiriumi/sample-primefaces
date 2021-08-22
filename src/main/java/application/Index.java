@@ -36,7 +36,7 @@ public class Index extends BaseBackingBean {
 
     public String init() {
 
-        messageService().addGlobalMessageError("sample.id2", "あ", "い");
+        System.out.println(ResourceBundle.getBundle("Environment").getString("sample.env"));
 
         return null;
     }

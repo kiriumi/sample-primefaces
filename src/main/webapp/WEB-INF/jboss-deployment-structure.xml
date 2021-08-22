@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+    <deployment>
+
+        <!-- 外部ディレクトリのクラスローディング -->
+        <dependencies>
+            <module name="server.conf" />
+        </dependencies>
+
+    </deployment>
+</jboss-deployment-structure>
