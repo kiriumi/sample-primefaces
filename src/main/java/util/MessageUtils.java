@@ -15,17 +15,19 @@ public class MessageUtils {
 
     public static String getMessage(final String id, Object... params) {
 
-        // メッセージのフォーマットを取得
-        ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
-        String format = null;
+        ResourceBundle bundle;
+        String format;
 
         try {
+            // 業務固有のメッセージフォーマットを取得
+            String subsystemId = id.substring(0, id.indexOf("."));
+            bundle = ResourceBundle.getBundle(String.join("_", subsystemId.toUpperCase(), bundleName));
             format = bundle.getString(id);
 
         } catch (MissingResourceException e) {
 
-            String subsystemId = id.substring(0, id.indexOf("."));
-            bundle = ResourceBundle.getBundle(String.join("_", subsystemId.toUpperCase(), bundleName));
+            // 共通のメッセージフォーマットを取得
+            bundle = ResourceBundle.getBundle(bundleName);
             format = bundle.getString(id);
         }
 
