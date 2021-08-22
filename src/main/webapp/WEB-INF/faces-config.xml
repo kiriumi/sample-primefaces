@@ -18,6 +18,7 @@
 
     <lifecycle>
         <phase-listener>security.LoginCheckLisener</phase-listener>
+        <phase-listener>event.AccountLockListener</phase-listener>
         <phase-listener>token.TokenCheckListener</phase-listener>
         <phase-listener>event.ErrorStyleListener</phase-listener>
         <phase-listener>event.SecurityHttpResponseHeaderListener</phase-listener>

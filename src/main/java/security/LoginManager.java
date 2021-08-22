@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Named
 @SessionScoped
@@ -36,10 +35,6 @@ public class LoginManager implements Serializable {
     @Getter
     private boolean logined;
 
-    @Getter
-    @Setter
-    private boolean locked;
-
     private Cookie sessionCookie;
 
     private LocalDateTime autoLoginExpiresDateTime;
@@ -47,7 +42,6 @@ public class LoginManager implements Serializable {
     public void setup(String userId, boolean autoLogin) {
         extCtx.getSessionMap().put(SESSION_KEY_USERID, userId); // ログ出力のstaticメソッドからユーザIDを取得できるようにするため
         this.autoLogin = autoLogin;
-        this.locked = false;
     }
 
     public void changeUserId(String userId) {
@@ -55,7 +49,8 @@ public class LoginManager implements Serializable {
     }
 
     public static String getUserId() {
-        return (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().getOrDefault(SESSION_KEY_USERID, "");
+        return (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+                .getOrDefault(SESSION_KEY_USERID, "");
     }
 
     public void login() {
@@ -69,7 +64,8 @@ public class LoginManager implements Serializable {
 
         if (autoLogin) {
             // セッションクッキーを破棄
-            Map<String, Object> cookieAttr = Map.of("path", extCtx.getRequestContextPath(), "maxAge", 0, "httpOnly", true);
+            Map<String, Object> cookieAttr = Map.of("path", extCtx.getRequestContextPath(), "maxAge", 0, "httpOnly",
+                    true);
             extCtx.addResponseCookie(COOKIE_KEY_SESSION, extCtx.getSessionId(false), cookieAttr);
             this.autoLogin = false;
         }
