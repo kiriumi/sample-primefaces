@@ -1,8 +1,8 @@
 package application;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -23,7 +23,6 @@ import com.google.common.base.Objects;
 import domain.ReCatpchaResponse;
 import domain.TwoStepVerificatior;
 import dto.UserInfo;
-import exception.WebApplicationException;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,6 +60,10 @@ public class Signup extends BaseBackingBean {
 
     private UserInfo user;
 
+    @Getter
+    @Setter
+    private boolean hasError;
+
     public String init() {
 
         if (loginManager.isLogined()) {
@@ -77,15 +80,27 @@ public class Signup extends BaseBackingBean {
 
     public void validate(ActionEvent event) {
 
-        if (isBot()) {
-            throw new WebApplicationException("BOTです");
+        ReCatpchaResponse reCatpchaReses = getReCatpchaResponse();
+
+        if (!reCatpchaReses.isSuccess()) {
+            messageService().addGlobalMessageWarn("もう一度登録を押してください");
+            getFacesContext().validationFailed();
+            return;
+        }
+
+        // レスポンスから検証結果を調査する
+        if (reCatpchaReses.getScore().compareTo(BigDecimal.valueOf(0.6)) <= 0
+                || !Objects.equal(reCatpchaReses.getHostname(), request().getServerName())) {
+
+            messageService().addGlobalMessageError("BOTと判定されました");
+            return;
         }
 
         if (Objects.equal(id, password)) {
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "IDとパスワードは同じにできません");
+            messageService().addMessageError(List.of("id", "password"), "IDとパスワードは同じにできません");
+            return;
         }
 
-        return;
     }
 
     @Transactional
@@ -99,7 +114,9 @@ public class Signup extends BaseBackingBean {
         user.setPassword(passwordEncoder.encode(password));
         mapper.insertSelective(user);
 
-        messageService().addMessage(FacesMessage.SEVERITY_INFO, "ユーザ登録が完了したよ");
+        // 本来はここで、ユーザ登録したことを、メールでユーザに通知する
+
+        messageService().addGlobalMessageInfo("ユーザ登録が完了したよ");
         flash().setKeepMessages(true);
 
         return redirect("login");
@@ -109,7 +126,7 @@ public class Signup extends BaseBackingBean {
     @Setter
     private String reCatpchaToken;
 
-    private Boolean isBot() {
+    private ReCatpchaResponse getReCatpchaResponse() {
 
         // reCATPCHAに検証をリクエストし
         UriBuilder uri = UriBuilder.fromUri("https://www.google.com/recaptcha/api/siteverify")
@@ -117,16 +134,12 @@ public class Signup extends BaseBackingBean {
                 .queryParam("response", reCatpchaToken);
 
         Client client = ClientBuilder.newClient();
-        String response = client.target(uri).request(MediaType.TEXT_PLAIN).get(String.class);
-        ReCatpchaResponse json = JsonbBuilder.create().fromJson(StringEscapeUtils.unescapeJson(response),
+        String json = client.target(uri).request(MediaType.TEXT_PLAIN).get(String.class);
+        ReCatpchaResponse response = JsonbBuilder.create().fromJson(StringEscapeUtils.unescapeJson(json),
                 ReCatpchaResponse.class);
 
-        // レスポンスから検証結果を調査する
-        if ((json.isSuccess() && json.getScore().compareTo(BigDecimal.valueOf(0.6)) > 0
-                && Objects.equal(json.getHostname(), request().getServerName()))) {
-            return false;
-        }
-        return true;
+        return response;
+
     }
 
 }

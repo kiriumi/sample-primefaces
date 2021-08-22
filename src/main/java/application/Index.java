@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -35,6 +34,13 @@ import lombok.Getter;
 @WebAccessLogging
 public class Index extends BaseBackingBean {
 
+    public String init() {
+
+        messageService().addGlobalMessageError("sample.id2", "あ", "い");
+
+        return null;
+    }
+
     public void handleFileUpload(FileUploadEvent event) throws IOException {
 
         final UploadedFile uploadedFile = event.getFile();
@@ -43,7 +49,7 @@ public class Index extends BaseBackingBean {
         if (uploadedFile == null || uploadedFile.getContent() == null || uploadedFile.getContent().length <= 0
                 || StringUtils.isBlank(uploadedFile.getFileName()) || uploadedFile.getFileName().length() >= 256) {
 
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "不正なファイルがアップロードされました");
+            messageService().addGlobalMessageError("不正なファイルがアップロードされました");
             return;
         }
 
@@ -51,7 +57,7 @@ public class Index extends BaseBackingBean {
         final TikaInputStream stream = TikaInputStream.get(uploadedFile.getInputStream());
         final String detectedContentType = new Tika().detect(stream);
         if (!Objects.equal(uploadedFile.getContentType(), detectedContentType)) {
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "不正なファイルがアップロードされました");
+            messageService().addGlobalMessageError("不正なファイルがアップロードされました");
             return;
         }
 

@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -47,7 +46,7 @@ public class Fileload extends BaseBackingBean {
                 || StringUtils.isBlank(uploadedFile.getFileName())
                 || uploadedFile.getFileName().length() >= 256) {
 
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "不正なファイルがアップロードされました");
+            messageService().addGlobalMessageError("不正なファイルがアップロードされました");
             return;
         }
 
@@ -56,7 +55,7 @@ public class Fileload extends BaseBackingBean {
             TikaInputStream stream = TikaInputStream.get(uploadedFile.getInputStream());
             String detectedContentType = new Tika().detect(stream);
             if (!Objects.equal(uploadedFile.getContentType(), detectedContentType)) {
-                messageService().addMessage(FacesMessage.SEVERITY_ERROR, "不正なファイルがアップロードされました");
+                messageService().addGlobalMessageError("不正なファイルがアップロードされました");
                 return;
             }
 

@@ -1,15 +1,14 @@
 package application;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.transaction.Transactional;
-import javax.transaction.UserTransaction;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -77,21 +76,18 @@ public class Login extends BaseBackingBean {
         return null;
     }
 
-    @Inject
-    private UserTransaction tx;
-
     @Transactional
     public String login() {
 
         UserInfo user = mapper.selectByPrimaryKey(id);
         if (user == null) {
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "IDかパスワードが間違ってるよ");
+            messageService().addMessageError(List.of("id", "password"), "IDかパスワードが間違ってるよ");
             return null;
         }
 
         boolean tempLocked = LocalDateTime.now().isBefore(user.getUnlockedDateTime());
         if (user.getLocked() || tempLocked) {
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "IDかパスワードが間違ってるよ");
+            messageService().addMessageError(List.of("id", "password"), "IDかパスワードが間違ってるよ");
         }
 
         if (passwordEncoder == null) {
@@ -108,16 +104,17 @@ public class Login extends BaseBackingBean {
                 user.setFailCount(0);
                 mapper.updateByPrimaryKeySelective(user);
 
-                // 本来は、ここでアカウントロックが掛かったことを、メールでユーザに通知する
+                // 本来はここで、アカウントロックが掛かったことを、メールでユーザに通知する
 
-                messageService().addMessage(FacesMessage.SEVERITY_ERROR, "IDかパスワードが間違ってるよ");
+                messageService().addMessageError(List.of("id", "password"), "IDかパスワードが間違ってるよ");
                 return null;
             }
 
             user.setFailCount(failCount);
             mapper.updateByPrimaryKeySelective(user);
 
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "IDかパスワードが間違ってるよ");
+            messageService().addMessageError(List.of("id", "password"), "IDかパスワードが間違ってるよ");
+
             return null;
         }
 
@@ -126,7 +123,12 @@ public class Login extends BaseBackingBean {
 
         setUser(user);
         loginManager.setup(user.getId(), autoLogin);
-        twoStep.setup(user.getEmail(), "/application/top", "login", () -> loginManager.login());
+        twoStep.setup(user.getEmail(), "/application/top", "login", () -> {
+
+            // 本来はここで、ログインしたことを、メールでユーザに通知する
+
+            loginManager.login();
+        });
 
         return redirect("twoStepVerification");
     }

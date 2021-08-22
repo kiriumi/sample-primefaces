@@ -1,64 +1,77 @@
 package faces;
 
-import java.util.ResourceBundle;
+import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
-import lombok.extern.log4j.Log4j2;
+import util.FacesUtils;
+import util.MessageUtils;
 
 @RequestScoped
-@Log4j2
 public class MessageService {
 
     @Inject
     private FacesContext facesContext;
 
-    public void addMessage(final Severity severity, @NotBlank final String message) {
-        facesContext.addMessage(null, new FacesMessage(severity, message, ""));
-        log(severity, message);
+    public void addGlobalMessageInfo(@NotBlank String message) {
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, message, null));
     }
 
-    public void addMessageById(final Severity severity, @NotBlank final String messageId, final Object... params) {
-        addMessageByProperties("ApplicationMessages", severity, messageId, params);
+    public void addGlobalMessageInfo(@NotBlank String id, Object... params) {
+        String message = MessageUtils.getMessage(id, params);
+        addGlobalMessageInfo(message);
     }
 
-    public void addValidaionMessageById(final Severity severity, @NotBlank final String messageId,
-            final Object... params) {
-        addMessageByProperties("ValidationMessages", severity, messageId, params);
+    public void addGlobalMessageWarn(@NotBlank String message) {
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, message, null));
     }
 
-    public boolean isEmpty() {
+    public void addGlobalMessageWarn(@NotBlank String id, Object... params) {
+        String message = MessageUtils.getMessage(id, params);
+        addGlobalMessageWarn(message);
+    }
 
-        if (facesContext.getMessageList().isEmpty()) {
-            return true;
+    public void addGlobalMessageError(@NotBlank String message) {
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
+    }
+
+    public void addGlobalMessageError(@NotBlank String id, Object... params) {
+        String message = MessageUtils.getMessage(id, params);
+        addGlobalMessageError(message);
+    }
+
+    public void addMessageError(@NotBlank String clientId, @NotBlank final String message) {
+
+        String targetId = FacesUtils.findComponent(clientId).getClientId();
+        facesContext.addMessage(targetId, new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
+
+        if (!facesContext.isValidationFailed()) {
+            facesContext.validationFailed();
         }
-        return false;
     }
 
-    private void addMessageByProperties(final String baseName, final Severity severity, final String messageId,
-            final Object... params) {
-
-        String rawMessage = ResourceBundle.getBundle(baseName).getString(messageId);
-        String message = String.format(rawMessage, params);
-        facesContext.addMessage(null, new FacesMessage(severity, message, ""));
-
-        log(severity, message);
+    public void addMessageError(@NotBlank String clientId, @NotBlank final String id, Object... params) {
+        String message = MessageUtils.getMessage(id, params);
+        addGlobalMessageError(message);
     }
 
-    private void log(final Severity severity, final String message) {
+    public void addMessageError(@NotEmpty List<String> ids, @NotBlank final String message) {
+        ids.forEach(id -> {
+            addMessageError(id, message);
+        });
+    }
 
-        if (severity.equals(FacesMessage.SEVERITY_INFO)) {
-            log.info(message);
-        } else if (severity.equals(FacesMessage.SEVERITY_WARN)) {
-            log.warn(message);
-        } else {
-            log.error(message);
-        }
+    public void addMessageError(@NotEmpty List<String> clientIds, @NotBlank final String id, Object... params) {
+
+        String message = MessageUtils.getMessage(id, params);
+        clientIds.forEach(clientId -> {
+            addMessageError(clientId, message);
+        });
     }
 
 }

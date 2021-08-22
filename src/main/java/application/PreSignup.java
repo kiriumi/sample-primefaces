@@ -8,9 +8,12 @@ import javax.validation.constraints.NotBlank;
 
 import domain.TwoStepVerificatior;
 import dto.UserInfo;
+import dto.UserInfoExample;
+import dto.UserInfoExample.Criteria;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
+import repository.UserInfoMapper;
 import security.LoginManager;
 
 @Named
@@ -29,6 +32,9 @@ public class PreSignup extends BaseBackingBean {
     @Inject
     private TwoStepVerificatior towStep;
 
+    @Inject
+    private UserInfoMapper mapper;
+
     public String init() {
 
         if (loginManager.isLogined()) {
@@ -38,6 +44,16 @@ public class PreSignup extends BaseBackingBean {
     }
 
     public String sendMail() {
+
+        UserInfoExample example = new UserInfoExample();
+        Criteria criteria = example.createCriteria();
+        criteria.andEmailEqualTo(email);
+        long count = mapper.countByExample(example);
+
+        if (count != 0) {
+            messageService().addMessageError("email", "そのメールアドレスは使用されています");
+            return null;
+        }
 
         UserInfo user = new UserInfo();
         user.setEmail(email);

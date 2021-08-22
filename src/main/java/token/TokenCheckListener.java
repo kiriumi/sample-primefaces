@@ -14,12 +14,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import faces.BaseBackingBean;
+import util.FacesUtils;
 
 public class TokenCheckListener implements PhaseListener {
 
@@ -29,32 +29,16 @@ public class TokenCheckListener implements PhaseListener {
 
     @Override
     public void afterPhase(final PhaseEvent event) {
-        verifyToken();
-        updateToken();
+        verifyToken(event);
+        updateToken(event);
     }
 
-    private void verifyToken() {
+    private void verifyToken(PhaseEvent event) {
 
-        FacesContext facesCtx = FacesContext.getCurrentInstance();
+        FacesContext facesCtx = event.getFacesContext();
         ExternalContext extCtx = facesCtx.getExternalContext();
 
-        // トークンチェック対象の画面か判定
-        ELContext elContext = facesCtx.getELContext();
-        ELResolver elResolver = elContext.getELResolver();
-
-        HttpServletRequest req = (HttpServletRequest) extCtx.getRequest();
-        String path = req.getRequestURL().toString();
-
-        // ページ指定なしの場合、ウェルカムページのURLに変換
-        String uri = req.getRequestURI();
-        if (req.getContextPath().endsWith(uri.substring(0, uri.length() - 1) )) {
-            path = StringUtils.join(path, extCtx.getRequestServletPath().substring(1));
-        }
-
-        String viewId = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
-        String beanName = StringUtils.join(viewId.substring(0, 1).toLowerCase(), viewId.substring(1));
-        BaseBackingBean bean = (BaseBackingBean) elResolver.getValue(elContext, null, beanName);
-
+        BaseBackingBean bean = FacesUtils.getBackingBean(facesCtx);
         TokenCheck tokenCheck = bean.getClass().getAnnotation(TokenCheck.class);
         if (tokenCheck == null) {
             //トークンチェック対象の画面ではない場合、何もしない
@@ -116,9 +100,9 @@ public class TokenCheckListener implements PhaseListener {
         }
     }
 
-    private void updateToken() {
+    private void updateToken(PhaseEvent event) {
 
-        FacesContext facesCtx = FacesContext.getCurrentInstance();
+        FacesContext facesCtx = event.getFacesContext();
         ExternalContext extCtx = facesCtx.getExternalContext();
 
         ELContext elContext = facesCtx.getELContext();

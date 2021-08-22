@@ -3,7 +3,6 @@ package application;
 import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -50,7 +49,7 @@ public class TwoStepVerification extends BaseBackingBean {
     public String verify() throws Exception {
 
         if (!twoStep.verify(token)) {
-            messageService().addMessage(FacesMessage.SEVERITY_ERROR, "トークンが違うよ");
+            messageService().addMessageError("input-token", "トークンが違うよ");
 
             if (++failCount > failCountLimit) {
                 throw new WebApplicationException("最初からやり直してください");

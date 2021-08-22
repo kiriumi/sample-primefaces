@@ -54,7 +54,7 @@ public class WebExceptionHandler extends ExceptionHandlerWrapper {
             flash.put(FLASH_KEY_EXCEPTION, throwable);
             flash.keep(FLASH_KEY_EXCEPTION);
 
-            WebApplicationLogger.error("error", throwable.getMessage(), throwable);
+            WebApplicationLogger.error(throwable, "error", throwable.getMessage());
 
             try {
                 // エラー画面に遷移
@@ -63,7 +63,7 @@ public class WebExceptionHandler extends ExceptionHandlerWrapper {
                 facesContext.getExternalContext().redirect(contextPath + bundle.getString("error.page"));
 
             } catch (IOException e) {
-                WebApplicationLogger.error("error", e.getMessage(), throwable);
+                WebApplicationLogger.error(e, "error", e.getMessage());
 
             } finally {
                 queuedEvent.remove();
