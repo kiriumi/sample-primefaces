@@ -23,6 +23,8 @@ import com.google.common.base.Objects;
 import domain.ReCatpchaResponse;
 import domain.TwoStepVerificatior;
 import dto.UserInfo;
+import dto.UserInfoExample;
+import dto.UserInfoExample.Criteria;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,7 +64,7 @@ public class Signup extends BaseBackingBean {
 
     @Getter
     @Setter
-    private boolean hasError;
+    private boolean isBot = true;
 
     public String init() {
 
@@ -80,24 +82,39 @@ public class Signup extends BaseBackingBean {
 
     public void validate(ActionEvent event) {
 
-        ReCatpchaResponse reCatpchaReses = getReCatpchaResponse();
+        if (isBot) {
 
-        if (!reCatpchaReses.isSuccess()) {
-            messageService().addGlobalMessageWarn("もう一度登録を押してください");
-            getFacesContext().validationFailed();
-            return;
+            ReCatpchaResponse reCatpchaReses = getReCatpchaResponse();
+
+            if (!reCatpchaReses.isSuccess()) {
+                messageService().addGlobalMessageWarn("もう一度登録を押してください");
+                getFacesContext().validationFailed();
+                return;
+            }
+
+            // レスポンスから検証結果を調査する
+            if (reCatpchaReses.getScore().compareTo(BigDecimal.valueOf(0.6)) <= 0
+                    || !Objects.equal(reCatpchaReses.getHostname(), request().getServerName())) {
+
+                messageService().addGlobalMessageError("BOTと判定されました");
+                return;
+            }
         }
 
-        // レスポンスから検証結果を調査する
-        if (reCatpchaReses.getScore().compareTo(BigDecimal.valueOf(0.6)) <= 0
-                || !Objects.equal(reCatpchaReses.getHostname(), request().getServerName())) {
-
-            messageService().addGlobalMessageError("BOTと判定されました");
-            return;
-        }
+        this.isBot = false;
 
         if (Objects.equal(id, password)) {
             messageService().addMessageError(List.of("id", "password"), "IDとパスワードは同じにできません");
+            return;
+        }
+
+        UserInfoExample example = new UserInfoExample();
+        Criteria criteria = example.createCriteria();
+        criteria.andIdEqualTo(id);
+        long count = mapper.countByExample(example);
+
+        if (count != 0) {
+            messageService().addMessageError("id", "そのIDは使用されています");
             return;
         }
 
