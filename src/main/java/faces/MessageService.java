@@ -55,15 +55,15 @@ public class MessageService {
         }
     }
 
+    public void addMessageError(@NotEmpty List<String> clientIds, @NotBlank final String message) {
+        clientIds.forEach(id -> {
+            addMessageError(id, message);
+        });
+    }
+
     public void addMessageError(@NotBlank String clientId, @NotBlank final String id, Object... params) {
         String message = MessageUtils.getMessage(id, params);
         addGlobalMessageError(message);
-    }
-
-    public void addMessageError(@NotEmpty List<String> ids, @NotBlank final String message) {
-        ids.forEach(id -> {
-            addMessageError(id, message);
-        });
     }
 
     public void addMessageError(@NotEmpty List<String> clientIds, @NotBlank final String id, Object... params) {
