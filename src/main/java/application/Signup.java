@@ -8,7 +8,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.bind.JsonbBuilder;
-import javax.transaction.Transactional;
+import javax.transaction.NotSupportedException;
+import javax.transaction.SystemException;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.mybatis.cdi.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.google.common.base.Objects;
@@ -25,6 +27,7 @@ import domain.TwoStepVerificatior;
 import dto.UserInfo;
 import dto.UserInfoExample;
 import dto.UserInfoExample.Criteria;
+import exception.WebApplicationException;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
@@ -120,21 +123,34 @@ public class Signup extends BaseBackingBean {
 
     }
 
+    //    @Inject
+    //    UserTransaction tx;
+
     @Transactional
-    public String signup() {
+    public String signup() throws NotSupportedException, SystemException {
+
+        //        tx.begin();
 
         if (passwordEncoder == null) {
             this.passwordEncoder = new BCryptPasswordEncoder();
         }
 
-        user.setId(id);
-        user.setPassword(passwordEncoder.encode(password));
-        mapper.insertSelective(user);
+        try {
+            user.setId(id);
+            user.setPassword(passwordEncoder.encode(password));
+            mapper.insertSelective(user);
 
-        // 本来はここで、ユーザ登録したことを、メールでユーザに通知する
+            // 本来はここで、ユーザ登録したことを、メールでユーザに通知する
 
-        messageService().addGlobalMessageInfo("ユーザ登録が完了したよ");
-        flash().setKeepMessages(true);
+            messageService().addGlobalMessageInfo("ユーザ登録が完了したよ");
+            flash().setKeepMessages(true);
+            //            tx.commit();
+
+        } catch (Exception e) {
+            //            tx.rollback();
+            throw new WebApplicationException();
+
+        }
 
         return redirect("login");
     }
