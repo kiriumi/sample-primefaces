@@ -16,6 +16,11 @@
     </context-param>
 
     <context-param>
+        <param-name>javax.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
         <param-name>primefaces.CSP</param-name>
         <param-value>true</param-value>
     </context-param>
@@ -38,15 +43,6 @@
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>nova-light</param-value>
-    </context-param>
-
-    <context-param>
-        <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
-        <param-value>何のキーか不明（サイトキー、シークレットキーでもなかった）</param-value>
-    </context-param>
-    <context-param>
-        <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
-        <param-value>何のキーか不明（サイトキー、シークレットキーでもなかった）</param-value>
     </context-param>
 
     <filter>
