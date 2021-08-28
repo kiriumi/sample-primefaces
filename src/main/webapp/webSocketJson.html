@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Web Socket</title>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+    integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+    crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <input type="text" id="name"></input>
+    <input type="text" id="age"></input>
+
+    <button onclick="send()">送信</button>
+
+    <div id="recieve-name"></div>
+    <div id="recieve-age"></div>
+
+    <script>
+        var url = "ws://localhost:8080/sample-primefaces/websocketJson";
+        var ws = new WebSocket(url);
+
+        ws.onmessage = function(recieve) {
+             var obj = JSON.parse(recieve.data);
+             $("#recieve-name").text(obj.name);
+             $("#recieve-age").text(obj.age);
+
+        };
+
+        ws.onopen = function() {
+            console.log('接続開始')
+        }
+
+        function send() {
+
+            var obj = {
+                name : $("#name").val(),
+                age : $("#age").val()
+            };
+
+            var json = JSON.stringify(obj);
+            ws.send(json);
+        }
+    </script>
+
+</body>
+</html>
