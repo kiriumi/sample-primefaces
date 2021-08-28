@@ -67,7 +67,6 @@ HTTPヘッダ・インジェクション
 ### ブラウザキャッシュ
 * Cache-Control
 * Pragma: no-cach
-
 * HTMLタグの属性値を「"」で囲むよう強制
 
 # 認証
