@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Web Socket</title>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+    integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+    crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <input type="text" id="input"></input>
+    <button onclick="send()">送信</button>
+
+    <span id="message"></span>
+
+    <script>
+        var url = "ws://localhost:8080/sample-primefaces/websocket";
+        var ws = new WebSocket(url);
+
+        ws.onmessage = function(recieve) {
+            $("#message").text(recieve.data);
+        };
+
+        ws.onopen = function() {
+            console.log('接続開始')
+        }
+
+        function send() {
+            var input = $("#input").val();
+            ws.send(input);
+        }
+    </script>
+
+</body>
+</html>
