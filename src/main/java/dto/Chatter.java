@@ -1,6 +1,7 @@
 package dto;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Database Table Remarks:
@@ -125,5 +126,9 @@ public class Chatter {
      */
     public void setUpdatedtime(LocalDateTime updatedtime) {
         this.updatedtime = updatedtime;
+    }
+
+    public String getCreatedtimeAsString() {
+        return createdtime.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
     }
 }

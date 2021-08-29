@@ -7,7 +7,7 @@
 
 <ui:composition template="/templates/baseMenubar.xhtml">
 
-    <ui:define name="title">チャット</ui:define>
+    <ui:define name="title">チャット（#{chat.group}）</ui:define>
 
     <f:metadata>
         <f:viewAction action="#{chat.init()}" />
@@ -18,7 +18,7 @@
         <h:form prependId="false">
 
             <ui:repeat var="chatter" value="#{chat.chatters}">
-                <p:panel header="#{chatter.userId}" toggleable="true">
+                <p:panel header="#{chatter.userId}" footer="#{chatter.createdtimeAsString}" toggleable="true">
                     <h:outputText value="#{chatter.message}" />
                 </p:panel>
             </ui:repeat>

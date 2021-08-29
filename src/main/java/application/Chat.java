@@ -39,10 +39,13 @@ public class Chat extends BaseBackingBean {
     @Setter
     private String recievedGroup;
 
+    @Getter
     private String group;
 
     @Inject
     private ChatterMapper mapper;
+
+    private boolean sended;
 
     public String init() {
 
@@ -51,12 +54,7 @@ public class Chat extends BaseBackingBean {
             return redirect("/application/top");
         }
 
-        ChatterExample example = new ChatterExample();
-        Criteria criteria = example.createCriteria();
-        criteria.andGroupIdEqualTo(group);
-        example.setOrderByClause("createdtime ASC");
-
-        this.chatters = mapper.selectByExample(example);
+        setupChatters();
 
         if (chatters == null) {
             this.chatters = new ArrayList<>();
@@ -73,11 +71,12 @@ public class Chat extends BaseBackingBean {
         chatter.setGroupId(group);
         chatter.setUserId(user.getId());
         chatter.setMessage(message);
-
         mapper.insertSelective(chatter);
-        pusher.bloadchast(group);
 
-        this.message = null;
+        setupChatters();
+
+        pusher.bloadchast(group);
+        this.sended = true;
     }
 
     public void recieve(ActionEvent event) {
@@ -86,14 +85,25 @@ public class Chat extends BaseBackingBean {
             return;
         }
 
+        if (sended) {
+            this.message = null;
+            this.sended = false;
+            return;
+        }
+
+        setupChatters();
+
+        this.message = StringUtils.isBlank(message) ? null : message;
+        this.recievedGroup = null;
+    }
+
+    private void setupChatters() {
+
         ChatterExample example = new ChatterExample();
         Criteria criteria = example.createCriteria();
         criteria.andGroupIdEqualTo(group);
         example.setOrderByClause("createdtime ASC");
 
         this.chatters = mapper.selectByExample(example);
-
-        this.recievedGroup = null;
     }
-
 }
