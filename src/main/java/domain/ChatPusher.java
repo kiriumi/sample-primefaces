@@ -11,11 +11,17 @@ import javax.inject.Named;
 public class ChatPusher {
 
     @Inject
-    @Push(channel = "chatChannel")
-    private PushContext push;
+    @Push
+    private PushContext chatChannel;
 
     public void bloadchast(Chatter chatter) {
-        push.send(chatter);
+        chatChannel.send(chatter);
+
+    }
+
+    public void bloadchast(Chatter chatter, String... ids) {
+        // TODO うまく動かない
+        chatChannel.send(chatter, ids);
     }
 
 }

@@ -10,6 +10,7 @@ import javax.inject.Named;
 
 import domain.ChatPusher;
 import domain.Chatter;
+import dto.UserInfo;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,7 +47,9 @@ public class Chat extends BaseBackingBean {
     }
 
     public void send(ActionEvent event) {
-        pusher.bloadchast(new Chatter("次郎", message));
+        UserInfo user = getUser();
+        //        pusher.bloadchast(new Chatter(user.getId(), message));
+        pusher.bloadchast(new Chatter(user.getId(), message), "1111", "1112");
     }
 
     public void recieve(ActionEvent event) {

@@ -29,6 +29,10 @@ public class Menubar extends BaseBackingBean {
         return redirect("/application/userInfoReference");
     }
 
+    public String goChat() {
+        return redirect("/application/chat");
+    }
+
     public String goFileload() {
         return redirect("/application/fileload");
     }
