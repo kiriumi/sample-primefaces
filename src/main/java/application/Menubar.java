@@ -29,7 +29,8 @@ public class Menubar extends BaseBackingBean {
         return redirect("/application/userInfoReference");
     }
 
-    public String goChat() {
+    public String goChat(String group) {
+        flash().put("application.Menubar.group", group);
         return redirect("/application/chat");
     }
 

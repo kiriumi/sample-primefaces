@@ -14,14 +14,8 @@ public class ChatPusher {
     @Push
     private PushContext chatChannel;
 
-    public void bloadchast(Chatter chatter) {
-        chatChannel.send(chatter);
-
-    }
-
-    public void bloadchast(Chatter chatter, String... ids) {
-        // TODO うまく動かない
-        chatChannel.send(chatter, ids);
+    public void bloadchast(String group) {
+        chatChannel.send(group);
     }
 
 }

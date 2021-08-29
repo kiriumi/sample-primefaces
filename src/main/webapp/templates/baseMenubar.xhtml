@@ -29,8 +29,12 @@
             <p:menuitem value="ファイル" icon="pi pi-fw pi-file"
                 action="#{menubar.goFileload()}" />
 
-            <p:menuitem value="チャット" icon="pi pi-fw pi-comments"
-                action="#{menubar.goChat()}" />
+            <p:submenu label="チャット" icon="pi pi-fw pi-comments">
+                <p:menuitem value="グループA" icon="pi pi-fw pi-comment"
+                    action="#{menubar.goChat('グループA')}" />
+                <p:menuitem value="グループB" icon="pi pi-fw pi-comment"
+                    action="#{menubar.goChat('グループB')}" />
+            </p:submenu>
 
             <f:facet name="options">
                 <h:outputText value="#{menubar.userId}" />

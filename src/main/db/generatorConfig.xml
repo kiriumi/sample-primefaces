@@ -34,6 +34,7 @@
         <table schema="public" tableName="user_info" modelType="flat" />
         <table schema="public" tableName="code" modelType="flat" />
         <table schema="public" tableName="logined_user" modelType="flat" />
+        <table schema="public" tableName="chatter" modelType="flat" />
 
     </context>
 

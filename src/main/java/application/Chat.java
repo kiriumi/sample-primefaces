@@ -8,12 +8,17 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
+
 import domain.ChatPusher;
-import domain.Chatter;
+import dto.Chatter;
+import dto.ChatterExample;
+import dto.ChatterExample.Criteria;
 import dto.UserInfo;
 import faces.BaseBackingBean;
 import lombok.Getter;
 import lombok.Setter;
+import repository.ChatterMapper;
 
 @Named
 @ViewScoped
@@ -32,33 +37,59 @@ public class Chat extends BaseBackingBean {
 
     @Getter
     @Setter
-    private String recieveName;
+    private String recievedGroup;
 
-    @Getter
-    @Setter
-    private String recieveMessage;
+    private String group;
+
+    @Inject
+    private ChatterMapper mapper;
 
     public String init() {
 
-        chatters.add(new Chatter("太郎", "ほげ"));
-        chatters.add(new Chatter("花子", "ふー"));
+        this.group = (String) flash().get("application.Menubar.group");
+        if (StringUtils.isBlank(group)) {
+            return redirect("/application/top");
+        }
+
+        ChatterExample example = new ChatterExample();
+        Criteria criteria = example.createCriteria();
+        criteria.andGroupIdEqualTo(group);
+
+        this.chatters = mapper.selectByExample(example);
+
+        if (chatters == null) {
+            this.chatters = new ArrayList<>();
+        }
 
         return null;
     }
 
     public void send(ActionEvent event) {
+
+        Chatter chatter = new Chatter();
         UserInfo user = getUser();
-        //        pusher.bloadchast(new Chatter(user.getId(), message));
-        pusher.bloadchast(new Chatter(user.getId(), message), "1111", "1112");
+
+        chatter.setGroupId(group);
+        chatter.setUserId(user.getId());
+        chatter.setMessage(message);
+
+        mapper.insertSelective(chatter);
+        pusher.bloadchast(group);
     }
 
     public void recieve(ActionEvent event) {
 
-        chatters.add(new Chatter(recieveName, recieveMessage));
+        if (!group.equals(recievedGroup)) {
+            return;
+        }
 
-        this.message = null;
-        this.recieveName = null;
-        this.recieveMessage = null;
+        ChatterExample example = new ChatterExample();
+        Criteria criteria = example.createCriteria();
+        criteria.andGroupIdEqualTo(group);
+
+        this.chatters = mapper.selectByExample(example);
+
+        this.recievedGroup = null;
     }
 
 }

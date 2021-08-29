@@ -18,7 +18,7 @@
         <h:form prependId="false">
 
             <ui:repeat var="chatter" value="#{chat.chatters}">
-                <p:panel header="#{chatter.name}">
+                <p:panel header="#{chatter.userId}">
                     <h:outputText value="#{chatter.message}" />
                 </p:panel>
             </ui:repeat>
@@ -31,18 +31,16 @@
             <f:websocket channel="chatChannel" scope="application"
                 onmessage="socketListener" />
 
-            <h:inputHidden id="recieve-name" value="#{chat.recieveName}" />
-            <h:inputHidden id="recieve-message" value="#{chat.recieveMessage}" />
             <p:commandButton style="visibility: hidden" id="recieve" ajax="false"
                 value="受信" actionListener="#{chat.recieve}" />
+
+            <h:inputHidden id="recieved-group" value="#{chat.recievedGroup}" />
 
         </h:form>
 
         <script>
             function socketListener(message, channel, event) {
-                $("#hoge").text("ほげ");
-                $("#recieve-name").val(message.name);
-                $("#recieve-message").val(message.message);
+                $("#recieved-group").val(message);
                 $("#recieve").click();
             }
         </script>
