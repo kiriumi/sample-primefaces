@@ -18,7 +18,7 @@
         <h:form prependId="false">
 
             <ui:repeat var="chatter" value="#{chat.chatters}">
-                <p:panel header="#{chatter.userId}">
+                <p:panel header="#{chatter.userId}" toggleable="true">
                     <h:outputText value="#{chatter.message}" />
                 </p:panel>
             </ui:repeat>
