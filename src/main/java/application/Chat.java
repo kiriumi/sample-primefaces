@@ -54,6 +54,7 @@ public class Chat extends BaseBackingBean {
         ChatterExample example = new ChatterExample();
         Criteria criteria = example.createCriteria();
         criteria.andGroupIdEqualTo(group);
+        example.setOrderByClause("createdtime ASC");
 
         this.chatters = mapper.selectByExample(example);
 
@@ -88,6 +89,7 @@ public class Chat extends BaseBackingBean {
         ChatterExample example = new ChatterExample();
         Criteria criteria = example.createCriteria();
         criteria.andGroupIdEqualTo(group);
+        example.setOrderByClause("createdtime ASC");
 
         this.chatters = mapper.selectByExample(example);
 
