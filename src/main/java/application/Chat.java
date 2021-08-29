@@ -75,6 +75,8 @@ public class Chat extends BaseBackingBean {
 
         mapper.insertSelective(chatter);
         pusher.bloadchast(group);
+
+        this.message = null;
     }
 
     public void recieve(ActionEvent event) {
