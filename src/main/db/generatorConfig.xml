@@ -35,6 +35,8 @@
         <table schema="public" tableName="code" modelType="flat" />
         <table schema="public" tableName="logined_user" modelType="flat" />
         <table schema="public" tableName="chatter" modelType="flat" />
+        <table schema="public" tableName="api_token" modelType="flat" />
+        <table schema="public" tableName="token" modelType="flat" />
 
     </context>
 

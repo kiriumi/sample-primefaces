@@ -29,11 +29,16 @@ import faces.BaseBackingBean;
 import log.WebAccessLogging;
 import log.WebApplicationLogger;
 import lombok.Getter;
+import lombok.Setter;
 
 @Named
 @ViewScoped
 @WebAccessLogging
 public class Index extends BaseBackingBean {
+
+    @Getter
+    @Setter
+    private String input;
 
     public String init() {
 
@@ -43,6 +48,10 @@ public class Index extends BaseBackingBean {
         WebApplicationLogger.info("sample.id1");
 
         return null;
+    }
+
+    public void action(ActionEvent event) {
+        this.input = null;
     }
 
     public void handleFileUpload(FileUploadEvent event) throws IOException {
