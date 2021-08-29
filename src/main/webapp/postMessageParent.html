@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PostMessage（親画面）</title>
+
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+    integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+    crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <button onclick="openChildWindow()">子画面を開く</button>
+    <button onclick="postChildWindow()">子画面にデータを渡す</button>
+
+    <span id="comment"></span>
+
+    <script>
+        var childWindow;
+
+        function openChildWindow() {
+
+            childWindow = window.open("postMessageChild.html", "_postChild");
+        }
+
+        function postChildWindow() {
+            childWindow.postMessage('親画面からのデータ', 'http://localhost:8080');
+        }
+
+        window.addEventListener("message", function(event) {
+
+            if (event.origin != 'http://localhost:8080') {
+                return;
+            }
+            $("#comment").text(event.data.comment);
+
+        }, false);
+    </script>
+
+</body>
+</html>
