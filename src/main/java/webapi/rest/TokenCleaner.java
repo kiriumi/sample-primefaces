@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 
 import dto.TokenExample;
 import dto.TokenExample.Criteria;
+import exception.WebApiException;
 import repository.TokenMapper;
 
 @Singleton
@@ -22,7 +23,7 @@ public class TokenCleaner {
 
     @PostConstruct
     @Transactional
-    public void cleanupToken() throws InterruptedException {
+    public void cleanupToken() {
 
         ResourceBundle bundle = ResourceBundle.getBundle("WebApiConfig");
 
@@ -44,6 +45,7 @@ public class TokenCleaner {
                     Thread.sleep(interbvalMinutes * 1000 * 60);
 
                 } catch (InterruptedException e) {
+                    throw new WebApiException(e);
                 }
             }
         };
