@@ -25,8 +25,8 @@ public class RestClient extends BaseBackingBean {
     private static final UriBuilder BASE_URI = UriBuilder
             .fromUri("http://localhost:8080/sample-primefaces/rest/service");
 
-    private static final Client CLIENT = ClientBuilder.newBuilder().connectTimeout(5, TimeUnit.MILLISECONDS)
-            .readTimeout(10, TimeUnit.MILLISECONDS).build();
+    private static final Client CLIENT = ClientBuilder.newBuilder().connectTimeout(5, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS).build();
 
     public void getToken() {
 

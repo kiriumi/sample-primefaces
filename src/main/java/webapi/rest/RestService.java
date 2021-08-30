@@ -1,6 +1,5 @@
 package webapi.rest;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Random;
 
@@ -23,6 +22,7 @@ import dto.ApiTokenExample;
 import dto.ApiTokenExample.Criteria;
 import dto.Token;
 import dto.UserInfo;
+import exception.WebApiException;
 import repository.ApiTokenMapper;
 import repository.TokenMapper;
 import repository.UserInfoMapper;
@@ -41,6 +41,9 @@ public class RestService {
 
     @Inject
     private TokenMapper tokenMapper;
+
+    @Inject
+    private RestUtils restUtils;
 
     @POST
     @Path("token")
@@ -79,13 +82,8 @@ public class RestService {
             @NotNull UserInfo user,
             @NotBlank @HeaderParam("Token") String token) {
 
-        // DBにトークンがあるか検索
-        Token tokenBean = new Token();
-        tokenBean.setToken(token);
-        tokenBean.setUpdatedtime(LocalDateTime.now());
-        int count = tokenMapper.updateByPrimaryKeySelective(tokenBean);
-        if (count != 1) {
-            throw new IllegalAccessError();
+        if (!restUtils.hasToken(token)) {
+            throw new WebApiException(String.join("：", "トークンが存在しないか期限が切れています", token));
         }
 
         userInfoMapper.insertSelective(user);
@@ -99,7 +97,7 @@ public class RestService {
 
         int count = tokenMapper.deleteByPrimaryKey(token);
         if (count != 1) {
-            throw new IllegalAccessError();
+            throw new WebApiException();
         }
     }
 

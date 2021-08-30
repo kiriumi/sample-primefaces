@@ -18,10 +18,10 @@
 
     <h:form prependId="false" enctype="multipart/form-data">
 
-        <p:commandButton actionListener="#{index.accessDbTable}" />
-        
-        
+        <p:inputText value="#{index.input}" />
+        <p:commandButton actionListener="#{index.action}" value="ボタン"/>
 
+        <p:commandButton actionListener="#{index.accessDbTable}" />
 
         <p:fileUpload mode="advanced" multiple="true" sizeLimit="102400"
             allowTypes="/(\.|\/)(gif|jpe?g|png|txt)$/" label="ファイルを選択"
