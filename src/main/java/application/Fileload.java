@@ -4,15 +4,20 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.QuoteMode;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
@@ -81,9 +86,14 @@ public class Fileload extends BaseBackingBean {
 
         response().addHeader("Content-Disposition", "attachement");
 
-        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-            output.write("ダウンロードファイルデータ".getBytes("MS932"));
+                CSVPrinter printer = CSVFormat.Builder.create(CSVFormat.DEFAULT).setQuoteMode(QuoteMode.ALL)
+                        .setHeader("id", "userName", "firstName", "lastName", "birthday")
+                        .build().print(new OutputStreamWriter(output, "MS932"))) {
+
+            printer.printRecord(1, "john73", "John", "Doe", LocalDate.of(1973, 9, 15));
+            printer.printRecord(2, "mary", "Mary", "Meyer", LocalDate.of(1985, 3, 29));
 
             this.downloadedFile = DefaultStreamedContent.builder()
                     .name("download.txt")
