@@ -96,7 +96,7 @@ public class Fileload extends BaseBackingBean {
             printer.printRecord(2, "mary", "Mary", "Meyer", LocalDate.of(1985, 3, 29));
 
             this.downloadedFile = DefaultStreamedContent.builder()
-                    .name("download.txt")
+                    .name("download.csv")
                     .contentType("text/plain")
                     .stream(() -> new ByteArrayInputStream(output.toByteArray()))
                     .build();
