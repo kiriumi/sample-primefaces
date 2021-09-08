@@ -19,11 +19,13 @@
                 invalidFileMessage="gif | jpg | jpeg | png | txt のみです"
                 virusScan="true" listener="#{fileload.handleFileUpload}" />
 
-            <p:commandButton icon="pi pi-download " title="ファイルダウンロード"
+            <p:commandButton icon="pi pi-download" value="CSVファイルダウンロード"
                 actionListener="#{fileload.downloadFile}" ajax="false"
                 onclick="PrimeFaces.monitorDownload(start, stop);">
                 <p:fileDownload value="#{fileload.downloadedFile}" />
             </p:commandButton>
+
+            <p:commandButton ajax="false" icon="pi pi-file" value="CSVファイルの読込み" actionListener="#{fileload.parseCsv}" />
 
             <p:dialog header="ダウンロード中" modal="true" widgetVar="statusDialog"
                 draggable="false" closable="false" resizable="false">
