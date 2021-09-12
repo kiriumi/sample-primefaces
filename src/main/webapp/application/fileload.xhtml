@@ -25,13 +25,22 @@
                 <p:fileDownload value="#{fileload.downloadedFile}" />
             </p:commandButton>
 
-            <p:commandButton ajax="false" icon="pi pi-file" value="CSVファイルの読込み" actionListener="#{fileload.parseCsv}" />
+            <p:commandButton ajax="false" icon="pi pi-file-excel" value="CSVファイルの読込み" actionListener="#{fileload.parseCsv}" />
 
-            <p:dialog header="ダウンロード中" modal="true" widgetVar="statusDialog"
+            <br/>
+
+            <p:commandButton icon="pi pi-download" value="PDFファイルダウンロード"
+                actionListener="#{fileload.downloadPdfDynamic}" ajax="false"
+                onclick="PrimeFaces.monitorDownload(start, stop);">
+                <p:fileDownload value="#{fileload.downloadedPdf}" />
+            </p:commandButton>
+
+            <p:commandButton ajax="false" icon="pi pi-file-pdf" value="PDFファイル作成" actionListener="#{fileload.makePdfStatic}" />
+
+        <p:dialog header="ダウンロード中" modal="true" widgetVar="statusDialog"
                 draggable="false" closable="false" resizable="false">
                 <i class="pi pi-spinner pi-spin" style="font-size: 3rem"></i>
             </p:dialog>
-
         </h:form>
 
         <script>
