@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>インデックス</title>
+</h:head>
+
+<h:body>
+    <p:messages id="messages" />
+
+    <f:metadata>
+        <f:viewAction action="#{index.init()}" />
+    </f:metadata>
+
+    <h:form prependId="false" >
+
+        <p:textEditor widgetVar="editor1" value="#{textEditor.text}" height="300"  >
+
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                   <button class="ql-bold"></button>
+                   <button class="ql-italic"></button>
+                   <button class="ql-underline"></button>
+                   <button class="ql-strike"></button>
+               </span>
+
+                <span class="ql-formats">
+                   <button class="ql-header" value="1"></button>
+                   <button class="ql-header" value="2"></button>
+                   <button class="ql-blockquote"></button>
+                   <button class="ql-code-block"></button>
+               </span>
+
+                <span class="ql-formats">
+                   <button class="ql-list" value="ordered"></button>
+                   <button class="ql-list" value="bullet"></button>
+                   <button class="ql-indent" value="+1"></button>
+                   <button class="ql-indent" value="-1"></button>
+               </span>
+            </f:facet>
+        </p:textEditor>
+
+        <p:commandButton ajax="false" value="ボタン" actionListener="#{textEditor.action}"/>
+
+    </h:form>
+
+</h:body>
+
+</html>
