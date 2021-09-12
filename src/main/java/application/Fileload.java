@@ -44,6 +44,8 @@ import domain.InvoiceDetail;
 import exception.WebApplicationException;
 import faces.BaseBackingBean;
 import lombok.Getter;
+import net.glxn.qrgen.core.scheme.EMail;
+import net.glxn.qrgen.core.scheme.VCard;
 import net.glxn.qrgen.javase.QRCode;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -156,9 +158,27 @@ public class Fileload extends BaseBackingBean {
             {
                 put("companyName", "株式会社サンプル");
 
-                // QRコード
-                ByteArrayOutputStream qrCode = QRCode.from("https://github.com/kiriumi/sample-primefaces").stream();
-                put("qrCode", new ByteArrayInputStream(qrCode.toByteArray()));
+                // QRコード（ホームページ）
+                ByteArrayOutputStream qrCodeUrl = QRCode.from("https://github.com/kiriumi/sample-primefaces").stream();
+                put("qrCodeUrl", new ByteArrayInputStream(qrCodeUrl.toByteArray()));
+
+                // QRコード（Eメール）
+                ByteArrayOutputStream qrCodeEmail = QRCode.from(new EMail("kiriumi@example.org"))
+                        .stream();
+                put("qrCodeEmail", new ByteArrayInputStream(qrCodeEmail.toByteArray()));
+
+                // QRコード（連絡先）
+                VCard vCard = new VCard("きり うみ")
+                        .setEmail("kiriumi@example.org")
+                        .setAddress("住所")
+                        .setTitle("タイトル")
+                        .setCompany("株式会社サンプル")
+                        .setPhoneNumber("0120-123-456")
+                        .setWebsite("https://github.com/kiriumi/sample-primefaces");
+
+                ByteArrayOutputStream qrCodeVCard = QRCode.from(vCard).withColor(0xFF000080, 0xFFF0F8FF)
+                        .withCharset("UTF-8").stream();
+                put("qrCodeVCard", new ByteArrayInputStream(qrCodeVCard.toByteArray()));
             }
         };
 

@@ -3,7 +3,9 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="example" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2425b628-b84d-49b7-90be-06e0f905be8d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="companyName" class="java.lang.String"/>
-	<parameter name="qrCode" class="java.io.InputStream"/>
+	<parameter name="qrCodeUrl" class="java.io.InputStream"/>
+	<parameter name="qrCodeEmail" class="java.io.InputStream"/>
+	<parameter name="qrCodeVCard" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -48,6 +50,21 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{companyName} + "　御中"]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="480" y="74" width="50" height="50" uuid="e2839561-bdd3-4c2c-a8d6-0641d75436c3"/>
+				<imageExpression><![CDATA[$P{qrCodeVCard}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="480" y="54" width="50" height="14" uuid="de823f72-b15f-495b-b3db-d0c68088c0ce"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexゴシック"/>
+				</textElement>
+				<text><![CDATA[連絡先]]></text>
+			</staticText>
+			<image>
+				<reportElement x="410" y="74" width="50" height="50" uuid="d3210106-b482-47b6-875d-606fbe946667"/>
+				<imageExpression><![CDATA["img/GitHub-Mark-64px.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -210,13 +227,27 @@
 	<summary>
 		<band height="95" splitType="Stretch">
 			<image>
-				<reportElement x="10" y="10" width="50" height="50" uuid="d3210106-b482-47b6-875d-606fbe946667"/>
-				<imageExpression><![CDATA["img/GitHub-Mark-64px.png"]]></imageExpression>
+				<reportElement x="22" y="30" width="50" height="50" uuid="4d7a6e45-76e0-4af2-8a40-345452765582"/>
+				<imageExpression><![CDATA[$P{qrCodeUrl}]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="80" y="10" width="50" height="50" uuid="4d7a6e45-76e0-4af2-8a40-345452765582"/>
-				<imageExpression><![CDATA[$P{qrCode}]]></imageExpression>
+				<reportElement x="90" y="30" width="50" height="50" uuid="c63ae729-2085-41b7-9734-b2949efc4103"/>
+				<imageExpression><![CDATA[$P{qrCodeEmail}]]></imageExpression>
 			</image>
+			<staticText>
+				<reportElement x="90" y="10" width="50" height="14" uuid="76934c43-6132-4d89-8f04-e5eb8a14dbc9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexゴシック"/>
+				</textElement>
+				<text><![CDATA[Eメール]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="10" width="70" height="14" uuid="64088c0f-0eb7-4962-adc1-dc22818f634b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="IPAexゴシック"/>
+				</textElement>
+				<text><![CDATA[Webサイト]]></text>
+			</staticText>
 		</band>
 	</summary>
 </jasperReport>
