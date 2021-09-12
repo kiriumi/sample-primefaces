@@ -54,6 +54,7 @@ Postgres 11.x
 * セッションクッキーにHttpOnly属性を設定
 * X-XSS-Protection
 * Content-Security-Policy
+* HTMLタグの属性値を「"」で囲むよう強制
 ### SQLインジェクション
 * 静的プレースホルダの使用（MyBatis）
 ### CSRF
@@ -78,7 +79,6 @@ HTTPヘッダ・インジェクション
 ### ブラウザキャッシュ
 * Cache-Control
 * Pragma: no-cach
-* HTMLタグの属性値を「"」で囲むよう強制
 
 # 認証
 ## ログイン
