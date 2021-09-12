@@ -44,6 +44,7 @@ import domain.InvoiceDetail;
 import exception.WebApplicationException;
 import faces.BaseBackingBean;
 import lombok.Getter;
+import net.glxn.qrgen.javase.QRCode;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -154,6 +155,10 @@ public class Fileload extends BaseBackingBean {
         Map<String, Object> params = new HashMap<>() {
             {
                 put("companyName", "株式会社サンプル");
+
+                // QRコード
+                ByteArrayOutputStream qrCode = QRCode.from("https://github.com/kiriumi/sample-primefaces").stream();
+                put("qrCode", new ByteArrayInputStream(qrCode.toByteArray()));
             }
         };
 

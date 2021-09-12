@@ -3,6 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="example" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2425b628-b84d-49b7-90be-06e0f905be8d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="companyName" class="java.lang.String"/>
+	<parameter name="qrCode" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -207,10 +208,14 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="67" splitType="Stretch">
+		<band height="95" splitType="Stretch">
 			<image>
 				<reportElement x="10" y="10" width="50" height="50" uuid="d3210106-b482-47b6-875d-606fbe946667"/>
 				<imageExpression><![CDATA["img/GitHub-Mark-64px.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="80" y="10" width="50" height="50" uuid="4d7a6e45-76e0-4af2-8a40-345452765582"/>
+				<imageExpression><![CDATA[$P{qrCode}]]></imageExpression>
 			</image>
 		</band>
 	</summary>

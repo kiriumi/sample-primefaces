@@ -16,42 +16,37 @@
         <f:viewAction action="#{index.init()}" />
     </f:metadata>
 
-    <h:form prependId="false" enctype="multipart/form-data">
+    <h:form prependId="false" >
 
-        <p:inputText value="#{index.input}" />
-        <p:commandButton actionListener="#{index.action}" value="ボタン"/>
+        <p:textEditor widgetVar="editor1" value="#{index.text}" height="300"  >
 
-        <p:commandButton actionListener="#{index.accessDbTable}" />
+            <f:facet name="toolbar">
+                <span class="ql-formats">
+                   <button class="ql-bold"></button>
+                   <button class="ql-italic"></button>
+                   <button class="ql-underline"></button>
+                   <button class="ql-strike"></button>
+               </span>
 
-        <p:fileUpload mode="advanced" multiple="true" sizeLimit="102400"
-            allowTypes="/(\.|\/)(gif|jpe?g|png|txt)$/" label="ファイルを選択"
-            uploadLabel="アップロード" cancelLabel="キャンセル"
-            invalidSizeMessage="上限は100 KBです"
-            invalidFileMessage="gif | jpg | jpeg | png | txt のみです"
-            virusScan="true" listener="#{index.handleFileUpload}" />
+                <span class="ql-formats">
+                   <button class="ql-header" value="1"></button>
+                   <button class="ql-header" value="2"></button>
+                   <button class="ql-blockquote"></button>
+                   <button class="ql-code-block"></button>
+               </span>
 
-        <p:commandButton icon="pi pi-download " title="ファイルダウンロード"
-            actionListener="#{index.downloadFile}" ajax="false"
-            onclick="PrimeFaces.monitorDownload(start, stop);">
-            <p:fileDownload value="#{index.downloadedFile}" />
-        </p:commandButton>
+                <span class="ql-formats">
+                   <button class="ql-list" value="ordered"></button>
+                   <button class="ql-list" value="bullet"></button>
+                   <button class="ql-indent" value="+1"></button>
+                   <button class="ql-indent" value="-1"></button>
+               </span>
+            </f:facet>
+        </p:textEditor>
 
-        <p:dialog header="ダウンロード中" modal="true" widgetVar="statusDialog"
-            draggable="false" closable="false" resizable="false">
-            <i class="pi pi-spinner pi-spin" style="font-size: 3rem"></i>
-        </p:dialog>
+        <p:commandButton ajax="false" value="ボタン" actionListener="#{index.action}"/>
 
     </h:form>
-
-    <script>
-        function start() {
-            PF('statusDialog').show();
-        }
-
-        function stop() {
-            PF('statusDialog').hide();
-        }
-    </script>
 
 </h:body>
 
