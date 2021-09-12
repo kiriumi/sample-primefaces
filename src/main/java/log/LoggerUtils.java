@@ -14,8 +14,6 @@ import security.LoginManager;
 
 public abstract class LoggerUtils {
 
-    private final static String bundleName = "Messages";
-
     private LoggerUtils() {
     }
 

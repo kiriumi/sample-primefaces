@@ -19,7 +19,7 @@ public class WebSessionListener implements HttpSessionListener {
             loginManager.deleteSessionId(event.getSession().getId());
 
         } catch (Exception e) {
-            WebApplicationLogger.error(e, "error", e.getMessage());
+            WebApplicationLogger.INSTANCE.error(e, "error", e.getMessage());
         }
 
     }

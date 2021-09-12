@@ -46,7 +46,11 @@ public class BaseBackingBean implements Serializable {
         return externalContext.getFlash();
     }
 
-    protected WebApplicationLogger log;
+    private WebApplicationLogger log;
+
+    protected WebApplicationLogger log() {
+        return WebApplicationLogger.INSTANCE;
+    }
 
     @Inject
     private MessageService messageService;
