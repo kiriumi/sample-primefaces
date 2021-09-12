@@ -18,7 +18,7 @@ public class WebVirusScanner implements VirusScanner {
     @Override
     public void scan(UploadedFile file) {
 
-        WebApplicationLogger.debug("ウィルススキャンを実施");
+        WebApplicationLogger.INSTANCE.debug("ウィルススキャンを実施");
 
         // ウィルススキャンを実施
         int exitValue = 0;
