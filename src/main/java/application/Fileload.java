@@ -186,30 +186,36 @@ public class Fileload extends BaseBackingBean {
         List<InvoiceDetail> list = new ArrayList<>();
 
         // 商品１の情報設定
-        InvoiceDetail detail1 = new InvoiceDetail();
-        detail1.setItemName("商品１");
-        detail1.setNum(10);
-        detail1.setPrice(new BigDecimal("100.10"));
+        for (int i = 1; i <= 3; i++) {
 
-        BigDecimal amount1 = detail1.getPrice().multiply(new BigDecimal(detail1.getNum()))
-                .setScale(0, RoundingMode.HALF_UP);
-        detail1.setAmount(amount1.intValue());
+            InvoiceDetail detail = new InvoiceDetail();
+            detail.setItemName("商品１");
+            detail.setNum(i * 10);
+            detail.setPrice(new BigDecimal("100.10").multiply(new BigDecimal(i)));
 
-        detail1.setNote("備考１");
-        list.add(detail1);
+            BigDecimal amount1 = detail.getPrice().multiply(new BigDecimal(detail.getNum()))
+                    .setScale(0, RoundingMode.HALF_UP);
+            detail.setAmount(amount1.intValue());
+
+            detail.setNote("備考１");
+            list.add(detail);
+        }
 
         // 商品２の情報設定
-        InvoiceDetail detail2 = new InvoiceDetail();
-        detail2.setItemName("商品２");
-        detail2.setNum(20);
-        detail2.setPrice(new BigDecimal("200.20"));
+        for (int i = 1; i <= 5; i++) {
 
-        BigDecimal amount2 = detail2.getPrice().multiply(new BigDecimal(detail2.getNum()))
-                .setScale(0, RoundingMode.HALF_UP);
-        detail2.setAmount(amount2.intValue());
+            InvoiceDetail detail = new InvoiceDetail();
+            detail.setItemName("商品２");
+            detail.setNum(i * 20);
+            detail.setPrice(new BigDecimal("200.20").multiply(new BigDecimal(i)));
 
-        detail2.setNote("備考２");
-        list.add(detail2);
+            BigDecimal amount1 = detail.getPrice().multiply(new BigDecimal(detail.getNum()))
+                    .setScale(0, RoundingMode.HALF_UP);
+            detail.setAmount(amount1.intValue());
+
+            detail.setNote("備考２");
+            list.add(detail);
+        }
 
         // レイアウトにパラメータとデータソース（詳細一覧）を設定
         JasperPrint print = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(list));
