@@ -149,6 +149,10 @@ public class ValidationUtils {
 
     private static final String FORBIT_CHAR = "\"$&'()*/;<>?[\\]`{|}";
 
+    private static final String CRLF = "\r\n";
+
+    private static final String LF = "\n";
+
     public static boolean isJisX0201_0208(String value) {
         return isJisX0201_0208(value, false);
     }
@@ -166,13 +170,11 @@ public class ValidationUtils {
      */
     public static boolean isJisX0201_0208(String value, boolean allowNewLine) {
 
-        final String str = value.replaceAll("\r\n", "\n");
-
-        final String[] strChars = str.split("");
+        final String[] strChars = value.split("");
 
         for (final String strChar : strChars) {
 
-            if (strChar.equals("\n") && allowNewLine) {
+            if ((strChar.equals(LF) || strChar.equals(CRLF)) && allowNewLine) {
                 // 改行を許可する場合
                 continue;
             }
