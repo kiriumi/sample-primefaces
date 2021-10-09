@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 public class ValidationUtils {
 
     private ValidationUtils() {
@@ -98,6 +101,17 @@ public class ValidationUtils {
 
     public static boolean isJisX0201_0208(String value) {
         return isJisX0201_0208(value, false);
+    }
+
+    public static boolean isEmail(String value) {
+
+        try {
+            new InternetAddress(value, true);
+
+        } catch (final AddressException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
