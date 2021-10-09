@@ -3,7 +3,7 @@ package validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import util.StringJisUtils;
+import util.ValidationUtils;
 import validation.constraints.Password;
 
 public class PasswordValidator implements ConstraintValidator<Password, String> {
@@ -22,7 +22,7 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         return value.matches(regexp)
-                && StringJisUtils.isJisX0201_0208(value)
+                && ValidationUtils.isJisX0201_0208(value)
                 && min <= value.length() && value.length() <= max;
     }
 
