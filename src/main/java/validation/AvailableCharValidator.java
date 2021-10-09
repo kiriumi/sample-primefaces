@@ -17,7 +17,7 @@ public class AvailableCharValidator implements ConstraintValidator<AvailableChar
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return StringJisUtils.jisX0201_0208(value, allowNewLine);
+        return StringJisUtils.isJisX0201_0208(value, allowNewLine);
     }
 
 }

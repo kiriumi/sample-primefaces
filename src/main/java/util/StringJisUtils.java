@@ -9,12 +9,12 @@ public class StringJisUtils {
     }
 
     @Deprecated
-    public static boolean isJisX0201_0208(String value) {
-        return isJisX0201_0208(value, false);
+    public static boolean isJisX0201_0208_old(String value) {
+        return isJisX0201_0208_old(value, false);
     }
 
     @Deprecated
-    public static boolean isJisX0201_0208(String value, boolean allowLf) {
+    public static boolean isJisX0201_0208_old(String value, boolean allowLf) {
 
         for (final char c : value.toCharArray()) {
 
@@ -78,8 +78,8 @@ public class StringJisUtils {
 
     private static final String FORBIT_CHAR = "\"$&'()*/;<>?[\\]`{|}";
 
-    public static boolean jisX0201_0208(String value) {
-        return jisX0201_0208(value, false);
+    public static boolean isJisX0201_0208(String value) {
+        return isJisX0201_0208(value, false);
     }
 
     /**
@@ -93,7 +93,7 @@ public class StringJisUtils {
      * @param allowNewLine 改行を許可するか否か
      * @return チェック結果
      */
-    public static boolean jisX0201_0208(String value, boolean allowNewLine) {
+    public static boolean isJisX0201_0208(String value, boolean allowNewLine) {
 
         final String str = value.replaceAll("\r\n", "\n");
 
