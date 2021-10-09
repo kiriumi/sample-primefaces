@@ -145,6 +145,8 @@ public class ValidationUtils {
 
     private static final String ALLOWED_BAD_CHAR = "～－";
 
+    private static final String FORBIT_BAD_CHAR = "〜‖−¢£¬—";
+
     private static final String FORBIT_CHAR = "\"$&'()*/;<>?[\\]`{|}";
 
     public static boolean isJisX0201_0208(String value) {
@@ -175,7 +177,7 @@ public class ValidationUtils {
                 continue;
             }
 
-            if (FORBIT_CHAR.contains(strChar)) {
+            if (FORBIT_CHAR.contains(strChar) || FORBIT_BAD_CHAR.contains(strChar)) {
                 // 禁止文字を使用している場合エラー
                 return false;
             }
