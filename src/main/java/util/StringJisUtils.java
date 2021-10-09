@@ -2,82 +2,84 @@ package util;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class StringJisUtils {
 
     private StringJisUtils() {
     }
 
-    private static final String REGEX_NUMELIC_HALF = "^[0-9]*$";
+    private static final Pattern PATTERN_NUMELIC_HALF = Pattern.compile("^[0-9]*$");
 
     public static boolean isNumericHalf(String value) {
-        return value.matches(REGEX_NUMELIC_HALF);
+        return PATTERN_NUMELIC_HALF.matcher(value).matches();
+
     }
 
-    private static final String REGEX_NUMELIC_FULL = "^[０-９]*$";
+    private static final Pattern PATTERN_NUMELIC_FULL = Pattern.compile("^[０-９]*$");
 
     public static boolean isNumericFull(String value) {
-        return value.matches(REGEX_NUMELIC_FULL);
+        return PATTERN_NUMELIC_FULL.matcher(value).matches();
     }
 
-    private static final String REGEX_ALFABET_LOWER_HALF = "^[a-z]*$";
+    private static final Pattern PATTERN_ALFABET_LOWER_HALF = Pattern.compile("^[a-z]*$");
 
     public static boolean isAlfavetLowerHalf(String value) {
-        return value.matches(REGEX_ALFABET_LOWER_HALF);
+        return PATTERN_ALFABET_LOWER_HALF.matcher(value).matches();
     }
 
-    private static final String REGEX_ALFABET_UPPER_HALF = "^[A-Z]*$";
+    private static final Pattern PATTERN_ALFABET_UPPER_HALF = Pattern.compile("^[A-Z]*$");
 
     public static boolean isAlfavetUpperHalf(String value) {
-        return value.matches(REGEX_ALFABET_UPPER_HALF);
+        return PATTERN_ALFABET_UPPER_HALF.matcher(value).matches();
     }
 
-    private static final String REGEX_ALFABET_HALF = "^[a-zA-Z]*$";
+    private static final Pattern PATTERN_ALFABET_HALF = Pattern.compile("^[a-zA-Z]*$");
 
     public static boolean isAlfavetHalf(String value) {
-        return value.matches(REGEX_ALFABET_HALF);
+        return PATTERN_ALFABET_HALF.matcher(value).matches();
     }
 
-    private static final String REGEX_ALFABET_LOWER_FULL = "^[ａ-ｚ]*$";
+    private static final Pattern PATTERN_ALFABET_LOWER_FULL = Pattern.compile("^[ａ-ｚ]*$");
 
     public static boolean isAlfavetLowerFull(String value) {
-        return value.matches(REGEX_ALFABET_LOWER_FULL);
+        return PATTERN_ALFABET_LOWER_FULL.matcher(value).matches();
     }
 
-    private static final String REGEX_ALFABET_UPPER_FULL = "^[Ａ-Ｚ]*$";
+    private static final Pattern PATTERN_ALFABET_UPPER_FULL = Pattern.compile("^[Ａ-Ｚ]*$");
 
     public static boolean isAlfavetUpperFull(String value) {
-        return value.matches(REGEX_ALFABET_UPPER_FULL);
+        return PATTERN_ALFABET_UPPER_FULL.matcher(value).matches();
     }
 
-    private static final String REGEX_ALFABET_FULL = "^[ａ-ｚＡ-Ｚ]*$";
+    private static final Pattern PATTERN_ALFABET_FULL = Pattern.compile("^[ａ-ｚＡ-Ｚ]*$");
 
     public static boolean isAlfavetFull(String value) {
-        return value.matches(REGEX_ALFABET_FULL);
+        return PATTERN_ALFABET_FULL.matcher(value).matches();
     }
 
-    private static final String REGEX_KATAKANA_HALF = "^[｡-ﾟ]*$";
+    private static final Pattern PATTERN_KATAKANA_HALF = Pattern.compile("^[｡-ﾟ]*$");
 
     public static boolean isKatakanaHalf(String value) {
-        return value.matches(REGEX_KATAKANA_HALF);
+        return PATTERN_KATAKANA_HALF.matcher(value).matches();
     }
 
-    private static final String REGEX_KATAKANA_FULL = "^[ァ-ヶ]*$";
+    private static final Pattern PATTERN_KATAKANA_FULL = Pattern.compile("^[ァ-ヶ]*$");
 
     public static boolean isKatakanaFull(String value) {
-        return value.matches(REGEX_KATAKANA_FULL);
+        return PATTERN_KATAKANA_FULL.matcher(value).matches();
     }
 
-    private static final String REGEX_HIRAGANA_FULL = "^[ぁ-ゖ]*$";
+    private static final Pattern PATTERN_HIRAGANA_FULL = Pattern.compile("^[ぁ-ゖ]*$");
 
     public static boolean isHiraganaFull(String value) {
-        return value.matches(REGEX_HIRAGANA_FULL);
+        return PATTERN_HIRAGANA_FULL.matcher(value).matches();
     }
 
-    private static final String REGEX_ASCII = "^[!-~]*$";
+    private static final Pattern PATTERN_ASCII = Pattern.compile("^[!-~]*$");
 
     public static boolean isAscii(String value) {
-        return value.matches(REGEX_ASCII) && isJisX0201_0208(value);
+        return PATTERN_ASCII.matcher(value).matches() && isJisX0201_0208(value);
     }
 
     private static final String[] HALF_WIDTH_CAHRS = {
