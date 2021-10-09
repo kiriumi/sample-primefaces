@@ -80,16 +80,6 @@ public class StringJisUtils {
         return value.matches(REGEX_ASCII) && isJisX0201_0208(value);
     }
 
-    private static final String ALLOWED_CHARSET = "x-euc-jp-linux";
-
-    private static final String ALLOWED_BAD_CHAR = "～－";
-
-    private static final String FORBIT_CHAR = "\"$&'()*/;<>?[\\]`{|}";
-
-    public static boolean isJisX0201_0208(String value) {
-        return isJisX0201_0208(value, false);
-    }
-
     private static final String[] HALF_WIDTH_CAHRS = {
             " ", "!", "\"", "#", "$", "%", "&", "(", ")", "*", "+", ",", "-", ".", "/",
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ":", ";", "<", "=", ">", "?", "@",
@@ -136,6 +126,16 @@ public class StringJisUtils {
             converted = converted.replaceAll(FULL_WIDTH_CHARS[i], HALF_WIDTH_CAHRS[i]);
         }
         return converted;
+    }
+
+    private static final String ALLOWED_CHARSET = "x-euc-jp-linux";
+
+    private static final String ALLOWED_BAD_CHAR = "～－";
+
+    private static final String FORBIT_CHAR = "\"$&'()*/;<>?[\\]`{|}";
+
+    public static boolean isJisX0201_0208(String value) {
+        return isJisX0201_0208(value, false);
     }
 
     /**
