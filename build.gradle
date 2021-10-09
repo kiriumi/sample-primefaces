@@ -15,6 +15,7 @@ repositories {
 dependencies {
 
     compileOnly group: 'jakarta.platform', name: 'jakarta.jakartaee-web-api', version: '8.0.0'
+    implementation group: 'javax.mail', name: 'javax.mail-api', version: '1.6.2'
 
     // PrimeFaces
     implementation group: 'org.primefaces', name: 'primefaces', version: '10.0.0'
@@ -46,7 +47,9 @@ dependencies {
     implementation group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.34'
 
     // JasperReports（必須）
-    implementation group: 'net.sf.jasperreports', name: 'jasperreports', version: '6.17.0'
+    implementation (group: 'net.sf.jasperreports', name: 'jasperreports', version: '6.17.0') {
+        exclude group: 'com.lowagie', module: 'itext'
+    }
     //implementation group: 'com.lowagie', name: 'itext', version: '2.1.7.js5' // MavenCentralにないため、WEB-INF/libに配置
 
     // JasperReports（任意）
@@ -58,11 +61,13 @@ dependencies {
 
     // ユーティリティ
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
     implementation group: 'org.apache.commons', name: 'commons-text', version: '1.9'
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.14'
     implementation group: 'org.apache.tika', name: 'tika-core', version: '1.27'
     implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.9.0'
     implementation group: 'com.github.kenglxn.QRGen', name: 'javase', version: '2.6.0'
+    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '7.0.1.Final'
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
 }
