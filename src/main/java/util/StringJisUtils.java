@@ -102,4 +102,8 @@ public class StringJisUtils {
         return value.format(DateTimeFormatter.ofPattern(format));
     }
 
+    public static String escapeSqlWildcard(String sql) {
+        // PostgreSQL用
+        return sql.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+    }
 }
