@@ -1,6 +1,10 @@
 package util;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -8,6 +12,19 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 public class ValidationUtils {
+
+    private static final Pattern PATTERN_NUMELIC_HALF = Pattern.compile("^[0-9]*$");
+    private static final Pattern PATTERN_NUMELIC_FULL = Pattern.compile("^[０-９]*$");
+    private static final Pattern PATTERN_ALPHABET_LOWER_HALF = Pattern.compile("^[a-z]*$");
+    private static final Pattern PATTERN_ALPHABET_UPPER_HALF = Pattern.compile("^[A-Z]*$");
+    private static final Pattern PATTERN_ALPHABET_HALF = Pattern.compile("^[a-zA-Z]*$");
+    private static final Pattern PATTERN_ALPHABET_LOWER_FULL = Pattern.compile("^[ａ-ｚ]*$");
+    private static final Pattern PATTERN_ALPHABET_UPPER_FULL = Pattern.compile("^[Ａ-Ｚ]*$");
+    private static final Pattern PATTERN_ALPHABET_FULL = Pattern.compile("^[ａ-ｚＡ-Ｚ]*$");
+    private static final Pattern PATTERN_KATAKANA_HALF = Pattern.compile("^[｡-ﾟ]*$");
+    private static final Pattern PATTERN_KATAKANA_FULL = Pattern.compile("^[ァ-ヶ]*$");
+    private static final Pattern PATTERN_HIRAGANA_FULL = Pattern.compile("^[ぁ-ゖ]*$");
+    private static final Pattern PATTERN_ASCII = Pattern.compile("^[!-~]*$");
 
     private ValidationUtils() {
     }
@@ -20,87 +37,97 @@ public class ValidationUtils {
         return !isBlank(value);
     }
 
-    private static final Pattern PATTERN_NUMELIC_HALF = Pattern.compile("^[0-9]*$");
-
     public static boolean isNumericHalf(String value) {
         return PATTERN_NUMELIC_HALF.matcher(value).matches();
 
     }
 
-    private static final Pattern PATTERN_NUMELIC_FULL = Pattern.compile("^[０-９]*$");
-
     public static boolean isNumericFull(String value) {
         return PATTERN_NUMELIC_FULL.matcher(value).matches();
     }
 
-    private static final Pattern PATTERN_ALFABET_LOWER_HALF = Pattern.compile("^[a-z]*$");
-
-    public static boolean isAlfavetLowerHalf(String value) {
-        return PATTERN_ALFABET_LOWER_HALF.matcher(value).matches();
+    public static boolean isAlphabetLowerHalf(String value) {
+        return PATTERN_ALPHABET_LOWER_HALF.matcher(value).matches();
     }
 
-    private static final Pattern PATTERN_ALFABET_UPPER_HALF = Pattern.compile("^[A-Z]*$");
-
-    public static boolean isAlfavetUpperHalf(String value) {
-        return PATTERN_ALFABET_UPPER_HALF.matcher(value).matches();
+    public static boolean isAlphabetUpperHalf(String value) {
+        return PATTERN_ALPHABET_UPPER_HALF.matcher(value).matches();
     }
 
-    private static final Pattern PATTERN_ALFABET_HALF = Pattern.compile("^[a-zA-Z]*$");
-
-    public static boolean isAlfavetHalf(String value) {
-        return PATTERN_ALFABET_HALF.matcher(value).matches();
+    public static boolean isAlphabetHalf(String value) {
+        return PATTERN_ALPHABET_HALF.matcher(value).matches();
     }
 
-    private static final Pattern PATTERN_ALFABET_LOWER_FULL = Pattern.compile("^[ａ-ｚ]*$");
-
-    public static boolean isAlfavetLowerFull(String value) {
-        return PATTERN_ALFABET_LOWER_FULL.matcher(value).matches();
+    public static boolean isAlphabetLowerFull(String value) {
+        return PATTERN_ALPHABET_LOWER_FULL.matcher(value).matches();
     }
 
-    private static final Pattern PATTERN_ALFABET_UPPER_FULL = Pattern.compile("^[Ａ-Ｚ]*$");
-
-    public static boolean isAlfavetUpperFull(String value) {
-        return PATTERN_ALFABET_UPPER_FULL.matcher(value).matches();
+    public static boolean isAlphabetUpperFull(String value) {
+        return PATTERN_ALPHABET_UPPER_FULL.matcher(value).matches();
     }
 
-    private static final Pattern PATTERN_ALFABET_FULL = Pattern.compile("^[ａ-ｚＡ-Ｚ]*$");
-
-    public static boolean isAlfavetFull(String value) {
-        return PATTERN_ALFABET_FULL.matcher(value).matches();
+    public static boolean isAlphabetFull(String value) {
+        return PATTERN_ALPHABET_FULL.matcher(value).matches();
     }
-
-    private static final Pattern PATTERN_KATAKANA_HALF = Pattern.compile("^[｡-ﾟ]*$");
 
     public static boolean isKatakanaHalf(String value) {
         return PATTERN_KATAKANA_HALF.matcher(value).matches();
     }
 
-    private static final Pattern PATTERN_KATAKANA_FULL = Pattern.compile("^[ァ-ヶ]*$");
-
     public static boolean isKatakanaFull(String value) {
         return PATTERN_KATAKANA_FULL.matcher(value).matches();
     }
-
-    private static final Pattern PATTERN_HIRAGANA_FULL = Pattern.compile("^[ぁ-ゖ]*$");
 
     public static boolean isHiraganaFull(String value) {
         return PATTERN_HIRAGANA_FULL.matcher(value).matches();
     }
 
-    private static final Pattern PATTERN_ASCII = Pattern.compile("^[!-~]*$");
-
     public static boolean isAscii(String value) {
         return PATTERN_ASCII.matcher(value).matches() && isJisX0201_0208(value);
     }
 
-    private static final String ALLOWED_CHARSET = "x-euc-jp-linux";
+    public static boolean isDigits(String value) {
+        return isDigits(value, Integer.MAX_VALUE, Integer.MAX_VALUE);
+    }
 
-    private static final String ALLOWED_BAD_CHAR = "～－";
+    public static boolean isDigits(String value, int integerLength) {
+        return isDigits(value, integerLength, 0);
+    }
 
-    private static final String FORBIT_CHAR = "\"$&'()*/;<>?[\\]`{|}";
+    public static boolean isDigits(String value, int integerLength, int fractionLength) {
 
-    public static boolean isJisX0201_0208(String value) {
-        return isJisX0201_0208(value, false);
+        final BigDecimal decimal;
+
+        try {
+            decimal = new BigDecimal(value);
+
+        } catch (final NumberFormatException e) {
+            return false;
+        }
+
+        final int integer = decimal.precision() - decimal.scale();
+
+        if (integer > integerLength) {
+            return false;
+        }
+
+        if (decimal.scale() > fractionLength) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static final boolean isDateTime(String value, String format) {
+
+        try {
+            LocalDateTime.parse(value, DateTimeFormatter.ofPattern(format));
+
+        } catch (final DateTimeParseException e) {
+            return false;
+        }
+
+        return false;
     }
 
     public static boolean isEmail(String value) {
@@ -112,6 +139,16 @@ public class ValidationUtils {
             return false;
         }
         return true;
+    }
+
+    private static final String ALLOWED_CHARSET = "x-euc-jp-linux";
+
+    private static final String ALLOWED_BAD_CHAR = "～－";
+
+    private static final String FORBIT_CHAR = "\"$&'()*/;<>?[\\]`{|}";
+
+    public static boolean isJisX0201_0208(String value) {
+        return isJisX0201_0208(value, false);
     }
 
     /**
