@@ -33,7 +33,7 @@ import lombok.Getter;
 import lombok.Setter;
 import repository.UserInfoMapper;
 import security.LoginManager;
-import validation.constraints.AvirableChar;
+import validation.constraints.AvailableChar;
 import validation.constraints.Password;
 
 @Named
@@ -42,7 +42,7 @@ public class Signup extends BaseBackingBean {
 
     private BCryptPasswordEncoder passwordEncoder;
 
-    @AvirableChar
+    @AvailableChar
     @NotBlank
     @Getter
     @Setter

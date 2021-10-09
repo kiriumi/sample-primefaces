@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import repository.UserInfoMapper;
 import security.LoginManager;
-import validation.constraints.AvirableChar;
+import validation.constraints.AvailableChar;
 
 @Named
 @ViewScoped
@@ -35,7 +35,7 @@ public class Login extends BaseBackingBean {
     private BCryptPasswordEncoder passwordEncoder;
 
     @NotBlank
-    @AvirableChar
+    @AvailableChar
     @Getter
     @Setter
     private String id;
