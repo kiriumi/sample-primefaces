@@ -8,24 +8,25 @@ public class StringJisUtils {
     private StringJisUtils() {
     }
 
+    @Deprecated
     public static boolean isJisX0201_0208(String value) {
-        return isJisX0201_0208(value , false);
+        return isJisX0201_0208(value, false);
     }
 
-
+    @Deprecated
     public static boolean isJisX0201_0208(String value, boolean allowLf) {
 
-        for (char c : value.toCharArray()) {
+        for (final char c : value.toCharArray()) {
 
             if (List.of('－', '―').contains(c)) {
                 continue;
             }
 
-            String strChar = new String(new char[] { c });
+            final String strChar = new String(new char[] { c });
             try {
-                byte[] bytes = strChar.getBytes("euc-jp");
+                final byte[] bytes = strChar.getBytes("euc-jp");
                 int code = 0;
-                for (byte b : bytes) {
+                for (final byte b : bytes) {
                     code = (code << 8) + (b & 0xff);
                 }
 
@@ -39,21 +40,22 @@ public class StringJisUtils {
                     if ("\"$&'()*/;<>?[\\]`{|}".contains(strChar)) {
                         // インジェクション対策用の使用禁止文字
                         return false;
-
-                    } else {
-                        // TODO ここのコードが不明
-                        String compare = new String(new byte[] { (byte) code }, "EUC_JP");
-                        if (!strChar.equals(compare)) {
-                            return false;
-                        }
                     }
+
+                    final String compare = new String(new byte[] { (byte) code }, "EUC_JP");
+                    if (!strChar.equals(compare)) {
+                        return false;
+                    }
+
                     continue;
 
-                } else if (0x8EA1 <= code && code <= 0x8EDF) {
+                }
+                if (0x8EA1 <= code && code <= 0x8EDF) {
                     // JIS X 0201 半角カナ
                     continue;
 
-                } else if (0xA1A1 <= code && code <= 0xF406) {
+                }
+                if (0xA1A1 <= code && code <= 0xF406) {
                     // JIS X 0208
                     if (List.of('〜', '‖', '−', '¢', '£', '¬', '—').contains(c)) {
                         // ダメ文字はエラーとする
@@ -63,10 +65,82 @@ public class StringJisUtils {
                 }
                 return false;
 
-            } catch (UnsupportedEncodingException e) {
+            } catch (final UnsupportedEncodingException e) {
                 throw new RuntimeException();
             }
         }
         return true;
     }
+
+    private static final String ALLOWED_CHARSET = "x-euc-jp-linux";
+
+    private static final String ALLOWED_BAD_CHAR = "～－";
+
+    private static final String FORBIT_CHAR = "\"$&'()*/;<>?[\\]`{|}";
+
+    public static boolean jisX0201_0208(String value) {
+        return jisX0201_0208(value, false);
+    }
+
+    /**
+     * JIS X 0201, JIS X 0208の文字かチェックする。左記文字集合の文字でも以下文字はエラーとする。<br>
+     * 制御文字<br>
+     * 「～」「－」を除くダメ文字（― ∥ ￠ ￡ ￢）<br>
+     * オーバーライン（‾）<br>
+     * .
+     *
+     * @param value チェック対象の文字列
+     * @param allowNewLine 改行を許可するか否か
+     * @return チェック結果
+     */
+    public static boolean jisX0201_0208(String value, boolean allowNewLine) {
+
+        final String str = value.replaceAll("\r\n", "\n");
+
+        final String[] strChars = str.split("");
+
+        for (final String strChar : strChars) {
+
+            if (strChar.equals("\n") && allowNewLine) {
+                // 改行を許可する場合
+                continue;
+            }
+
+            if (FORBIT_CHAR.contains(strChar)) {
+                // 禁止文字を使用している場合エラー
+                return false;
+            }
+
+            if (ALLOWED_BAD_CHAR.contains(strChar)) {
+                // 使用できるダメ文字を使用している場合
+                continue;
+            }
+
+            try {
+                final byte[] eucJpBytes = strChar.getBytes(ALLOWED_CHARSET);
+
+                int code = 0;
+                for (final byte b : eucJpBytes) {
+                    code = (code << 8) + (b & 0xff);
+                }
+
+                if ((0x20 <= code && code <= 0x7e) // ASCII
+                        || (0x8EA1 <= code && code <= 0x8EDF) // JIS X 0201 半角カナ
+                        || (0xA1A1 <= code && code <= 0xF406)) { // JIS X 0208
+
+                    final String encoded = new String(eucJpBytes, ALLOWED_CHARSET);
+                    if (strChar.equals(encoded)) {
+                        continue;
+                    }
+                }
+
+                return false;
+
+            } catch (final UnsupportedEncodingException e) {
+                throw new RuntimeException();
+            }
+        }
+        return true;
+    }
+
 }

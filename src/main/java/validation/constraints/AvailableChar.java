@@ -11,30 +11,29 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import validation.AvirableCharValidator;
-import validation.constraints.AvirableChar.List;
+import validation.AvailableCharValidator;
+import validation.constraints.AvailableChar.List;
 
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
 @Repeatable(List.class)
 @Documented
-@Constraint(validatedBy = {AvirableCharValidator.class})
-public @interface AvirableChar {
+@Constraint(validatedBy = { AvailableCharValidator.class })
+public @interface AvailableChar {
 
-    String message() default "{validation.constraints.AvirableChar.message}";
+    String message() default "{validation.constraints.AvailableChar.message}";
 
-    boolean allowLf() default false;
+    boolean allowNewLine() default false;
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-
     @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
     @Retention(RUNTIME)
     @Documented
     public @interface List {
-        AvirableChar[] value();
+        AvailableChar[] value();
     }
 
 }
