@@ -8,68 +8,76 @@ public class StringJisUtils {
     private StringJisUtils() {
     }
 
-    @Deprecated
-    public static boolean isJisX0201_0208_old(String value) {
-        return isJisX0201_0208_old(value, false);
+    private static final String REGEX_NUMELIC_HALF = "^[0-9]*$";
+
+    public static boolean isNumericHalf(String value) {
+        return value.matches(REGEX_NUMELIC_HALF);
     }
 
-    @Deprecated
-    public static boolean isJisX0201_0208_old(String value, boolean allowLf) {
+    private static final String REGEX_NUMELIC_FULL = "^[０-９]*$";
 
-        for (final char c : value.toCharArray()) {
+    public static boolean isNumericFull(String value) {
+        return value.matches(REGEX_NUMELIC_FULL);
+    }
 
-            if (List.of('－', '―').contains(c)) {
-                continue;
-            }
+    private static final String REGEX_ALFABET_LOWER_HALF = "^[a-z]*$";
 
-            final String strChar = new String(new char[] { c });
-            try {
-                final byte[] bytes = strChar.getBytes("euc-jp");
-                int code = 0;
-                for (final byte b : bytes) {
-                    code = (code << 8) + (b & 0xff);
-                }
+    public static boolean isAlfavetLowerHalf(String value) {
+        return value.matches(REGEX_ALFABET_LOWER_HALF);
+    }
 
-                if (code == 0x0a && allowLf) {
-                    // 改行を許可する場合
-                    continue;
-                }
+    private static final String REGEX_ALFABET_UPPER_HALF = "^[A-Z]*$";
 
-                if (0x20 <= code && code <= 0x7e) {
-                    // ASCII
-                    if ("\"$&'()*/;<>?[\\]`{|}".contains(strChar)) {
-                        // インジェクション対策用の使用禁止文字
-                        return false;
-                    }
+    public static boolean isAlfavetUpperHalf(String value) {
+        return value.matches(REGEX_ALFABET_UPPER_HALF);
+    }
 
-                    final String compare = new String(new byte[] { (byte) code }, "EUC_JP");
-                    if (!strChar.equals(compare)) {
-                        return false;
-                    }
+    private static final String REGEX_ALFABET_HALF = "^[a-zA-Z]*$";
 
-                    continue;
+    public static boolean isAlfavetHalf(String value) {
+        return value.matches(REGEX_ALFABET_HALF);
+    }
 
-                }
-                if (0x8EA1 <= code && code <= 0x8EDF) {
-                    // JIS X 0201 半角カナ
-                    continue;
+    private static final String REGEX_ALFABET_LOWER_FULL = "^[ａ-ｚ]*$";
 
-                }
-                if (0xA1A1 <= code && code <= 0xF406) {
-                    // JIS X 0208
-                    if (List.of('〜', '‖', '−', '¢', '£', '¬', '—').contains(c)) {
-                        // ダメ文字はエラーとする
-                        return false;
-                    }
-                    continue;
-                }
-                return false;
+    public static boolean isAlfavetLowerFull(String value) {
+        return value.matches(REGEX_ALFABET_LOWER_FULL);
+    }
 
-            } catch (final UnsupportedEncodingException e) {
-                throw new RuntimeException();
-            }
-        }
-        return true;
+    private static final String REGEX_ALFABET_UPPER_FULL = "^[Ａ-Ｚ]*$";
+
+    public static boolean isAlfavetUpperFull(String value) {
+        return value.matches(REGEX_ALFABET_UPPER_FULL);
+    }
+
+    private static final String REGEX_ALFABET_FULL = "^[ａ-ｚＡ-Ｚ]*$";
+
+    public static boolean isAlfavetFull(String value) {
+        return value.matches(REGEX_ALFABET_FULL);
+    }
+
+    private static final String REGEX_KATAKANA_HALF = "^[｡-ﾟ]*$";
+
+    public static boolean isKatakanaHalf(String value) {
+        return value.matches(REGEX_KATAKANA_HALF);
+    }
+
+    private static final String REGEX_KATAKANA_FULL = "^[ァ-ヶ]*$";
+
+    public static boolean isKatakanaFull(String value) {
+        return value.matches(REGEX_KATAKANA_FULL);
+    }
+
+    private static final String REGEX_HIRAGANA_FULL = "^[ぁ-ゖ]*$";
+
+    public static boolean isHiraganaFull(String value) {
+        return value.matches(REGEX_HIRAGANA_FULL);
+    }
+
+    private static final String REGEX_ASCII = "^[!-~]*$";
+
+    public static boolean isAscii(String value) {
+        return value.matches(REGEX_ASCII) && isJisX0201_0208(value);
     }
 
     private static final String ALLOWED_CHARSET = "x-euc-jp-linux";
@@ -143,4 +151,67 @@ public class StringJisUtils {
         return true;
     }
 
+    @Deprecated
+    public static boolean isJisX0201_0208_old(String value) {
+        return isJisX0201_0208_old(value, false);
+    }
+
+    @Deprecated
+    public static boolean isJisX0201_0208_old(String value, boolean allowLf) {
+
+        for (final char c : value.toCharArray()) {
+
+            if (List.of('－', '―').contains(c)) {
+                continue;
+            }
+
+            final String strChar = new String(new char[] { c });
+            try {
+                final byte[] bytes = strChar.getBytes("euc-jp");
+                int code = 0;
+                for (final byte b : bytes) {
+                    code = (code << 8) + (b & 0xff);
+                }
+
+                if (code == 0x0a && allowLf) {
+                    // 改行を許可する場合
+                    continue;
+                }
+
+                if (0x20 <= code && code <= 0x7e) {
+                    // ASCII
+                    if ("\"$&'()*/;<>?[\\]`{|}".contains(strChar)) {
+                        // インジェクション対策用の使用禁止文字
+                        return false;
+                    }
+
+                    final String compare = new String(new byte[] { (byte) code }, "EUC_JP");
+                    if (!strChar.equals(compare)) {
+                        return false;
+                    }
+
+                    continue;
+
+                }
+                if (0x8EA1 <= code && code <= 0x8EDF) {
+                    // JIS X 0201 半角カナ
+                    continue;
+
+                }
+                if (0xA1A1 <= code && code <= 0xF406) {
+                    // JIS X 0208
+                    if (List.of('〜', '‖', '−', '¢', '£', '¬', '—').contains(c)) {
+                        // ダメ文字はエラーとする
+                        return false;
+                    }
+                    continue;
+                }
+                return false;
+
+            } catch (final UnsupportedEncodingException e) {
+                throw new RuntimeException();
+            }
+        }
+        return true;
+    }
 }
