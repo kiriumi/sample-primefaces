@@ -1,5 +1,8 @@
 package util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class StringJisUtils {
 
     private StringJisUtils() {
@@ -93,6 +96,10 @@ public class StringJisUtils {
             converted = converted.replaceAll(FULL_WIDTH_CHARS[i], HALF_WIDTH_CAHRS[i]);
         }
         return converted;
+    }
+
+    public static String formatDateTime(LocalDateTime value, String format) {
+        return value.format(DateTimeFormatter.ofPattern(format));
     }
 
 }
