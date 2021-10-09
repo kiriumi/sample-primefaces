@@ -4,16 +4,17 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class ValidationUtils {
 
     private ValidationUtils() {
     }
 
-    private boolean isBlank(String value) {
+    public static boolean isBlank(String value) {
+        return value == null ? true : StringJisUtils.trim(value).isEmpty();
+    }
 
-        return StringUtils.isBlank(value);
+    public static boolean isNotBlank(String value) {
+        return !isBlank(value);
     }
 
     private static final Pattern PATTERN_NUMELIC_HALF = Pattern.compile("^[0-9]*$");
