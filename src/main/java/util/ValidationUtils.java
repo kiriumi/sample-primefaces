@@ -143,15 +143,23 @@ public class ValidationUtils {
 
     private static final String ALLOWED_CHARSET = "x-euc-jp-linux";
 
-    private static final String ALLOWED_BAD_CHAR = "～－";
+    private static final String ALLOWED_UNMAPPING_CHAR = "～－";
 
-    private static final String FORBIT_BAD_CHAR = "〜‖−¢£¬—";
+    private static final String FORBITTEN_UMAPPING_CHAR = "〜‖−¢£¬—";
 
-    private static final String FORBIT_CHAR = "\"$&'()*/;<>?[\\]`{|}";
+    private static final String FORBITTEN_CHAR = "\"$&'()*/;<>?[\\]`{|}";
 
     private static final String CRLF = "\r\n";
 
     private static final String LF = "\n";
+
+    private static final String EMPTY = "";
+
+    private static boolean containSurrogate(String value) {
+        return value.chars().anyMatch(c -> {
+            return Character.isSurrogate((char) c);
+        });
+    }
 
     public static boolean isJisX0201_0208(String value) {
         return isJisX0201_0208(value, false);
@@ -170,30 +178,34 @@ public class ValidationUtils {
      */
     public static boolean isJisX0201_0208(String value, boolean allowNewLine) {
 
-        final String[] strChars = value.split("");
+        final String[] strChars = value.split(EMPTY);
 
         for (final String strChar : strChars) {
+
+            if (containSurrogate(value)) {
+                return false;
+            }
 
             if ((strChar.equals(LF) || strChar.equals(CRLF)) && allowNewLine) {
                 // 改行を許可する場合
                 continue;
             }
 
-            if (FORBIT_CHAR.contains(strChar) || FORBIT_BAD_CHAR.contains(strChar)) {
+            if (FORBITTEN_CHAR.contains(strChar) || FORBITTEN_UMAPPING_CHAR.contains(strChar)) {
                 // 禁止文字を使用している場合エラー
                 return false;
             }
 
-            if (ALLOWED_BAD_CHAR.contains(strChar)) {
+            if (ALLOWED_UNMAPPING_CHAR.contains(strChar)) {
                 // 使用できるダメ文字を使用している場合
                 continue;
             }
 
             try {
-                final byte[] eucJpBytes = strChar.getBytes(ALLOWED_CHARSET);
+                final byte[] bytes = strChar.getBytes(ALLOWED_CHARSET);
 
                 int code = 0;
-                for (final byte b : eucJpBytes) {
+                for (final byte b : bytes) {
                     code = (code << 8) + (b & 0xff);
                 }
 
@@ -201,7 +213,7 @@ public class ValidationUtils {
                         || (0x8EA1 <= code && code <= 0x8EDF) // JIS X 0201 半角カナ
                         || (0xA1A1 <= code && code <= 0xF406)) { // JIS X 0208
 
-                    final String encoded = new String(eucJpBytes, ALLOWED_CHARSET);
+                    final String encoded = new String(bytes, ALLOWED_CHARSET);
                     if (strChar.equals(encoded)) {
                         continue;
                     }
