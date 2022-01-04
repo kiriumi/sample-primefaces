@@ -4,5 +4,5 @@
 	<fixed facet="jst.web"/>
 	<installed facet="jst.web" version="2.4"/>
 	<installed facet="jst.java" version="11"/>
-	<runtime name="WildFly 24.0 Runtime"/>
+	<runtime name="WildFly24(Java11)"/>
 </faceted-project>
