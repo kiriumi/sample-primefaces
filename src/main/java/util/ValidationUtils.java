@@ -11,83 +11,116 @@ import java.util.regex.Pattern;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class ValidationUtils {
 
     private static final Pattern PATTERN_NUMELIC_HALF = Pattern.compile("^[0-9]*$");
     private static final Pattern PATTERN_NUMELIC_FULL = Pattern.compile("^[０-９]*$");
-    private static final Pattern PATTERN_ALPHABET_LOWER_HALF = Pattern.compile("^[a-z]*$");
-    private static final Pattern PATTERN_ALPHABET_UPPER_HALF = Pattern.compile("^[A-Z]*$");
-    private static final Pattern PATTERN_ALPHABET_HALF = Pattern.compile("^[a-zA-Z]*$");
-    private static final Pattern PATTERN_ALPHABET_LOWER_FULL = Pattern.compile("^[ａ-ｚ]*$");
-    private static final Pattern PATTERN_ALPHABET_UPPER_FULL = Pattern.compile("^[Ａ-Ｚ]*$");
-    private static final Pattern PATTERN_ALPHABET_FULL = Pattern.compile("^[ａ-ｚＡ-Ｚ]*$");
-    private static final Pattern PATTERN_KATAKANA_HALF = Pattern.compile("^[｡-ﾟ]*$");
-    private static final Pattern PATTERN_KATAKANA_FULL = Pattern.compile("^[ァ-ヶ]*$");
-    private static final Pattern PATTERN_HIRAGANA_FULL = Pattern.compile("^[ぁ-ゖ]*$");
-    private static final Pattern PATTERN_ASCII = Pattern.compile("^[!-~]*$");
+
+    private static final Pattern PATTERN_ALPHABET_LOWER_HALF = Pattern.compile("^[ a-z]*$");
+    private static final Pattern PATTERN_ALPHABET_UPPER_HALF = Pattern.compile("^[ A-Z]*$");
+    private static final Pattern PATTERN_ALPHABET_HALF = Pattern.compile("^[ a-zA-Z]*$");
+    private static final Pattern PATTERN_ALPHABET_LOWER_FULL = Pattern.compile("^[　ａ-ｚ]*$");
+    private static final Pattern PATTERN_ALPHABET_UPPER_FULL = Pattern.compile("^[　Ａ-Ｚ]*$");
+    private static final Pattern PATTERN_ALPHABET_FULL = Pattern.compile("^[　ａ-ｚＡ-Ｚ]*$");
+
+    private static final Pattern PATTERN_ALPHANUMERIC_HALF = Pattern.compile("^[ 0-9A-Za-z]*$");
+    private static final Pattern PATTERN_ALPHANUMERIC_FULL = Pattern.compile("^[　０-１Ａ-Ｚａ-ｚ]*$");
+
+    private static final Pattern PATTERN_ALPHANUMERIC_SYMBOL_HALF = Pattern.compile("^[ -~]*$");
+    private static final Pattern PATTERN_ALPHANUMERIC_SYMBOL_FULL = Pattern.compile("^[　！-～]*$");
+
+    private static final Pattern PATTERN_KATAKANA_HALF = Pattern.compile("^[ ｦ-ﾟ]*$");
+    private static final Pattern PATTERN_KATAKANA_FULL = Pattern.compile("^[　ァ-ヶー]*$");
+    private static final Pattern PATTERN_HIRAGANA = Pattern.compile("^[　ぁ-ゖー]*$");
+
+    private static final Pattern PATTERN_HANKAKU = Pattern.compile("^[ -~｡-ﾟ]*$"); // 禁止記号を除外する正規表現：^(?!.*["$&'\(\)*/;<>?\[\\\]`{\|}])[ -~｡-ﾟ]*$
 
     private ValidationUtils() {
     }
 
     public static boolean isBlank(String value) {
-        return value == null ? true : StringJisUtils.trim(value).isEmpty();
+        return StringUtils.isBlank(value);
     }
 
     public static boolean isNotBlank(String value) {
-        return !isBlank(value);
+        return StringUtils.isNotBlank(value);
     }
 
     public static boolean isNumericHalf(String value) {
-        return PATTERN_NUMELIC_HALF.matcher(value).matches();
+        return (value == null) ? false : PATTERN_NUMELIC_HALF.matcher(value).matches();
 
     }
 
     public static boolean isNumericFull(String value) {
-        return PATTERN_NUMELIC_FULL.matcher(value).matches();
+        return (value == null) ? false : PATTERN_NUMELIC_FULL.matcher(value).matches();
     }
 
     public static boolean isAlphabetLowerHalf(String value) {
-        return PATTERN_ALPHABET_LOWER_HALF.matcher(value).matches();
+        return (value == null) ? false : PATTERN_ALPHABET_LOWER_HALF.matcher(value).matches();
     }
 
     public static boolean isAlphabetUpperHalf(String value) {
-        return PATTERN_ALPHABET_UPPER_HALF.matcher(value).matches();
+        return (value == null) ? false : PATTERN_ALPHABET_UPPER_HALF.matcher(value).matches();
     }
 
     public static boolean isAlphabetHalf(String value) {
-        return PATTERN_ALPHABET_HALF.matcher(value).matches();
+        return (value == null) ? false : PATTERN_ALPHABET_HALF.matcher(value).matches();
     }
 
     public static boolean isAlphabetLowerFull(String value) {
-        return PATTERN_ALPHABET_LOWER_FULL.matcher(value).matches();
+        return (value == null) ? false : PATTERN_ALPHABET_LOWER_FULL.matcher(value).matches();
     }
 
     public static boolean isAlphabetUpperFull(String value) {
-        return PATTERN_ALPHABET_UPPER_FULL.matcher(value).matches();
+        return (value == null) ? false : PATTERN_ALPHABET_UPPER_FULL.matcher(value).matches();
     }
 
     public static boolean isAlphabetFull(String value) {
-        return PATTERN_ALPHABET_FULL.matcher(value).matches();
+        return (value == null) ? false : PATTERN_ALPHABET_FULL.matcher(value).matches();
+    }
+
+    public static boolean isAlphanumericHalf(String value) {
+        return (value == null) ? false : PATTERN_ALPHANUMERIC_HALF.matcher(value).matches();
+    }
+
+    public static boolean isAlphanumericFull(String value) {
+        return (value == null) ? false : PATTERN_ALPHANUMERIC_FULL.matcher(value).matches();
+    }
+
+    public static boolean isAlphanumericSymbolHalf(String value) {
+        return (value == null) ? false
+                : PATTERN_ALPHANUMERIC_SYMBOL_HALF.matcher(value).matches() && isJisX0201_0208(value);
+    }
+
+    public static boolean isAlphanumericSymbolFull(String value) {
+        return (value == null) ? false
+                : PATTERN_ALPHANUMERIC_SYMBOL_FULL.matcher(value).matches() && isJisX0201_0208(value);
     }
 
     public static boolean isKatakanaHalf(String value) {
-        return PATTERN_KATAKANA_HALF.matcher(value).matches();
+        return (value == null) ? false : PATTERN_KATAKANA_HALF.matcher(value).matches();
     }
 
     public static boolean isKatakanaFull(String value) {
-        return PATTERN_KATAKANA_FULL.matcher(value).matches();
+        return (value == null) ? false : PATTERN_KATAKANA_FULL.matcher(value).matches();
     }
 
     public static boolean isHiraganaFull(String value) {
-        return PATTERN_HIRAGANA_FULL.matcher(value).matches();
+        return (value == null) ? false : PATTERN_HIRAGANA.matcher(value).matches();
     }
 
-    public static boolean isAscii(String value) {
-        return PATTERN_ASCII.matcher(value).matches() && isJisX0201_0208(value);
+    public static boolean isHalfWidth(String value) {
+        return (value == null) ? false : PATTERN_HANKAKU.matcher(value).matches() && isJisX0201_0208(value);
+    }
+
+    public static boolean isFullWidth(String value) {
+        return (value == null) ? false : !PATTERN_HANKAKU.matcher(value).matches() && isJisX0201_0208(value);
     }
 
     public static boolean isDigits(String value) {
-        return isDigits(value, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        return (value == null) ? false : isDigits(value, Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     public static boolean isDigits(String value, int integerLength) {
@@ -95,6 +128,10 @@ public class ValidationUtils {
     }
 
     public static boolean isDigits(String value, int integerLength, int fractionLength) {
+
+        if (value == null) {
+            return false;
+        }
 
         final BigDecimal decimal;
 
@@ -120,6 +157,10 @@ public class ValidationUtils {
 
     public static final boolean isDateTime(String value, String format) {
 
+        if (value == null) {
+            return false;
+        }
+
         try {
             LocalDateTime.parse(value, DateTimeFormatter.ofPattern(format));
 
@@ -132,12 +173,17 @@ public class ValidationUtils {
 
     public static boolean isEmail(String value) {
 
+        if (value == null) {
+            return false;
+        }
+
         try {
             new InternetAddress(value, true);
 
         } catch (final AddressException e) {
             return false;
         }
+
         return true;
     }
 
@@ -177,6 +223,10 @@ public class ValidationUtils {
      * @return チェック結果
      */
     public static boolean isJisX0201_0208(String value, boolean allowNewLine) {
+
+        if (value == null) {
+            return false;
+        }
 
         final String[] strChars = value.split(EMPTY);
 
