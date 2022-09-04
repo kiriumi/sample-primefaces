@@ -140,10 +140,6 @@ public class Signup extends BaseBackingBean {
             user.setPassword(passwordEncoder.encode(password));
             mapper.insertSelective(user);
 
-            if (false) {
-                throw new Exception();
-            }
-
             // 本来はここで、ユーザ登録したことを、メールでユーザに通知する
 
             messageService().addGlobalMessageInfo("ユーザ登録が完了したよ");
