@@ -124,7 +124,7 @@ public class Signup extends BaseBackingBean {
     }
 
     //    @Inject
-    //    UserTransaction tx;
+    //    private UserTransaction tx;
 
     @Transactional
     public String signup() throws NotSupportedException, SystemException {
