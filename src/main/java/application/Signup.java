@@ -10,6 +10,7 @@ import javax.inject.Named;
 import javax.json.bind.JsonbBuilder;
 import javax.transaction.NotSupportedException;
 import javax.transaction.SystemException;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -17,7 +18,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.mybatis.cdi.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.google.common.base.Objects;
@@ -87,7 +87,7 @@ public class Signup extends BaseBackingBean {
 
         if (isBot) {
 
-            ReCatpchaResponse reCatpchaReses = getReCatpchaResponse();
+            final ReCatpchaResponse reCatpchaReses = getReCatpchaResponse();
 
             if (!reCatpchaReses.isSuccess()) {
                 messageService().addGlobalMessageWarn("もう一度登録を押してください");
@@ -111,10 +111,10 @@ public class Signup extends BaseBackingBean {
             return;
         }
 
-        UserInfoExample example = new UserInfoExample();
-        Criteria criteria = example.createCriteria();
+        final UserInfoExample example = new UserInfoExample();
+        final Criteria criteria = example.createCriteria();
         criteria.andIdEqualTo(id);
-        long count = mapper.countByExample(example);
+        final long count = mapper.countByExample(example);
 
         if (count != 0) {
             messageService().addMessageError("id", "そのIDは使用されています");
@@ -140,13 +140,17 @@ public class Signup extends BaseBackingBean {
             user.setPassword(passwordEncoder.encode(password));
             mapper.insertSelective(user);
 
+            if (false) {
+                throw new Exception();
+            }
+
             // 本来はここで、ユーザ登録したことを、メールでユーザに通知する
 
             messageService().addGlobalMessageInfo("ユーザ登録が完了したよ");
             flash().setKeepMessages(true);
             //            tx.commit();
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             //            tx.rollback();
             throw new WebApplicationException();
 
@@ -162,13 +166,13 @@ public class Signup extends BaseBackingBean {
     private ReCatpchaResponse getReCatpchaResponse() {
 
         // reCATPCHAに検証をリクエストし
-        UriBuilder uri = UriBuilder.fromUri("https://www.google.com/recaptcha/api/siteverify")
+        final UriBuilder uri = UriBuilder.fromUri("https://www.google.com/recaptcha/api/siteverify")
                 .queryParam("secret", "6Ldy9w8cAAAAAOvp_jALS5IrsFJK0xCGa8tUiwED")
                 .queryParam("response", reCatpchaToken);
 
-        Client client = ClientBuilder.newClient();
-        String json = client.target(uri).request(MediaType.TEXT_PLAIN).get(String.class);
-        ReCatpchaResponse response = JsonbBuilder.create().fromJson(StringEscapeUtils.unescapeJson(json),
+        final Client client = ClientBuilder.newClient();
+        final String json = client.target(uri).request(MediaType.TEXT_PLAIN).get(String.class);
+        final ReCatpchaResponse response = JsonbBuilder.create().fromJson(StringEscapeUtils.unescapeJson(json),
                 ReCatpchaResponse.class);
 
         return response;
