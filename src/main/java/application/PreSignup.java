@@ -59,7 +59,7 @@ public class PreSignup extends BaseBackingBean {
         user.setEmail(email);
         setUser(user);
 
-        towStep.setup(email, "signup", "preSignup");
+        towStep.setup(email, "ユーザ登録における本人確認", "signup", "preSignup");
 
         return redirect("twoStepVerification");
     }

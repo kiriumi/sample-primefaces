@@ -1,13 +1,17 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
+import java.util.Random;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.mail.MessagingException;
 
+import exception.WebApplicationException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,10 +21,14 @@ public class TwoStepVerificatior implements Serializable {
 
     public static final String FLASH_KEY_TWO_STEP_VERIFICATR_SUCCESS = "domain.TwoStepVerificatior.success";
 
+    private static final String EMAIL_MASSAGE_FORMAT = "トークンです。\n%s";
+
     @Inject
     private ExternalContext extCtx;
 
-    private String email;
+    private String emailAddress;
+
+    private String emailTitle;
 
     @Setter
     private String redirectPage;
@@ -37,23 +45,34 @@ public class TwoStepVerificatior implements Serializable {
 
     private Runnable callback;
 
-    public void setup(String email, String redirectPage, String backPage) {
+    public void setup(String emailAddress, String emailTitle, String redirectPage, String backPage) {
         clear();
-        this.email = email;
+        this.emailAddress = emailAddress;
+        this.emailTitle = emailTitle;
         this.redirectPage = redirectPage;
         this.backPage = backPage;
         this.setuped = true;
         sendTokenByMail();
     }
 
-    public void setup(String email, String redirectPage, String backPage, Runnable callbackIfSuccessed) {
-        setup(email, redirectPage, backPage);
+    public void setup(String emailAddress, String emailTitle,
+            String redirectPage, String backPage, Runnable callbackIfSuccessed) {
+
+        setup(emailAddress, emailTitle, redirectPage, backPage);
         this.callback = callbackIfSuccessed;
     }
 
     public void sendTokenByMail() {
+
         generateToken();
-        sendMail();
+
+        try {
+            MailSender.sendMail(emailAddress, emailTitle,
+                    String.format(EMAIL_MASSAGE_FORMAT, token));
+
+        } catch (MessagingException e) {
+            throw new WebApplicationException("Eメールの送信に失敗しました。", e);
+        }
     }
 
     public boolean verify(String inputedToken) {
@@ -70,7 +89,8 @@ public class TwoStepVerificatior implements Serializable {
     }
 
     public boolean isSuccessed() {
-        return (boolean) extCtx.getFlash().getOrDefault(TwoStepVerificatior.FLASH_KEY_TWO_STEP_VERIFICATR_SUCCESS, false);
+        return (boolean) extCtx.getFlash().getOrDefault(
+                TwoStepVerificatior.FLASH_KEY_TWO_STEP_VERIFICATR_SUCCESS, false);
     }
 
     public String getRedirectPage() {
@@ -86,18 +106,15 @@ public class TwoStepVerificatior implements Serializable {
     }
 
     private void clear() {
-        this.email = null;
+        this.emailAddress = null;
         this.redirectPage = null;
         this.backPage = null;
         this.token = null;
     }
 
     private void generateToken() {
-        this.token = "123456";
-    }
-
-    private void sendMail() {
-        System.out.println(email);
+        Random random = new Random(new Date().getTime());
+        this.token = String.valueOf(random.nextInt(999999));
     }
 
 }

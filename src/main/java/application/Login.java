@@ -9,11 +9,13 @@ import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import domain.MailSender;
 import domain.TwoStepVerificatior;
 import dto.UserInfo;
 import faces.BaseBackingBean;
@@ -156,9 +158,14 @@ public class Login extends BaseBackingBean {
 
         setUser(user);
         loginManager.setup(user.getId(), autoLogin);
-        twoStep.setup(user.getEmail(), "/application/top", "login", () -> {
 
-            // 本来はここで、ログインしたことを、メールでユーザに通知する
+        twoStep.setup(user.getEmail(), "ログインに置ける本人確認", "/application/top", "login", () -> {
+            try {
+                MailSender.sendMail(user.getEmail(), "ログイン通知", "ログインされました");
+
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
 
             loginManager.login();
         });

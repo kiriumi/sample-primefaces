@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.google.common.base.Objects;
 
+import domain.MailSender;
 import domain.ReCatpchaResponse;
 import domain.TwoStepVerificatior;
 import dto.UserInfo;
@@ -140,7 +141,7 @@ public class Signup extends BaseBackingBean {
             user.setPassword(passwordEncoder.encode(password));
             mapper.insertSelective(user);
 
-            // 本来はここで、ユーザ登録したことを、メールでユーザに通知する
+            MailSender.sendMail(user.getEmail(), "ユーザ登録完了のお知らせ", "ユーザ登録が完了しました。");
 
             messageService().addGlobalMessageInfo("ユーザ登録が完了したよ");
             flash().setKeepMessages(true);
@@ -148,7 +149,7 @@ public class Signup extends BaseBackingBean {
 
         } catch (final Exception e) {
             //            tx.rollback();
-            throw new WebApplicationException();
+            throw new WebApplicationException(e);
 
         }
 
