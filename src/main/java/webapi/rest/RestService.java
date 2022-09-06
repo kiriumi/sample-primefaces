@@ -1,8 +1,5 @@
 package webapi.rest;
 
-import java.util.Date;
-import java.util.Random;
-
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
@@ -16,7 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import dto.ApiTokenExample;
 import dto.ApiTokenExample.Criteria;
@@ -102,7 +99,6 @@ public class RestService {
     }
 
     private String generateToken() {
-        long seed = new Random().nextLong() + new Date().getTime();
-        return DigestUtils.sha256Hex(Long.toString(seed)).substring(0, 32);
+        return RandomStringUtils.randomAlphanumeric(32);
     }
 }

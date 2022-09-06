@@ -1,10 +1,8 @@
 package token;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.el.ELContext;
@@ -15,7 +13,7 @@ import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import faces.BaseBackingBean;
@@ -172,8 +170,7 @@ public class TokenCheckListener implements PhaseListener {
     }
 
     private String generateToken() {
-        long seed = new Random().nextLong() + new Date().getTime();
-        return DigestUtils.sha256Hex(Long.toString(seed)).substring(0, 32);
+        return RandomStringUtils.randomAlphanumeric(32);
     }
 
 }

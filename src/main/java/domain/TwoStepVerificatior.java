@@ -1,15 +1,15 @@
 package domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
-import java.util.Random;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.MessagingException;
+
+import org.apache.commons.lang3.RandomStringUtils;
 
 import exception.WebApplicationException;
 import lombok.Getter;
@@ -64,7 +64,7 @@ public class TwoStepVerificatior implements Serializable {
 
     public void sendTokenByMail() {
 
-        generateToken();
+        this.token = RandomStringUtils.randomNumeric(6);
 
         try {
             MailSender.sendMail(emailAddress, emailTitle,
@@ -110,11 +110,6 @@ public class TwoStepVerificatior implements Serializable {
         this.redirectPage = null;
         this.backPage = null;
         this.token = null;
-    }
-
-    private void generateToken() {
-        Random random = new Random(new Date().getTime());
-        this.token = String.valueOf(random.nextInt(999999));
     }
 
 }
