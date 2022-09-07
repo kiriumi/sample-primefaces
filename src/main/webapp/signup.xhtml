@@ -27,8 +27,9 @@
 
                 <p:outputLabel for="password">パスワード</p:outputLabel>
                 <p:password id="password" value="#{signup.password}" feedback="true"
+                    promptLabel="パスワードを入力してください"
                     weakLabel="弱" goodLabel="中" strongLabel="強" toggleMask="true"
-                    redisplay="true" label="パスワード" />
+                    label="パスワード" />
                 <p:message id="password-message" for="password" />
 
                 <p:outputLabel for="postal-code" value="郵便番号" />

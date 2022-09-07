@@ -23,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.google.common.base.Objects;
 
 import domain.MailSender;
+import domain.NgPasswords;
 import domain.ReCatpchaResponse;
 import domain.TwoStepVerificatior;
 import dto.UserInfo;
@@ -84,6 +85,9 @@ public class Signup extends BaseBackingBean {
         return null;
     }
 
+    @Inject
+    private NgPasswords ngPasswords;
+
     public void validate(ActionEvent event) {
 
         if (isBot) {
@@ -109,6 +113,11 @@ public class Signup extends BaseBackingBean {
 
         if (Objects.equal(id, password)) {
             messageService().addMessageError(List.of("id", "password"), "IDとパスワードは同じにできません");
+            return;
+        }
+
+        if (ngPasswords.getList().contains(password)) {
+            messageService().addMessageError("password", "安易なパスワードは使用できません");
             return;
         }
 
