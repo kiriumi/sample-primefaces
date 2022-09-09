@@ -10,6 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.apache.commons.io.IOUtils;
 
+import exception.WebApplicationException;
 import lombok.Getter;
 
 @ApplicationScoped
@@ -19,11 +20,16 @@ public class NgPasswords implements Serializable {
     private List<String> list;
 
     @PostConstruct
-    public void loadNgPasswords() throws IOException {
+    public void loadNgPasswords() {
 
-        InputStream in = this.getClass().getClassLoader()
-                .getResourceAsStream("ng-passwords.dat");
+        try (InputStream in = this.getClass().getClassLoader()
+                .getResourceAsStream("ng-passwords.dat");) {
 
-        this.list = IOUtils.readLines(in, "UTF-8");
+            this.list = IOUtils.readLines(in, "UTF-8");
+
+        } catch (IOException e) {
+            throw new WebApplicationException(e);
+        }
+
     }
 }
