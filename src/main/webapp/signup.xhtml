@@ -21,12 +21,14 @@
                 columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-8"
                 styleClass="ui-panelgrid-blank ui-fluid">
 
+                <p:autoUpdate />
+
                 <p:outputLabel for="id">ID</p:outputLabel>
                 <p:inputText id="id" value="#{signup.id}" label="ID" />
                 <p:message id="id-message" for="id" />
 
                 <p:outputLabel for="password">パスワード</p:outputLabel>
-                <p:password id="password" value="#{signup.password}" feedback="true"
+                <p:password id="password" value="#{signup.password}" redisplay="true" feedback="true"
                     promptLabel="パスワードを入力してください"
                     weakLabel="弱" goodLabel="中" strongLabel="強" toggleMask="true"
                     label="パスワード" />
@@ -61,7 +63,7 @@
                     <p:column styleClass="ui-grid-col-12">
                         <p:commandButton styleClass="not-confirm p-mr-2"
                             style="width: auto" ajax="true" value="ユーザ登録"
-                            actionListener="#{signup.validate}" update="@form"
+                            actionListener="#{signup.validate}"
                             oncomplete="if (!args.validationFailed) $('#signup').click()" />
 
                         <p:commandButton id="signup" ajax="false"
