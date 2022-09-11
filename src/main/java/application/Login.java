@@ -159,7 +159,7 @@ public class Login extends BaseBackingBean {
         setUser(user);
         loginManager.setup(user.getId(), autoLogin);
 
-        twoStep.setup(user.getEmail(), "ログインに置ける本人確認", "/application/top", "login", () -> {
+        twoStep.setup(user.getEmail(), "ログインにおける本人確認", "/application/top", "login", () -> {
             try {
                 MailSender.sendMail(user.getEmail(), "ログイン通知", "ログインされました");
 
