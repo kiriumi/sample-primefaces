@@ -9,11 +9,13 @@ import faces.BaseBackingBean;
 import log.WebAccessLogging;
 import lombok.Getter;
 import lombok.Setter;
+import token.TokenCheck;
 
 @Named
 @ViewScoped
 @WebAccessLogging
-public class Index extends BaseBackingBean {
+@TokenCheck
+public class Index2 extends BaseBackingBean {
 
     @Getter
     @Setter
@@ -33,7 +35,7 @@ public class Index extends BaseBackingBean {
     }
 
     public String go() {
-        return redirect("index2");
+        return redirect("index3");
     }
 
     @Getter
@@ -55,5 +57,4 @@ public class Index extends BaseBackingBean {
         session().remove("application.Top.passInfo");
         return null;
     }
-
 }

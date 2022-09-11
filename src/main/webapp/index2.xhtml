@@ -6,7 +6,7 @@
     xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-    <title>インデックス</title>
+    <title>インデックス２</title>
     <h:outputScript library="primefaces" name="jquery/jquery.js" />
     <h:outputScript library="js" name="childwindow-opnener.js" />
 </h:head>
@@ -17,7 +17,7 @@
     </p:messages>
 
     <f:metadata>
-        <f:viewAction action="#{index.init()}" />
+        <f:viewAction action="#{index2.init()}" />
     </f:metadata>
 
     <h:form prependId="false">
@@ -25,25 +25,25 @@
         <div>
             <p:autoUpdate />
 
-            <p:inputText id="toChild" value="#{index.toChild}" />
+            <p:inputText id="toChild" value="#{index2.toChild}" />
             <p:message for="toChild" />
         </div>
 
-        <h:outputText value="#{index.fromChild}"/>
+        <h:outputText value="#{index2.fromChild}"/>
 
         <p:commandButton value="子画面を開く"
-            action="#{index.showChildWindow()}"
+            action="#{index2.showChildWindow()}"
             oncomplete="if (!args.validationFailed) openChildWindow('#{request.contextPath}/childWindow.xhtml', '_child', 'resizable')" />
 
-        <p:commandButton id="refresh" ajax="false" immediate="true" style="visibility: hidden" action="#{index.refresh()}" />
+        <p:commandButton id="refresh" ajax="false" immediate="true" style="visibility: hidden" action="#{index2.refresh()}" />
 
         <p:commandButton style="visibility: hidden"
-            actionListener="#{index.actionListener}"
+            actionListener="#{index2.actionListener}"
             oncomplete="if (!args.validationFailed) $('#action').click()" />
 
-        <p:commandButton value="アクション" action="#{index.action()}" />
+        <p:commandButton value="アクション" action="#{index2.action()}" />
 
-        <p:commandButton ajax="false" value="画面遷移" action="#{index.go()}" />
+        <p:commandButton ajax="false" value="画面遷移" action="#{index2.go()}" />
 
     </h:form>
 

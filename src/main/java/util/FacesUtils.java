@@ -37,6 +37,14 @@ public class FacesUtils {
 
         String viewId = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
         String beanName = StringUtils.join(viewId.substring(0, 1).toLowerCase(), viewId.substring(1));
+
+        return (T) elResolver.getValue(elContext, null, beanName);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getBean(String beanName) {
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        ELResolver elResolver = elContext.getELResolver();
         return (T) elResolver.getValue(elContext, null, beanName);
     }
 

@@ -22,6 +22,11 @@ import util.FacesUtils;
 public class TokenCheckListener implements PhaseListener {
 
     @Override
+    public PhaseId getPhaseId() {
+        return PhaseId.RESTORE_VIEW;
+    }
+
+    @Override
     public void beforePhase(final PhaseEvent event) {
     }
 
@@ -31,6 +36,10 @@ public class TokenCheckListener implements PhaseListener {
         updateToken(event);
     }
 
+    private String generateToken() {
+        return RandomStringUtils.randomAlphanumeric(32);
+    }
+
     private void verifyToken(PhaseEvent event) {
 
         FacesContext facesCtx = event.getFacesContext();
@@ -38,21 +47,17 @@ public class TokenCheckListener implements PhaseListener {
 
         BaseBackingBean bean = FacesUtils.getBackingBean(facesCtx);
         TokenCheck tokenCheck = bean.getClass().getAnnotation(TokenCheck.class);
-        if (tokenCheck == null) {
-            //トークンチェック対象の画面ではない場合、何もしない
+        if (tokenCheck == null || facesCtx.isPostback()) {
+            //トークンチェック対象外の画面または、アクションの場合、何もしない
             return;
         }
 
-        if (facesCtx.isPostback() || TokenUtils.isSamePage()) {
-            // 初期表示処理以外の場合、何もしない
-            return;
-        }
-
-        // セッションの取得
+        // 子画面トークンマップを取得
         Map<String, Object> session = extCtx.getSessionMap();
         @SuppressWarnings("unchecked")
         Map<String, String> childTokenMap = (Map<String, String>) session.get(TokenUtils.KEY_CHILD_TOKEN_MAP);
         if (childTokenMap == null) {
+            // 子画面トークンマップの初期化
             childTokenMap = new HashMap<>();
             session.put("childTokenMap", childTokenMap);
         }
@@ -61,8 +66,6 @@ public class TokenCheckListener implements PhaseListener {
         if (TokenUtils.isParent()) {
 
             // 親画面の場合
-            childTokenMap.clear(); // 子画面のトークンをリセット
-
             String tokenInSession = (String) session.get(TokenUtils.KEY_TOKEN);
             String tokenInRequest = extCtx.getRequestParameterMap().get(TokenUtils.KEY_TOKEN);
 
@@ -113,9 +116,8 @@ public class TokenCheckListener implements PhaseListener {
 
         Map<String, Object> session = extCtx.getSessionMap();
 
-        // 初期表示処理以外またはエラー画面の場合、トークンを画面に再設定
-        if (facesCtx.isPostback() || TokenUtils.isSamePage()
-                || extCtx.getRequestServletPath().endsWith(bundle.getString("error.page"))) {
+        // アクションの場合、トークンを画面に再設定
+        if (facesCtx.isPostback()) {
 
             if (TokenUtils.isParent()) {
                 // 親画面の場合
@@ -162,15 +164,6 @@ public class TokenCheckListener implements PhaseListener {
             childToken.setNamespace(namespace);
             childToken.setToken(updatedToken);
         }
-    }
-
-    @Override
-    public PhaseId getPhaseId() {
-        return PhaseId.RESTORE_VIEW;
-    }
-
-    private String generateToken() {
-        return RandomStringUtils.randomAlphanumeric(32);
     }
 
 }
