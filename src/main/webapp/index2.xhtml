@@ -9,6 +9,7 @@
     <title>インデックス２</title>
     <h:outputScript library="primefaces" name="jquery/jquery.js" />
     <h:outputScript library="js" name="childwindow-opnener.js" />
+    <h:outputScript library="js" name="window-controller.js" />
 </h:head>
 
 <h:body>
@@ -20,7 +21,7 @@
         <f:viewAction action="#{index2.init()}" />
     </f:metadata>
 
-    <h:form prependId="false">
+    <h:form prependId="false" class="confirm-beforeunload">
 
         <div>
             <p:autoUpdate />
@@ -43,7 +44,8 @@
 
         <p:commandButton value="アクション" action="#{index2.action()}" />
 
-        <p:commandButton ajax="false" value="画面遷移" action="#{index2.go()}" />
+        <p:commandButton ajax="false" value="画面遷移（遷移確認あり）" action="#{index2.go()}" />
+        <p:commandButton ajax="false" styleClass="not-confirm" value="画面遷移（遷移確認なし）" action="#{index2.go()}" />
 
     </h:form>
 

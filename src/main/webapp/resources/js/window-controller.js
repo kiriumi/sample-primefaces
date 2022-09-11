@@ -49,7 +49,7 @@ document.addEventListener("contextmenu", function(event) {
 /**
  * ページを離れる際に、入力項目に変更があったら確認する
  * 使用方法
- * ・form要素のclass属性に「confirm-onunload」を指定する
+ * ・form要素のclass属性に「confirm-beforeunload」を指定する
  * ・確認が不要な処理を行う要素のclass属性に「not-confirm」を指定する
  */
 $(function() {
@@ -64,9 +64,9 @@ $(function() {
     // ページの移動・更新を検知した時の処理
     $(window).on('beforeunload', function() {
         if (confirm && changed && !notConfirm) {
-            return 'このページを離れます。\nよろしいですか？';
+            $('form').css('pointer-events', ''); // ダブルクリック抑止の解除
+            return '';
         }
-        submit = false;
     });
 
     // 文字入力項目に変更があった時の処理
