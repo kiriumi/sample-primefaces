@@ -5,14 +5,15 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/templates/baseMenubar.xhtml">
+<ui:composition template="/templates/baseChild.xhtml">
 
-    <ui:define name="title">トップ</ui:define>
+    <ui:define name="title">子画面３</ui:define>
 
     <ui:define name="content">
         <h:form prependId="false">
 
-            ようこそ
+            <p:commandButton ajax="false" value="子画面２に戻る" action="#{childWindow3.back()}" />
+            <p:commandButton ajax="false" value="子画面１に遷移" action="#{childWindow3.go()}" />
 
         </h:form>
     </ui:define>

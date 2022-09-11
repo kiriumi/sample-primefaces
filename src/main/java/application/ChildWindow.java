@@ -2,6 +2,7 @@ package application;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.validation.constraints.NotBlank;
 
 import faces.BaseBackingBean;
 import lombok.Getter;
@@ -15,20 +16,26 @@ public class ChildWindow extends BaseBackingBean {
 
     @Getter
     @Setter
-    private String passInfo;
+    private String fromParent;
+
+    @Getter
+    @Setter
+    @NotBlank
+    private String toParent;
 
     public String init() {
-        this.passInfo = (String) session().get("application.Top.passInfo");
+        this.fromParent = (String) session().get("application.Top.passInfo");
+        session().remove("application.Top.passInfo");
         return null;
     }
 
-    public String close() {
-        session().put("application.Top.passInfo", "親画面に渡した情報");
+    public String pass() {
+        session().put("application.Top.passInfo", toParent);
         return null;
     }
 
-    public String goChildWindow2() {
-        return redirect("/application/childWindow2.xhtml");
+    public String go() {
+        return redirect("childWindow2");
     }
 
 }

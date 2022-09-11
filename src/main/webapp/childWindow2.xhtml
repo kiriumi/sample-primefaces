@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/baseChild.xhtml">
+
+    <ui:define name="title">子画面２</ui:define>
+
+    <ui:define name="content">
+        <h:form prependId="false">
+
+            <div>
+                <p:autoUpdate />
+
+                <p:inputText id="toParent" value="#{childWindow2.toParent}" />
+                <p:message for="toParent" />
+            </div>
+
+            <p:commandButton value="親画面に情報を渡す" action="#{childWindow2.pass()}" oncomplete="if (!args.validationFailed) actionParentWindow('refresh')" />
+            <p:commandButton value="閉じる" action="#{childWindow2.pass()}" oncomplete="if (!args.validationFailed) closeChildWindow('refresh')" />
+
+            <p:commandButton ajax="false" immediate="true" value="子画面１に戻る" action="#{childWindow2.back()}" />
+            <p:commandButton ajax="false" immediate="true" value="子画面３に遷移" action="#{childWindow2.go()}" />
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+</html>

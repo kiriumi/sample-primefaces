@@ -10,11 +10,19 @@ function openChildWindow(url, windowName, windowFeature) {
 }
 
 /**
+ * 親画面の要素をクリックしてアクションを実行する
+ * ※例：<p: commandButton ajax="true" value="閉じる" action="#{sample.close()}" onsuccess="actionParentWindow('action')" />
+ */
+function actionParentWindow(elementId) {
+    window.opener.document.getElementById(elementId).click();
+}
+
+/**
  * 子画面を閉じた後、親画面の要素をクリックしてアクションを実行する
  * ※例：<p: commandButton ajax="true" value="閉じる" action="#{sample.close()}" onsuccess="closeChildWindowWithAction('action')" />
  */
 function closeChildWindow(elementId) {
-    window.opener.document.getElementById(elementId).click();
+    actionParentWindow(elementId);
     window.close();
     window.opener.focus();
 }

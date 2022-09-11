@@ -11,9 +11,10 @@
 </h:head>
 <h:body>
 
-    <p:growl id="growl" globalOnly="true" />
+    <p:growl id="growl" globalOnly="true" >
+        <p:autoUpdate />
+    </p:growl>
     <ui:insert name="content" />
-
     <ui:include src="/templates/token.xhtml" />
 
 </h:body>
