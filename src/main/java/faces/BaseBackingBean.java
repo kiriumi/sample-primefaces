@@ -89,8 +89,9 @@ public class BaseBackingBean implements Serializable {
         }
 
         if (childToken.getNamespace() == null) {
-            // 親画面での画面遷移の場合
 
+            // 親画面での画面遷移の場合
+            session().remove(TokenUtils.KEY_CHILD_TOKEN_MAP);
             return StringUtils.isBlank(token.getToken()) ? StringUtils.join(pageName, PARAM_REDIRECT)
                     : StringUtils.join(pageName, PARAM_REDIRECT,
                             String.format(PARAM_KEY_VALUE_FORMAT, TokenUtils.KEY_TOKEN, token.getToken()));
