@@ -6,14 +6,12 @@ import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
 import faces.BaseBackingBean;
-import log.WebAccessLogging;
 import lombok.Getter;
 import lombok.Setter;
 import token.TokenCheck;
 
 @Named
 @ViewScoped
-@WebAccessLogging
 @TokenCheck
 public class Index2 extends BaseBackingBean {
 

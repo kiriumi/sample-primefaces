@@ -6,13 +6,11 @@ import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
 import faces.BaseBackingBean;
-import log.WebAccessLogging;
 import lombok.Getter;
 import lombok.Setter;
 
 @Named
 @ViewScoped
-@WebAccessLogging
 public class Index extends BaseBackingBean {
 
     @Getter
