@@ -32,7 +32,7 @@ public class SecurityHttpResponseHeaderListener implements PhaseListener {
     }
 
     public HttpServletResponse invalidateCache(final HttpServletResponse response) {
-        response.addHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
+        response.addHeader("Cache-Control", "private, no-store, no-cache, max-age=0, must-revalidate");
         response.addHeader("Pragma", "no-cache");
         response.addHeader("Expires", "Mon, 01 Jan 1990 00:00:00 GMT");
         return response;
